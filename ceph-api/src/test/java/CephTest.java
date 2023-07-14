@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@SpringBootTest(classes = Application.class)
+@SpringBootTest(classes = CephTest.class)
 @RunWith(SpringRunner.class)
 public class CephTest {
     @RequestMapping(value = "/ceph/test", method = RequestMethod.POST, produces = {"application/json;charset=utf-8"})
