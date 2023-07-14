@@ -8,7 +8,6 @@
 
 import com.ceph.fs.CephMount;
 import com.qtech.ceph.grw.CephUtils;
-import javafx.application.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
