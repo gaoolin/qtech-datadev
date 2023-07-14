@@ -3,9 +3,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <modules>
-        <module>ceph-api</module>
-    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -14,10 +11,13 @@
     </parent>
     <packaging>pom</packaging>
 
-    <groupId>org.qtech</groupId>
+    <groupId>com.qtech</groupId>
     <artifactId>api</artifactId>
     <version>1.0</version>
 
+    <modules>
+        <module>ceph-api</module>
+    </modules>
 
     <build>
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
