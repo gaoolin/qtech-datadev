@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile="C:\Users\zhilin.gao\Desktop\libcephfs-0.80.5.jar" -DgroupId="com.qtech" -DartifactId="libcephfs" -Dversion="0.80.5" -Dpackaging=jar
