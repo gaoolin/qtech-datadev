@@ -1,4 +1,4 @@
-package com.qtech.ceph.fs;
+package com.qtech.ceph.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/14 14:30:40
- * desc   :  TODO
+ * desc   :  Swagger Bean 访问：ip:port/swagger-ui.html
  */
 
 

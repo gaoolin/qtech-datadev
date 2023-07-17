@@ -7,7 +7,7 @@
 
 
 import com.ceph.fs.CephMount;
-import com.qtech.ceph.grw.CephUtils;
+import com.qtech.ceph.grw.CephGrwServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,13 +25,13 @@ import java.util.UUID;
 @SpringBootTest(classes = CephTest.class)
 @RunWith(SpringRunner.class)
 public class CephTest {
-    @RequestMapping(value = "/ceph/test", method = RequestMethod.POST, produces = {"application/json;charset=utf-8"})
+/*    @RequestMapping(value = "/ceph/test", method = RequestMethod.POST, produces = {"application/json;charset=utf-8"})
     @ResponseBody
     public Map<String, Object> cephTest(@RequestBody String jsonStr) {
 
         //删除测试时所创建的桶名称
-        /*String oldBucketName = "my-new-bucket";
-        CephUtils.deleteBucket(oldBucketName);*/
+        *//*String oldBucketName = "my-new-bucket";
+        CephUtils.deleteBucket(oldBucketName);*//*
 
         String uuid = UUID.randomUUID().toString();
         //String fileName = "message_" + uuid + ".txt";
@@ -39,19 +39,19 @@ public class CephTest {
         String fileName = uuid;
         String bucketName;
         //先查看远程ceph系统是否存在当前日期的桶名称 bst-yyyymmdd
-        boolean isCreated = CephUtils.getBucketIsCreated();
+        boolean isCreated = CephGrwServiceImpl.getBucketIsCreated();
         //如果返回true,证明当天的桶名称已存在；否则创建
         if (!isCreated) {
             //新创建桶名称
-            CephUtils.createBucket();
+            CephGrwServiceImpl.createBucket();
         }
-        bucketName = CephUtils.getCurrentDateBucketName();
-        CephUtils.uploadByte(bucketName, fileName, jsonStr.getBytes());
+        bucketName = CephGrwServiceImpl.getCurrentDateBucketName();
+        CephGrwServiceImpl.uploadByte(bucketName, fileName, jsonStr.getBytes());
         Map<String, Object> map = new HashMap<>();
         map.put("message", "成功=" + fileName);
         map.put("message", "成功=" + bucketName);
         return map;
-    }
+    }*/
 
     @Test
     public void cephFsTest() {

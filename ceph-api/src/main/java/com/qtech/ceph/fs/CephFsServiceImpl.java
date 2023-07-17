@@ -14,103 +14,102 @@ import java.io.*;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/14 13:57:20
- * desc   :  TODO
+ * desc   :  文件存储相关方法
  */
 
 
 @Service
-public class CephFsServiceImpl  {
-    Logger logger= LoggerFactory.getLogger(CephFsServiceImpl.class);
-    private CephMount mount=null;
+public class CephFsServiceImpl {
+    Logger logger = LoggerFactory.getLogger(CephFsServiceImpl.class);
+    private CephMount mount = null;
 
 
-    public Boolean mountCephfsByRoot(){
+    public Boolean mountCephFsByRoot() {
         try {
             this.mount = new CephMount("admin");
             this.mount.conf_set("mon_host", "10.96.179.58;10.96.141.70;10.96.137.48");
             //System.out.println(mount.conf_get("mon_host"));
-            this.mount.conf_set("key","AQDztv1j2RZSOxAAb+KA/gKvLu8e4P1GR+C3AQ==");
+            this.mount.conf_set("key", "AQDztv1j2RZSOxAAb+KA/gKvLu8e4P1GR+C3AQ==");
             this.mount.mount("/");
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
 
-
-    public String[] createDirByPath(String path){
+    public String[] createDirByPath(String path) {
         String[] dirList = null;
         try {
-            if (this.mount == null){
+            if (this.mount == null) {
                 return null;
             }
             this.mount.mkdirs(path, 0777);
             dirList = this.mount.listdir("/");
             return dirList;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
 
-    public String[] deleteDirByPath(String path){
+    public String[] deleteDirByPath(String path) {
         String[] dirList = null;
         try {
-            if (this.mount == null){
+            if (this.mount == null) {
                 return null;
             }
             this.mount.rmdir(path);
             dirList = this.mount.listdir("/");
             return dirList;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
 
-    public CephStat getFileStatusByPath(String path){
+    public CephStat getFileStatusByPath(String path) {
         CephStat stat = new CephStat();
         try {
-            if (this.mount == null){
+            if (this.mount == null) {
                 return null;
             }
             this.mount.lstat(path, stat);
             return stat;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
 
-    public String readFileByPath(String path){
+    public String readFileByPath(String path) {
         CephStat stat = new CephStat();
-        String context=null;
+        String context = null;
         try {
-            if (this.mount == null){
+            if (this.mount == null) {
                 return null;
             }
             int fd = this.mount.open(path, CephMount.O_RDONLY, 0);
             this.mount.fstat(fd, stat);
-            byte[] buffer = new byte[(int)stat.size];
+            byte[] buffer = new byte[(int) stat.size];
             this.mount.read(fd, buffer, stat.size, 0);
             context = new String(buffer);
             this.mount.close(fd);
             return context;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public Boolean uploadFileByPath(String filePath, String fileName){
+    public Boolean uploadFileByPath(String filePath, String fileName) {
 
         // exit with null if not mount
-        if (this.mount == null){
+        if (this.mount == null) {
             logger.info("Ceph fs not mount!");
             return null;
         }
@@ -127,9 +126,9 @@ public class CephFsServiceImpl  {
 
         // get local file info
         fileFullName = filePath + pathChar + fileName;
-        logger.info("fileInfo:{}",fileFullName);
+        logger.info("fileInfo:{}", fileFullName);
         file = new File(fileFullName);
-        if (!file.exists()){
+        if (!file.exists()) {
             logger.info("File not exist!");
             return false;
         }
@@ -138,7 +137,7 @@ public class CephFsServiceImpl  {
         // get io from local file
         try {
             fis = new FileInputStream(file);
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             logger.info("Read local file failed!");
             e.printStackTrace();
         }
@@ -148,19 +147,19 @@ public class CephFsServiceImpl  {
         Boolean fileExist = false;
         try {
             dirList = this.mount.listdir("/");
-            for (String fileInfo : dirList){
-                logger.info("fileInfo:{}",dirList);
-                if (fileInfo.equals(fileName)){
+            for (String fileInfo : dirList) {
+                logger.info("fileInfo:{}", dirList);
+                if (fileInfo.equals(fileName)) {
                     fileExist = true;
                 }
             }
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             logger.info("File Path not exist!");
             e.printStackTrace();
         }
 
         // transfer file by diff pattern
-        if (!fileExist){
+        if (!fileExist) {
             try {
                 // create file and set mode WRITE
                 this.mount.open(fileName, CephMount.O_CREAT, 0);
@@ -169,7 +168,7 @@ public class CephFsServiceImpl  {
                 // start transfer
                 int length = 0;
                 byte[] bytes = new byte[1024];
-                while ((length = fis.read(bytes, 0, bytes.length)) != -1){
+                while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
                     // write
                     this.mount.write(fd, bytes, length, uploadedLength);
 
@@ -177,12 +176,12 @@ public class CephFsServiceImpl  {
                     uploadedLength += length;
 
                     // output transfer rate
-                    float rate = (float)uploadedLength * 100 / (float)fileLength;
-                    String rateValue = (int)rate + "%";
+                    float rate = (float) uploadedLength * 100 / (float) fileLength;
+                    String rateValue = (int) rate + "%";
                     System.out.println(rateValue);
 
                     // complete flag
-                    if (uploadedLength == fileLength){
+                    if (uploadedLength == fileLength) {
                         break;
                     }
                 }
@@ -193,15 +192,15 @@ public class CephFsServiceImpl  {
 
                 // close
                 this.mount.close(fd);
-                if (fis != null){
+                if (fis != null) {
                     fis.close();
                 }
                 return true;
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.info("File transfer failed!");
                 e.printStackTrace();
             }
-        }else if (fileExist){
+        } else if (fileExist) {
             try {
                 // get file length
                 CephStat stat = new CephStat();
@@ -213,7 +212,7 @@ public class CephFsServiceImpl  {
                 int length = 0;
                 byte[] bytes = new byte[1024];
                 fis.skip(uploadedLength);
-                while ((length = fis.read(bytes, 0, bytes.length)) != -1){
+                while ((length = fis.read(bytes, 0, bytes.length)) != -1) {
                     // write
                     this.mount.write(fd, bytes, length, uploadedLength);
 
@@ -221,12 +220,12 @@ public class CephFsServiceImpl  {
                     uploadedLength += length;
 
                     // output transfer rate
-                    float rate = (float)uploadedLength * 100 / (float)fileLength;
-                    String rateValue = (int)rate + "%";
+                    float rate = (float) uploadedLength * 100 / (float) fileLength;
+                    String rateValue = (int) rate + "%";
                     System.out.println(rateValue);
 
                     // complete flag
-                    if (uploadedLength == fileLength){
+                    if (uploadedLength == fileLength) {
                         break;
                     }
                 }
@@ -237,20 +236,20 @@ public class CephFsServiceImpl  {
 
                 // close
                 this.mount.close(fd);
-                if (fis != null){
+                if (fis != null) {
                     fis.close();
                 }
                 return true;
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.info("BreakPoint transfer failed!");
                 e.printStackTrace();
             }
-        }else {
+        } else {
             try {
-                if (fis != null){
+                if (fis != null) {
                     fis.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return false;
@@ -388,8 +387,8 @@ public class CephFsServiceImpl  {
         return false;
     }
 
-    public Boolean uploadFileByMultipart(MultipartFile uploadFile)  {
-        String fileName=uploadFile.getOriginalFilename();
+    public Boolean uploadFileByMultipart(MultipartFile uploadFile) {
+        String fileName = uploadFile.getOriginalFilename();
         InputStream inputStream = null;
         try {
             inputStream = uploadFile.getInputStream();
@@ -397,7 +396,7 @@ public class CephFsServiceImpl  {
             e.printStackTrace();
         }
         // exit with null if not mount
-        if (this.mount == null){
+        if (this.mount == null) {
             logger.info("Ceph fs not mount!");
             return null;
         }
@@ -406,7 +405,7 @@ public class CephFsServiceImpl  {
         char pathChar = File.separatorChar;
         String fileFullName = "";
         Long fileLength = 0l;
-        fileLength=uploadFile.getSize();
+        fileLength = uploadFile.getSize();
         Long uploadedLength = 0l;
 
         // if file exists or not
@@ -414,19 +413,19 @@ public class CephFsServiceImpl  {
         Boolean fileExist = false;
         try {
             dirList = this.mount.listdir("/");
-            for (String fileInfo : dirList){
-                logger.info("fileInfo:{}",dirList);
-                if (fileInfo.equals(fileName)){
+            for (String fileInfo : dirList) {
+                logger.info("fileInfo:{}", dirList);
+                if (fileInfo.equals(fileName)) {
                     fileExist = true;
                 }
             }
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             logger.info("File Path not exist!");
             e.printStackTrace();
         }
 
         // transfer file by diff pattern
-        if (!fileExist){
+        if (!fileExist) {
             try {
                 // create file and set mode WRITE
                 this.mount.open(fileName, CephMount.O_CREAT, 0);
@@ -435,7 +434,7 @@ public class CephFsServiceImpl  {
                 // start transfer
                 int length = 0;
                 byte[] bytes = new byte[1024];
-                while ((length = inputStream.read(bytes, 0, bytes.length)) != -1){
+                while ((length = inputStream.read(bytes, 0, bytes.length)) != -1) {
                     // write
                     this.mount.write(fd, bytes, length, uploadedLength);
 
@@ -443,12 +442,12 @@ public class CephFsServiceImpl  {
                     uploadedLength += length;
 
                     // output transfer rate
-                    float rate = (float)uploadedLength * 100 / (float)fileLength;
-                    String rateValue = (int)rate + "%";
+                    float rate = (float) uploadedLength * 100 / (float) fileLength;
+                    String rateValue = (int) rate + "%";
                     System.out.println(rateValue);
 
                     // complete flag
-                    if (uploadedLength == fileLength){
+                    if (uploadedLength == fileLength) {
                         break;
                     }
                 }
@@ -459,15 +458,15 @@ public class CephFsServiceImpl  {
 
                 // close
                 this.mount.close(fd);
-                if (inputStream != null){
+                if (inputStream != null) {
                     inputStream.close();
                 }
                 return true;
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.info("File transfer failed!");
                 e.printStackTrace();
             }
-        }else if (fileExist){
+        } else if (fileExist) {
             try {
                 // get file length
                 CephStat stat = new CephStat();
@@ -479,7 +478,7 @@ public class CephFsServiceImpl  {
                 int length = 0;
                 byte[] bytes = new byte[1024];
                 inputStream.skip(uploadedLength);
-                while ((length = inputStream.read(bytes, 0, bytes.length)) != -1){
+                while ((length = inputStream.read(bytes, 0, bytes.length)) != -1) {
                     // write
                     this.mount.write(fd, bytes, length, uploadedLength);
 
@@ -487,12 +486,12 @@ public class CephFsServiceImpl  {
                     uploadedLength += length;
 
                     // output transfer rate
-                    float rate = (float)uploadedLength * 100 / (float)fileLength;
-                    String rateValue = (int)rate + "%";
+                    float rate = (float) uploadedLength * 100 / (float) fileLength;
+                    String rateValue = (int) rate + "%";
                     System.out.println(rateValue);
 
                     // complete flag
-                    if (uploadedLength == fileLength){
+                    if (uploadedLength == fileLength) {
                         break;
                     }
                 }
@@ -503,20 +502,20 @@ public class CephFsServiceImpl  {
 
                 // close
                 this.mount.close(fd);
-                if (inputStream != null){
+                if (inputStream != null) {
                     inputStream.close();
                 }
                 return true;
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.info("BreakPoint transfer failed!");
                 e.printStackTrace();
             }
-        }else {
+        } else {
             try {
-                if (inputStream != null){
+                if (inputStream != null) {
                     inputStream.close();
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return false;
@@ -532,7 +531,7 @@ public class CephFsServiceImpl  {
         // exit with null if not mount
         if (this.mount == null) {
             logger.info("Ceph fs not mount!");
-            return ;
+            return;
         }
 
         // file definition
@@ -544,7 +543,7 @@ public class CephFsServiceImpl  {
         OutputStream os = null;
         RandomAccessFile raf = null;
         try {
-            os=resp.getOutputStream();
+            os = resp.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -596,7 +595,7 @@ public class CephFsServiceImpl  {
                 System.out.println("Download Success!");
                 os.close();
                 this.mount.close(fd);
-                return ;
+                return;
             } catch (Exception e) {
                 logger.info("First download fail!");
                 e.printStackTrace();

@@ -1,17 +1,14 @@
 package com.qtech.ceph.grw;
 
 import com.alibaba.fastjson.JSON;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.StringUtils;
 import com.qtech.ceph.common.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -19,24 +16,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-import java.util.Properties;
-
-import static com.amazonaws.util.ClassLoaderHelper.getResourceAsStream;
 
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/14 15:19:09
- * desc   :  TODO
+ * desc   :  对象存储相关操作
  */
 
+@Service
+public class CephGrwServiceImpl {
 
-public class CephUtils {
+    private static Logger logger = LoggerFactory.getLogger(CephGrwServiceImpl.class);
 
-    private static Logger log = LoggerFactory.getLogger(CephUtils.class);
-
-    public void CephUtils() {
-    }
+    @Autowired
+    private AmazonS3 conn;
 
     /**
      * 【你的 access_key】
@@ -52,12 +46,12 @@ public class CephUtils {
      */
     private static final String ENDPOINT = "http://127.0.0.1:7480";
 
-    private static AmazonS3 conn;
+    /*private static AmazonS3 conn;*/
 
     /**
      * 静态块：初始化S3的连接对象AmazonS3！ 需要3个参数：AWS_ACCESS_KEY，AWS_SECRET_KEY
      */
-    static {
+    /*static {
         InputStream inputStream = getResourceAsStream("properties/ceph.properties");
         Properties p = new Properties();
         try {
@@ -70,14 +64,14 @@ public class CephUtils {
         clientConfig.setProtocol(Protocol.HTTP);
         conn = new AmazonS3Client(awsCredentials, clientConfig);
         conn.setEndpoint(p.getProperty("ceph.domain.ip"));
-    }
+    }*/
 
     /**
      * 获取ceph的所有列表
      *
      * @return
      */
-    public static List<Bucket> getBucketList() {
+    public List<Bucket> getBucketList() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
             System.out.println(bucket.getName() + "\t" +
@@ -91,7 +85,7 @@ public class CephUtils {
      *
      * @return
      */
-    public static boolean getBucketIsCreated() {
+    public boolean getBucketIsCreated() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
             if (("bst-" + DateUtils.dateTime()).equals(bucket.getName())) {
@@ -106,7 +100,7 @@ public class CephUtils {
      *
      * @return bucket.getName()
      */
-    public static String getCurrentDateBucketName() {
+    public String getCurrentDateBucketName() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
             if (("bst-" + DateUtils.dateTime()).equals(bucket.getName())) {
@@ -123,7 +117,7 @@ public class CephUtils {
      * @param bucketName
      * @return
      */
-    public static ObjectListing getObjectListing(String bucketName) {
+    public ObjectListing getObjectListing(String bucketName) {
         Bucket bucket = conn.createBucket(bucketName);
         ObjectListing objects = conn.listObjects(bucket.getName());
         do {
@@ -142,11 +136,17 @@ public class CephUtils {
      *
      * @param
      */
-    public static String createBucket() {
-        String bucketName = "bst-" + DateUtils.dateTime();
+    public String createBucket() {
+        String bucketName = "qtech-" + DateUtils.dateTime();
         Bucket bucket = conn.createBucket(bucketName);
         System.out.println(JSON.toJSONString(bucket));
         return bucketName;
+    }
+
+    public String createBucket(String bucketName) {
+        Bucket bucket = conn.createBucket(bucketName);
+        System.out.println(JSON.toJSONString(bucket));
+        return "bucket " + bucketName + "successful created!";
     }
 
     /**
@@ -154,7 +154,7 @@ public class CephUtils {
      *
      * @param bucketName
      */
-    public static void deleteBucket(String bucketName) {
+    public void deleteBucket(String bucketName) {
         conn.deleteBucket(bucketName);
     }
 
@@ -165,7 +165,7 @@ public class CephUtils {
      * @param fileName
      * @param text
      */
-    public static void uploadStream(String bucketName, String fileName, String text) {
+    public void uploadStream(String bucketName, String fileName, String text) {
         ByteArrayInputStream input = new ByteArrayInputStream(text.getBytes());
         PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
         System.out.println(JSON.toJSONString(putObjectResult));
@@ -177,7 +177,7 @@ public class CephUtils {
      * @param bucketName
      * @param fileName
      */
-    public static void modifyPub(String bucketName, String fileName) {
+    public void modifyPub(String bucketName, String fileName) {
         conn.setObjectAcl(bucketName, fileName, CannedAccessControlList.PublicRead);
     }
 
@@ -188,7 +188,7 @@ public class CephUtils {
      * @param keyName
      * @param dirName
      */
-    public static void downloadFile(String bucketName, String keyName, String dirName) {
+    public void downloadFile(String bucketName, String keyName, String dirName) {
         conn.getObject(
                 new GetObjectRequest(bucketName, keyName),
                 new File(dirName)
@@ -198,7 +198,7 @@ public class CephUtils {
     /**
      * 删除文件
      */
-    public static void deleteObject(String bucketName, String fileName) {
+    public void deleteObject(String bucketName, String fileName) {
         conn.deleteObject(bucketName, fileName);
     }
 
@@ -209,7 +209,7 @@ public class CephUtils {
      * @param keyName
      * @return
      */
-    public static URL geturl(String bucketName, String keyName) {
+    public URL geturl(String bucketName, String keyName) {
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, keyName);
         return conn.generatePresignedUrl(request);
     }
@@ -222,12 +222,12 @@ public class CephUtils {
      * @param keyName
      * @return
      */
-    public static URL uploadFileToUrl(String bucketName, File file, String keyName) {
+    public URL uploadFileToUrl(String bucketName, File file, String keyName) {
         try {
             PutObjectRequest request = new PutObjectRequest(bucketName, keyName, file);
             conn.putObject(request);
         } catch (Exception e) {
-            log.info("上传文件异常：{}", e);
+            logger.info("上传文件异常：{}", e);
         }
         GeneratePresignedUrlRequest requests = new GeneratePresignedUrlRequest(bucketName, keyName);
         return conn.generatePresignedUrl(requests);
@@ -240,7 +240,7 @@ public class CephUtils {
      * @param fileName
      * @param input
      */
-    public static void uploadInputStream(String bucketName, String fileName, InputStream input) {
+    public void uploadInputStream(String bucketName, String fileName, InputStream input) {
         PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
         System.out.println(JSON.toJSONString(putObjectResult));
     }
@@ -253,7 +253,7 @@ public class CephUtils {
      * @param fileName
      * @param contents
      */
-    public static void uploadByte(String bucketName, String fileName, byte[] contents) {
+    public void uploadByte(String bucketName, String fileName, byte[] contents) {
         try (ByteArrayInputStream input = new ByteArrayInputStream(contents)) {
             PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
             System.out.println(JSON.toJSONString(putObjectResult));
@@ -262,7 +262,7 @@ public class CephUtils {
                 System.out.println("====" + objectSummary.getKey());
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             throw new IllegalStateException("文件上传到阿里云OSS服务报错!", e);
         }
     }
@@ -273,7 +273,7 @@ public class CephUtils {
      * @param bucketName
      * @param
      */
-    public static InputStream readStreamObject(String bucketName, String fileName) {
+    public InputStream readStreamObject(String bucketName, String fileName) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileName);
         S3Object object = conn.getObject(getObjectRequest);
         System.out.println("Content-Type:" + object.getObjectMetadata().getContentType());

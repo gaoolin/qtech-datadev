@@ -33,3 +33,8 @@ spring:
 logging:
   level:
     root: info
+
+ceph:
+  accessKey: 3N9CP0C0D0VNY5UFLACJ
+  secretKey: jAkyxAwskyg0rQ5U27BZ3PcphtmVbiLiAjkXylUn
+  endpoint: 10.170.6.40:31033
