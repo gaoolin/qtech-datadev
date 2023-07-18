@@ -116,10 +116,8 @@ public class CephGrwController {
     }
 
     @ApiOperation(value = "DownloadObjectByByte", notes = "DownloadObjectByByte")
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/dwnloadObjectByByte", method = RequestMethod.GET)
     public byte[] DownloadObjectByByte(String bucketName, String fileName) {
         return cephGrwService.downloadObjectByByte(bucketName, fileName);
     }
-
-
 }
