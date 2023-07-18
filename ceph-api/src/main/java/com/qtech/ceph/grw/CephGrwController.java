@@ -114,4 +114,12 @@ public class CephGrwController {
     public InputStream readStreamObject(String bucketName, String fileName) {
         return cephGrwService.readStreamObject(bucketName, fileName);
     }
+
+    @ApiOperation(value = "DownloadObjectByByte", notes = "DownloadObjectByByte")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public byte[] DownloadObjectByByte(String bucketName, String fileName) {
+        return cephGrwService.downloadObjectByByte(bucketName, fileName);
+    }
+
+
 }

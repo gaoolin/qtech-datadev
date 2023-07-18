@@ -279,4 +279,14 @@ public class CephGrwServiceImpl {
         System.out.println("Content-Type:" + object.getObjectMetadata().getContentType());
         return object.getObjectContent();
     }
+
+    public byte[] downloadObjectByByte(String bucketName, String fileName) {
+        InputStream inputStream = readStreamObject(bucketName, fileName);
+        try {
+            return Utils.toByteArray(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
+    }
 }
