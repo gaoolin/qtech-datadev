@@ -58,24 +58,21 @@ class UtilsTest {
 
     @Test
     @Scheduled(cron = "0,5 * * * * ?")
-    public void postShieldDate() {
+    public void postShieldData() {
         String DataUrl = "http://localhost:8080//cephgrw/api/uploadByte";
 
         String s = Base64.encodeBase64String(bytes);
 
-
-        //假设这是入参
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bucketName", "qtech-20230717");
-        paramMap.put("fileName", "test3.jpg");
+        paramMap.put("fileName", "test7.jpg");
         paramMap.put("contents", s);
 
-        //转为Json格式
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(paramMap));
-        //调用工具类
+
         String jsonStr = Utils.connectPost(DataUrl, jsonObject);
-        //接收返回数据
-        JSON.parseObject(jsonStr);
+
+        System.out.println(jsonStr);
 //        logger.info("发送时间->{}", map.get("executeTime"));
         //把发送的json格式字符串转为对象形式
 //        User entity = JSON.parseObject(map.get("data").toString(), User.class);

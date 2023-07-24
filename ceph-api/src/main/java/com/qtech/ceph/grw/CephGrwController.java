@@ -104,12 +104,18 @@ public class CephGrwController {
 
     @ApiOperation(value = "UploadByte", notes = "UploadByte")
     @RequestMapping(value = "/uploadByte", method = RequestMethod.POST)
-    public void uploadByte(@RequestBody Map<String,Object> paramMap) {
-        String bucketName = (String) paramMap.get("bucketName");
-        String fileName = (String) paramMap.get("fileName");
-        String contents = (String) paramMap.get("contents");
-        byte[] bytes = Base64.decodeBase64(contents);
-        cephGrwService.uploadByte(bucketName, fileName, bytes);
+    public int uploadByte(@RequestBody Map<String,Object> paramMap) {
+        try {
+            String bucketName = (String) paramMap.get("bucketName");
+            String fileName = (String) paramMap.get("fileName");
+            String contents = (String) paramMap.get("contents");
+            byte[] bytes = Base64.decodeBase64(contents);
+            cephGrwService.uploadByte(bucketName, fileName, bytes);
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     @ApiOperation(value = "ReadStreamObject", notes = "ReadStreamObject")
