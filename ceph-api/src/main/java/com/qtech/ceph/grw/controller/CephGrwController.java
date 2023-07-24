@@ -1,7 +1,8 @@
-package com.qtech.ceph.grw;
+package com.qtech.ceph.grw.controller;
 
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.qtech.ceph.grw.service.CephGrwServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;

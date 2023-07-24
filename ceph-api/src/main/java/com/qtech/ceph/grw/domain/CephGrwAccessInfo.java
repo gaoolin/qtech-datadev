@@ -1,4 +1,4 @@
-package com.qtech.ceph.grw;
+package com.qtech.ceph.grw.domain;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;

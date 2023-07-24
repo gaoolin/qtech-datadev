@@ -1,6 +1,7 @@
-package com.qtech.ceph.fs;
+package com.qtech.ceph.fs.controller;
 
 import com.ceph.fs.CephStat;
+import com.qtech.ceph.fs.service.CephFsServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

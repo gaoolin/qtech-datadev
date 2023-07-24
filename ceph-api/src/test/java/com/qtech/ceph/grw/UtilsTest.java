@@ -2,6 +2,8 @@ package com.qtech.ceph.grw;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qtech.ceph.grw.service.CephGrwServiceImpl;
+import com.qtech.ceph.grw.utils.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
@@ -59,13 +61,13 @@ class UtilsTest {
     @Test
     @Scheduled(cron = "0,5 * * * * ?")
     public void postShieldData() {
-        String DataUrl = "http://localhost:8080//cephgrw/api/uploadByte";
+        String DataUrl = "http://10.170.6.40:31555//cephgrw/api/uploadByte";
 
         String s = Base64.encodeBase64String(bytes);
 
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bucketName", "qtech-20230717");
-        paramMap.put("fileName", "test7.jpg");
+        paramMap.put("fileName", "test8.jpg");
         paramMap.put("contents", s);
 
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(paramMap));
@@ -73,9 +75,5 @@ class UtilsTest {
         String jsonStr = Utils.connectPost(DataUrl, jsonObject);
 
         System.out.println(jsonStr);
-//        logger.info("发送时间->{}", map.get("executeTime"));
-        //把发送的json格式字符串转为对象形式
-//        User entity = JSON.parseObject(map.get("data").toString(), User.class);
-//        System.err.println(entity);
     }
 }

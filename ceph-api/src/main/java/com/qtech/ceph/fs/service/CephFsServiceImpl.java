@@ -1,4 +1,4 @@
-package com.qtech.ceph.fs;
+package com.qtech.ceph.fs.service;
 
 import com.ceph.fs.CephMount;
 import com.ceph.fs.CephStat;
@@ -22,7 +22,6 @@ import java.io.*;
 public class CephFsServiceImpl {
     Logger logger = LoggerFactory.getLogger(CephFsServiceImpl.class);
     private CephMount mount = null;
-
 
     public Boolean mountCephFsByRoot() {
         try {

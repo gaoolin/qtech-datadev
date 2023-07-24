@@ -1,4 +1,4 @@
-package com.qtech.ceph.grw;
+package com.qtech.ceph.grw.config;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
