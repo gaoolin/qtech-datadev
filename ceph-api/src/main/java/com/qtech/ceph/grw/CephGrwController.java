@@ -3,6 +3,7 @@ package com.qtech.ceph.grw;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,8 +107,9 @@ public class CephGrwController {
     public void uploadByte(@RequestBody Map<String,Object> paramMap) {
         String bucketName = (String) paramMap.get("bucketName");
         String fileName = (String) paramMap.get("fileName");
-        byte[] contents = (byte[]) paramMap.get("contents");
-        cephGrwService.uploadByte(bucketName, fileName, contents);
+        String contents = (String) paramMap.get("contents");
+        byte[] bytes = Base64.decodeBase64(contents);
+        cephGrwService.uploadByte(bucketName, fileName, bytes);
     }
 
     @ApiOperation(value = "ReadStreamObject", notes = "ReadStreamObject")

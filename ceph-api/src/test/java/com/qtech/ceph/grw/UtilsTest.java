@@ -2,6 +2,7 @@ package com.qtech.ceph.grw;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -56,14 +57,18 @@ class UtilsTest {
     }
 
     @Test
-//    @Scheduled(cron = "0,5 * * * * ?")
+    @Scheduled(cron = "0,5 * * * * ?")
     public void postShieldDate() {
-        String DataUrl = "http://10.170.6.40:31555//cephgrw/api/uploadByte";
+        String DataUrl = "http://localhost:8080//cephgrw/api/uploadByte";
+
+        String s = Base64.encodeBase64String(bytes);
+
+
         //假设这是入参
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bucketName", "qtech-20230717");
-        paramMap.put("fileName", "test2.jpg");
-        paramMap.put("contents", file);
+        paramMap.put("fileName", "test3.jpg");
+        paramMap.put("contents", s);
 
         //转为Json格式
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(paramMap));
