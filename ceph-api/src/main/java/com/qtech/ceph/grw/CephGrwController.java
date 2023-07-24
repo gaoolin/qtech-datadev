@@ -4,15 +4,13 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -75,7 +73,7 @@ public class CephGrwController {
 
     @ApiOperation(value = "DownloadFile", notes = "DownloadFile")
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
-    public void downloadFile(String bucketName, String keyName, String dirName) {
+    public void downloadFile(@PathVariable String bucketName, @PathVariable String keyName, @PathVariable String dirName) {
         cephGrwService.downloadFile(bucketName, keyName, dirName);
     }
 
@@ -105,7 +103,10 @@ public class CephGrwController {
 
     @ApiOperation(value = "UploadByte", notes = "UploadByte")
     @RequestMapping(value = "/uploadByte", method = RequestMethod.POST)
-    public void uploadByte(String bucketName, String fileName, byte[] contents) {
+    public void uploadByte(@RequestBody Map<String,Object> paramMap) {
+        String bucketName = (String) paramMap.get("bucketName");
+        String fileName = (String) paramMap.get("fileName");
+        byte[] contents = (byte[]) paramMap.get("contents");
         cephGrwService.uploadByte(bucketName, fileName, contents);
     }
 

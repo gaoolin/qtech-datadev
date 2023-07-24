@@ -1,9 +1,10 @@
 package com.qtech.ceph.grw;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -23,21 +26,54 @@ import java.io.File;
 @RunWith(SpringRunner.class)
 class UtilsTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(UtilsTest.class);
+
     @Autowired
     CephGrwServiceImpl cephGrwService;
 
+    File file = new File("C:\\Users\\zhilin.gao\\Desktop\\test.jpg");
+    byte[] bytes = Utils.fileToByte(file);
+
     @Test
     void fileToByte() {
-        File file = new File("C:\\Users\\zhilin.gao\\Desktop\\test.jpg");
-        byte[] bytes = Utils.fileToByte(file);
         cephGrwService.uploadByte("qtech-20230717", "test1.jpg", bytes);
     }
 
-//    @Test
-//    @Scheduled(cron = "0/30 * * * * ?")
-//    void rpcToByteTest() {
-//        //创建HttpClient对象
-//        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-//        HttpGet httpGet = new HttpGet(url);
-//    }
+    @Test
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void getShieldDate() {
+        String shieldDataUrl = "http://10.170.6.40:31555//cephgrw/api/uploadByte";
+        //假设这是入参
+        String str = "/123/456";
+        //调用工具类
+        String jsonStr = Utils.connectGet(shieldDataUrl + str);
+        //接收返回数据
+        Map map = JSON.parseObject(jsonStr);
+//        logger.info("数据发送时间->{}", map.get("executeTime"));
+        //把发送的json格式字符串转为对象形式
+//        User entity = JSON.parseObject(map.get("data").toString(), User.class);
+//        System.err.println(entity);
+    }
+
+    @Test
+//    @Scheduled(cron = "0,5 * * * * ?")
+    public void postShieldDate() {
+        String DataUrl = "http://10.170.6.40:31555//cephgrw/api/uploadByte";
+        //假设这是入参
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("bucketName", "qtech-20230717");
+        paramMap.put("fileName", "test2.jpg");
+        paramMap.put("contents", file);
+
+        //转为Json格式
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(paramMap));
+        //调用工具类
+        String jsonStr = Utils.connectPost(DataUrl, jsonObject);
+        //接收返回数据
+        JSON.parseObject(jsonStr);
+//        logger.info("发送时间->{}", map.get("executeTime"));
+        //把发送的json格式字符串转为对象形式
+//        User entity = JSON.parseObject(map.get("data").toString(), User.class);
+//        System.err.println(entity);
+    }
 }
