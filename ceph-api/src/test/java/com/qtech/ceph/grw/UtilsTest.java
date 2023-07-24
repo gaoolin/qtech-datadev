@@ -33,11 +33,11 @@ class UtilsTest {
         cephGrwService.uploadByte("qtech-20230717", "test1.jpg", bytes);
     }
 
-    @Test
-    @Scheduled(cron = "0/30 * * * * ?")
-    void rpcToByteTest() {
-        //创建HttpClient对象
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet httpGet = new HttpGet(url);
-    }
+//    @Test
+//    @Scheduled(cron = "0/30 * * * * ?")
+//    void rpcToByteTest() {
+//        //创建HttpClient对象
+//        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+//        HttpGet httpGet = new HttpGet(url);
+//    }
 }
