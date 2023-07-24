@@ -104,7 +104,7 @@ public class CephGrwController {
     }
 
     @ApiOperation(value = "UploadByte", notes = "UploadByte")
-    @RequestMapping(value = "/uploadByte", method = RequestMethod.GET)
+    @RequestMapping(value = "/uploadByte", method = RequestMethod.POST)
     public void uploadByte(String bucketName, String fileName, byte[] contents) {
         cephGrwService.uploadByte(bucketName, fileName, contents);
     }
