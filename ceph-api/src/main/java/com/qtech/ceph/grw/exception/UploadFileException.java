@@ -4,7 +4,7 @@ package com.qtech.ceph.grw.exception;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/24 11:12:58
- * desc   :  TODO
+ * desc   :  异常类
  */
 
 

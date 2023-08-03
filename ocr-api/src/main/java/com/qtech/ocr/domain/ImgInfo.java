@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/31 17:01:15
- * desc   :  TODO
+ * desc   :  图片对象实体类
  */
 
 @Component

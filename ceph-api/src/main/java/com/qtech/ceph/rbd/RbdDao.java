@@ -4,7 +4,7 @@ package com.qtech.ceph.rbd;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/15 10:07:15
- * desc   :  TODO
+ * desc   :  块存储
  */
 
 /*

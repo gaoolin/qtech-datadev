@@ -22,38 +22,38 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "cephgrw/api")
+@RequestMapping(value = "cephGrw/api")
 public class CephGrwController {
 
     @Autowired
     private CephGrwServiceImpl cephGrwService;
 
     @ApiOperation(value = "BucketList", notes = "BucketList")
-    @RequestMapping(value = "bucketlist", method = RequestMethod.GET)
+    @RequestMapping(value = "bucketList", method = RequestMethod.GET)
     public List<Bucket> getBucketList() {
         return cephGrwService.getBucketList();
     }
 
     @ApiOperation(value = "BucketIsCreated", notes = "BucketIsCreated")
-    @RequestMapping(value = "/bucketiscreate", method = RequestMethod.GET)
+    @RequestMapping(value = "/bucketIsCreated", method = RequestMethod.GET)
     public boolean getBucketIsCreated() {
         return cephGrwService.getBucketIsCreated();
     }
 
-    @ApiOperation(value = "CurrentDateBucketName", notes = "CurrentDateBucketName")
+    @ApiOperation(value = "currentDateBucketName", notes = "CurrentDateBucketName")
     @RequestMapping(value = "/currentDateBucketName", method = RequestMethod.GET)
     public String getCurrentDateBucketName() {
         return cephGrwService.getCurrentDateBucketName();
     }
 
     @ApiOperation(value = "ObjectListing", notes = "ObjectListing")
-    @RequestMapping(value = "/objectlisting", method = RequestMethod.GET)
+    @RequestMapping(value = "/objectListing", method = RequestMethod.GET)
     public ObjectListing getObjectListing(String bucketName) {
         return cephGrwService.getObjectListing(bucketName);
     }
 
     @ApiOperation(value = "CreateBucket", notes = "CreateBucket")
-    @RequestMapping(value = "/createbucket", method = RequestMethod.GET)
+    @RequestMapping(value = "/createBucket", method = RequestMethod.GET)
     public String createBucket(@RequestParam(value = "bucketName", required = false) String bucketName) {
         if (bucketName == null) {
             return cephGrwService.createBucket();
@@ -62,13 +62,13 @@ public class CephGrwController {
     }
 
     @ApiOperation(value = "DeleteBucket", notes = "DeleteBucket")
-    @RequestMapping(value = "/deletebucket", method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteBucket", method = RequestMethod.GET)
     public void deleteBucket(String bucket) {
         cephGrwService.deleteBucket(bucket);
     }
 
     @ApiOperation(value = "ModifyPub", notes = "ModifyPub")
-    @RequestMapping(value = "/modifypub", method = RequestMethod.GET)
+    @RequestMapping(value = "/modifyPub", method = RequestMethod.GET)
     public void modifyPub(String bucketName, String fileName) {
         cephGrwService.modifyPub(bucketName, fileName);
     }
@@ -126,7 +126,7 @@ public class CephGrwController {
     }
 
     @ApiOperation(value = "DownloadObjectByByte", notes = "DownloadObjectByByte")
-    @RequestMapping(value = "/dwnloadObjectByByte", method = RequestMethod.GET)
+    @RequestMapping(value = "/downloadObjectByByte", method = RequestMethod.GET)
     public byte[] DownloadObjectByByte(String bucketName, String fileName) {
         return cephGrwService.downloadObjectByByte(bucketName, fileName);
     }

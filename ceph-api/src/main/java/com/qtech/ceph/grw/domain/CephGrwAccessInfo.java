@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/07/17 11:41:31
- * desc   :  TODO
+ * desc   :  连接Ceph集群实体类
  */
 
 //@Configuration("cephGrwAccess")

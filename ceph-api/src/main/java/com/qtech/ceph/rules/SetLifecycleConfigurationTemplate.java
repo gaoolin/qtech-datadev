@@ -19,7 +19,7 @@ import java.util.Arrays;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/08/01 10:15:42
- * desc   :  TODO
+ * desc   :  文件对象操作模版
  */
 
 
