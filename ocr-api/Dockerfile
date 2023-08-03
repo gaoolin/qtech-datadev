@@ -8,7 +8,7 @@ COPY ./src /usr/src/app/src
 RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests  -s /usr/src/app/settings.xml dependency:resolve
 
 
-FROM registry.cn-shanghai.aliyuncs.com/kolenz/ceph-centos
+FROM registry.cn-shanghai.aliyuncs.com/kolenz/openjdk:8-jre-alpine-font
 LABEL maintainer=gaoolin@gmail.com
 
 
