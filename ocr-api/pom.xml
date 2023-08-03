@@ -76,15 +76,28 @@
 
     <build>
         <plugins>
+            <!--用此插件打包时候会默认寻找签名是public static void main(String[] args)的方法, 没有会报错。可以增加配置解决，或者直接修改maven插件，改用apache的maven插件-->
+            <!--
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+             <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            -->
+
+            <!--复制打包jar包-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
             <!--将依赖移到libs目录下-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
