@@ -27,7 +27,7 @@ public class AwsS3ClientConfig {
     private String endpoint;
 
     @Bean
-    public AmazonS3 AwsS3Conn() {
+    public AmazonS3 AwsS3Client() {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(access, secret);
         ClientConfiguration clientConfig = new ClientConfiguration();
         clientConfig.setProtocol(Protocol.HTTP);

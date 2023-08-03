@@ -28,7 +28,7 @@ import java.util.List;
 @Service
 public class CephGrwServiceImpl {
 
-    private static Logger logger = LoggerFactory.getLogger(CephGrwServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(CephGrwServiceImpl.class);
 
     @Autowired
     private AmazonS3 conn;
@@ -266,6 +266,7 @@ public class CephGrwServiceImpl {
             logger.error(e.getMessage(), e);
             throw new IllegalStateException("文件上传到阿里云OSS服务报错!", e);
         }
+        conn.deleteBucketLifecycleConfiguration("");
     }
 
     /**
