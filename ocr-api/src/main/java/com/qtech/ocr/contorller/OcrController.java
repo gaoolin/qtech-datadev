@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qtech.ocr.service.ImgInfoServiceImpl;
 import com.qtech.ocr.utils.Utils;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -24,8 +27,9 @@ public class OcrController extends BaseController {
     @Autowired
     ImgInfoServiceImpl imgInfoService;
 
-    @RequestMapping("/getInfo")
-    public String getOcrInfo(JSONObject byteJson) {
+    @ApiOperation(value = "GetInfo", notes = "GetInfo")
+    @RequestMapping(value = "/getInfo", method = RequestMethod.POST)
+    public String getOcrInfo(@RequestBody JSONObject byteJson) {
 
         String flag = imgInfoService.cephGrwSvc("http://10.170.6.40:31555//cephgrw/api/uploadByte", byteJson);
 
