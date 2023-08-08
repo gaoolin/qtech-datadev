@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ceph-api" />
         <module name="ocr-api" />
+        <module name="pulsar-api" />
       </profile>
     </annotationProcessing>
   </component>
@@ -15,6 +16,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ceph-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
+      <module name="pulsar-api" options="-parameters" />
       <module name="qtech-datadev-api" options="-parameters" />
     </option>
   </component>

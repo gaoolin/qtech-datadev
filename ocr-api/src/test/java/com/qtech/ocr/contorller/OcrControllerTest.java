@@ -2,6 +2,7 @@ package com.qtech.ocr.contorller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qtech.ocr.contorller.OcrController;
 import com.qtech.ocr.utils.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;

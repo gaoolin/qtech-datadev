@@ -1,0 +1,31 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 1000
+    threads:
+      max: 800
+      min-spare: 20
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+logging:
+  level:
+    root: debug
+
+pulsar:
+  # 命名空间名称
+  namespace: qtech-eq-aa
+  # 服务接入地址
+  service-url: http://qtech-pulsar-broker.pulsar:6650
+  # 授权角色密钥
+  token-auth-value:
+  # 集群名称/租户
+  tenant: qtech-datadev
+
+
