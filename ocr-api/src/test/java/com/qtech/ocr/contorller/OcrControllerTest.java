@@ -2,7 +2,8 @@ package com.qtech.ocr.contorller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.qtech.ocr.utils.Utils;
+import com.qtech.common.utils.ImageUtils;
+import com.qtech.common.utils.Utils;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,7 @@ import java.util.HashMap;
 class OcrControllerTest {
 
     File file = new File("C:\\Users\\zhilin.gao\\Desktop\\IMG_20230809_093108.jpg");
-    byte[] bytes = Utils.fileToByte(file);
+    byte[] bytes = ImageUtils.fileToByte(file);
 
     @Autowired
     OcrController ocrController;

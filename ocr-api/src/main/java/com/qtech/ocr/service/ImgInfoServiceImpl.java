@@ -1,7 +1,7 @@
 package com.qtech.ocr.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qtech.ocr.utils.Utils;
+import com.qtech.common.utils.HttpConnectUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,8 +16,6 @@ public class ImgInfoServiceImpl {
 
     public String cephGrwSvc(String url, JSONObject byteJson) {
 
-        String jsonStr = Utils.connectPost(url, byteJson);
-
-        return jsonStr;
+        return HttpConnectUtils.post(url, byteJson);
     }
 }

@@ -1,5 +1,6 @@
 package com.qtech.pulsar.config;
 
+import com.qtech.pulsar.pojo.MessageDto;
 import io.github.majusko.pulsar.producer.ProducerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +13,12 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
-public class ProducerConfiguration {
+public class PulsarConfig {
     @Bean
     public ProducerFactory producerFactory() {
         return new ProducerFactory()
                 // topic
-                .addProducer("aaList");
+                .addProducer("aaList", String.class)
+                .addProducer("xx", MessageDto.class);
     }
 }

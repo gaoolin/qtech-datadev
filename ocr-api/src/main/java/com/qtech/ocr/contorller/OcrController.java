@@ -2,8 +2,8 @@ package com.qtech.ocr.contorller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qtech.common.utils.HttpConnectUtils;
 import com.qtech.ocr.service.ImgInfoServiceImpl;
-import com.qtech.ocr.utils.Utils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +37,7 @@ public class OcrController extends BaseController {
             HashMap<String, String> map = new HashMap<>();
             map.put("file_name", byteJson.getString("fileName"));
             JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(map));
-            return Utils.connectPost("http://10.170.6.40:30113/ocrAPI", jsonObject);
+            return HttpConnectUtils.post("http://10.170.6.40:30113/ocrAPI", jsonObject);
         }
         return null;
     }

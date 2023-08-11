@@ -1,4 +1,4 @@
-package com.qtech.pulsar.common;
+package com.qtech.common.utils;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 

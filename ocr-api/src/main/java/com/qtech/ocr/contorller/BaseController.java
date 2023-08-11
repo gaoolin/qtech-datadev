@@ -1,7 +1,7 @@
 package com.qtech.ocr.contorller;
 
-import com.qtech.ocr.common.DateUtils;
-import com.qtech.ocr.utils.AjaxResult;
+import com.qtech.common.utils.AjaxResult;
+import com.qtech.common.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;

@@ -27,7 +27,7 @@ public class PulsarConsumeController {
             deadLetterTopic = "topic1-DLQ" // 死信topic名称
     )
     @RequestMapping(value = "/topicConsume", method = RequestMethod.GET)
-    public void topicConsume(byte[] msg) throws  Exception{
+    public void topicConsume(byte[] msg) throws Exception {
         // TODO process your message
 
         String message = new String(msg);

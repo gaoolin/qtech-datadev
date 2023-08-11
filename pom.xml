@@ -18,6 +18,7 @@
         <module>ceph-api</module>
         <module>ocr-api</module>
         <module>pulsar-api</module>
+        <module>common-api</module>
     </modules>
 
     <properties>

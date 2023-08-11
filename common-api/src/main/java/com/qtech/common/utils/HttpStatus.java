@@ -1,4 +1,4 @@
-package com.qtech.ocr.utils;
+package com.qtech.common.utils;
 
 /**
  * 返回状态码

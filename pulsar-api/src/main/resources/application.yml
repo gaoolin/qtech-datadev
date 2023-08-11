@@ -27,5 +27,7 @@ pulsar:
   # token-auth-value:
   # 集群名称/租户
   tenant: qtech-datadev
+  # 消费者组
+  subscription: subs-aaList
 
 

@@ -1,4 +1,4 @@
-package com.qtech.ocr.utils;
+package com.qtech.common.utils;
 
 import org.springframework.util.AntPathMatcher;
 
