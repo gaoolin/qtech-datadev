@@ -36,7 +36,6 @@ public class PulsarProducerServiceImpl<T> implements IPulsarProducerService<T> {
      *
      * @param message  消息体
      * @param producer 生产者实例
-     * @param <T>      消息泛型
      */
     @Override
     public void sendAsyncMessage(T message, Producer<T> producer) {
@@ -50,7 +49,6 @@ public class PulsarProducerServiceImpl<T> implements IPulsarProducerService<T> {
      *
      * @param message  消息体
      * @param producer 生产者实例
-     * @param <T>      泛型
      * @throws PulsarClientException
      */
     @Override

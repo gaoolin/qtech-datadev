@@ -59,7 +59,7 @@ public class PulsarProducerController<T> {
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
-            return "1";
+            return "-1";
         }
     }
 
@@ -67,12 +67,13 @@ public class PulsarProducerController<T> {
     @RequestMapping(value = "/sendString", method = RequestMethod.POST)
     public String sendMsg(@RequestBody String msg) {
         try {
+            logger.info(topic1);
             stringProducerService.sendAsyncMessage(msg, pulsarCommon.producer(topic1, Schema.STRING));
             logger.info("消息已异步发送。");
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
-            return "1";
+            return "-1";
         }
     }
 
@@ -80,12 +81,13 @@ public class PulsarProducerController<T> {
     @RequestMapping(value = "/sendMessageDto", method = RequestMethod.POST)
     public String sendMsg(@RequestBody MessageDto msg) {
         try {
+            logger.info(topic2);
             messageDtoIPulsarProducerService.sendAsyncMessage(msg, pulsarCommon.producer(topic2, AvroSchema.of(MessageDto.class)));
             logger.info("实体类消息已异步发送");
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
-            return "1";
+            return "-1";
         }
     }
 }
