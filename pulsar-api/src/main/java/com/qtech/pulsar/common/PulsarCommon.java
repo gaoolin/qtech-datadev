@@ -64,6 +64,7 @@ public class PulsarCommon {
                     .batcherBuilder(BatcherBuilder.DEFAULT)
                     .create();
         } catch (PulsarClientException e) {
+            e.printStackTrace();
             throw new RuntimeException("初始化Pulsar Producer失败");
         }
     }
