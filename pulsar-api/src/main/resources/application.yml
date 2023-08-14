@@ -22,12 +22,15 @@ pulsar:
   # 命名空间名称
   namespace: qtech-eq-aa
   # 服务接入地址
-  service-url: pulsar://qtech-pulsar-broker.pulsar:6650
+  serviceUrl: pulsar://qtech-pulsar-broker.pulsar:6650
   # 授权角色密钥
-  # token-auth-value:
+  # token:
   # 集群名称/租户
-  tenant: qtech-datadev
+  cluster: qtech-datadev
   # 消费者组
-  subscription: subs-aaList
+  subMap: subs-aaList
+  topicMap:
+    aaList: aaList
+
 
 

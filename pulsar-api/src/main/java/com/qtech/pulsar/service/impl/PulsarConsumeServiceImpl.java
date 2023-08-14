@@ -1,13 +1,5 @@
 package com.qtech.pulsar.service.impl;
 
-import com.qtech.pulsar.common.Constants;
-import com.qtech.pulsar.pojo.MessageDto;
-import com.qtech.pulsar.service.IPulsarConsumeService;
-import io.github.majusko.pulsar.annotation.PulsarConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -16,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 
 //@Slf4j
-@Service
+/*@Service
 public class PulsarConsumeServiceImpl<T> implements IPulsarConsumeService<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarConsumeServiceImpl.class);
@@ -32,4 +24,4 @@ public class PulsarConsumeServiceImpl<T> implements IPulsarConsumeService<T> {
     public int starterConsume(T msg) {
         return 0;
     }
-}
+}*/

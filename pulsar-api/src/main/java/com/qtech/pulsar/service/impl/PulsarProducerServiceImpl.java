@@ -1,11 +1,13 @@
 package com.qtech.pulsar.service.impl;
 
-import com.qtech.pulsar.pojo.MessageDto;
 import com.qtech.pulsar.service.IPulsarProducerService;
-import io.github.majusko.pulsar.producer.PulsarTemplate;
+import org.apache.pulsar.client.api.MessageId;
+import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 
 /**
  * author :  gaozhilin
@@ -17,28 +19,48 @@ import org.springframework.stereotype.Service;
 @Service
 public class PulsarProducerServiceImpl<T> implements IPulsarProducerService<T> {
 
-    @Autowired
-    private PulsarTemplate<T> template;
+    private static final Logger logger = LoggerFactory.getLogger(PulsarProducerServiceImpl.class);
 
     @Override
     public int send(String topic, T msg) {
-        try {
-            template.send(topic, msg);
-            return 0;
-        } catch (PulsarClientException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return 0;
     }
 
     @Override
     public int sendAsync(String topic, T msg) {
+        return 0;
+    }
+
+    /**
+     * 异步发送一条消息
+     *
+     * @param message  消息体
+     * @param producer 生产者实例
+     * @param <T>      消息泛型
+     */
+    @Override
+    public void sendAsyncMessage(T message, Producer<T> producer) {
+        producer.sendAsync(message).thenAccept(msgId -> {
+        });
+        logger.info("消息已发");
+    }
+
+    /**
+     * 同步发送一条消息
+     *
+     * @param message  消息体
+     * @param producer 生产者实例
+     * @param <T>      泛型
+     * @throws PulsarClientException
+     */
+    @Override
+    public void sendSyncMessage(T message, Producer<T> producer) {
         try {
-            template.sendAsync(topic, msg);
-            return 0;
-        } catch (Exception e) {
+            MessageId send = producer.send(message);
+            logger.info("");
+            logger.info("消息已发送：{}", send);
+        } catch (PulsarClientException e) {
             e.printStackTrace();
-            return 1;
         }
     }
 }

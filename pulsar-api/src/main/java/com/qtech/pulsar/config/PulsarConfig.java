@@ -1,7 +1,11 @@
 package com.qtech.pulsar.config;
 
-import com.qtech.pulsar.pojo.MessageDto;
-import io.github.majusko.pulsar.producer.ProducerFactory;
+import com.qtech.pulsar.pojo.PulsarProperties;
+import org.apache.pulsar.client.api.AuthenticationFactory;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,11 +18,24 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class PulsarConfig {
+
+    @Autowired
+    PulsarProperties pulsarProperties;
+
+    @Value("${pulsar.service-url}")
+    String serviceUrl;
+
     @Bean
-    public ProducerFactory producerFactory() {
-        return new ProducerFactory()
-                // topic
-                .addProducer("aaList", String.class)
-                .addProducer("xx", MessageDto.class);
+    public PulsarClient pulsarClient() {
+
+        try {
+            return PulsarClient.builder()
+                    .authentication(AuthenticationFactory.token(pulsarProperties.getToken()))
+                    .serviceUrl(pulsarProperties.getServiceUrl())
+                    .build();
+        } catch (PulsarClientException e) {
+            System.out.println(e);
+            throw new RuntimeException("初始化Pulsar Client失败");
+        }
     }
 }

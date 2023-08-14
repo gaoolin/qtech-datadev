@@ -1,4 +1,4 @@
-package com.qtech.pulsar.common;
+package com.qtech.pulsar.utils;
 
 import org.apache.pulsar.client.api.*;
 import org.slf4j.Logger;

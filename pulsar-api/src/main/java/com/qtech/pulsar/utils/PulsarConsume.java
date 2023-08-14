@@ -1,4 +1,4 @@
-package com.qtech.pulsar.common;
+package com.qtech.pulsar.utils;
 
 import com.qtech.common.utils.SpringUtils;
 import org.apache.commons.lang3.StringUtils;

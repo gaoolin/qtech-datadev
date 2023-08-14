@@ -74,11 +74,11 @@
         </dependency>
 
         <!--消息发送端还是消息消费端都要引入-->
-        <dependency>
+        <!--<dependency>
             <groupId>io.github.majusko</groupId>
             <artifactId>pulsar-java-spring-boot-starter</artifactId>
             <version>${spring.pulsar.version}</version>
-        </dependency>
+        </dependency>-->
 
         <!--CloseableHttpClient-->
         <dependency>
