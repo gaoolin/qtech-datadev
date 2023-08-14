@@ -22,9 +22,9 @@ public class PulsarProducer {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarProducer.class);
 
-    @Value("${pulsar.url}")
+    @Value("${pulsar.serviceUrl}")
     private String url;
-    @Value("${pulsar.topic}")
+    @Value("${pulsar.topicMap.aaList}")
     private String topic;
 
     PulsarClient client = null;

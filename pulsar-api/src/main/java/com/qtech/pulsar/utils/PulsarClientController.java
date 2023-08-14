@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/pulsarclient/api")
 public class PulsarClientController {
 
-    @Value("${pulsar.url}")
+    @Value("${pulsar.serviceUrl}")
     String serverUrl;
 
     @RequestMapping(value = "client", method = RequestMethod.POST)

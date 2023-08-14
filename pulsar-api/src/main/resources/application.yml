@@ -28,7 +28,8 @@ pulsar:
   # 集群名称/租户
   cluster: qtech-datadev
   # 消费者组
-  subMap: subs-aaList
+  subMap:
+    aaList: aaList
   topicMap:
     aaList: aaList
 

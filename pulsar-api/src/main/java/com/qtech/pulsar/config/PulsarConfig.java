@@ -22,7 +22,7 @@ public class PulsarConfig {
     @Autowired
     PulsarProperties pulsarProperties;
 
-    @Value("${pulsar.service-url}")
+    @Value("${pulsar.serviceUrl}")
     String serviceUrl;
 
     @Bean

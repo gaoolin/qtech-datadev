@@ -23,9 +23,9 @@ public class PulsarConsume {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarConsume.class);
 
-    @Value("${pulsar.url}")
+    @Value("${pulsar.serviceUrl}")
     private String url;
-    @Value("${pulsar.topic}")
+    @Value("${pulsar.topicMap.aaList}")
     private String topic;
     @Value("${pulsar.subscription}")
     private String subscription;
