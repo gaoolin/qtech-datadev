@@ -28,6 +28,9 @@ public class PulsarCommon {
     @Autowired
     private PulsarClient client;
 
+    public PulsarCommon() {
+    }
+
     /**
      * 创建一个生产者
      *
@@ -36,7 +39,7 @@ public class PulsarCommon {
      * @param <T>    泛型
      * @return Producer生产者
      */
-    @PostConstruct
+//    @PostConstruct
     public <T> Producer<T> producer(String topic, Schema<T> schema) {
 
         try {
@@ -73,7 +76,7 @@ public class PulsarCommon {
      * @param <T>             泛型
      * @return Consumer消费者
      */
-    @PostConstruct
+//    @PostConstruct
     public <T> Consumer<T> consumer(String topic, String subscription,
                                     MessageListener<T> messageListener, Schema<T> schema) {
         try {

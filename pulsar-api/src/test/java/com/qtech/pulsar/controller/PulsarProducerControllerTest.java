@@ -1,9 +1,6 @@
 package com.qtech.pulsar.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.qtech.common.utils.HttpConnectUtils;
-import com.qtech.common.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +23,7 @@ class PulsarProducerControllerTest {
 
     @Test
     void topicProducer() {
-        JSONObject s = JSONObject.parseObject(JSON.toJSONString("hello pulsar"));
-        String s1 = HttpConnectUtils.post("http://10.170.6.40:32140/pulsar/api/topicProducer", s);
+        String s1 = HttpConnectUtils.post("http://10.170.6.40:32140/pulsar/api/sendString", "hello pulsar");
         System.out.println(s1);
     }
 }

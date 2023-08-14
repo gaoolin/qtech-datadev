@@ -53,10 +53,10 @@ public class HttpConnectUtils {
      * 注释: 以post方式调用第三方接口
      *
      * @param url  地址
-     * @param json 入参
+     * @param content 入参
      * @return java.lang.String
      */
-    public static String post(String url, JSONObject json) {
+    public static String post(String url, String content) {
         //创建HttpClient对象
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
@@ -64,7 +64,7 @@ public class HttpConnectUtils {
         httpPost.addHeader("token", "");
         httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
         try {
-            StringEntity se = new StringEntity(json.toString());
+            StringEntity se = new StringEntity(content);
             se.setContentEncoding("UTF-8");
             //发送json数据需要设置contentType
             se.setContentType("application/json");
@@ -73,8 +73,7 @@ public class HttpConnectUtils {
             HttpResponse response = httpClient.execute(httpPost);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 //返回json格式
-                String res = EntityUtils.toString(response.getEntity(), "UTF-8");
-                return res;
+                return EntityUtils.toString(response.getEntity(), "UTF-8");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -89,4 +88,18 @@ public class HttpConnectUtils {
         }
         return null;
     }
+
+
+    /**
+     * 注释: 以post方式调用第三方接口
+     *
+     * @param url  地址
+     * @param json 入参
+     * @return java.lang.String
+     */
+    public static String post(String url, JSONObject json) {
+        String s = json.toString();
+        return post(url, s);
+    }
+
 }

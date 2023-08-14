@@ -16,7 +16,7 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
 
 pulsar:
   # 命名空间名称

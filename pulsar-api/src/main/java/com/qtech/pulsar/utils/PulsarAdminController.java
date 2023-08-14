@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 
-@RestController
-@RequestMapping(value = "/pulsarAdmin/api")
+//@RestController
+//@RequestMapping(value = "/pulsarAdmin/api")
 public class PulsarAdminController {
 
     @RequestMapping(value = "/admin")

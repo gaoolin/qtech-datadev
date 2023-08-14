@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * desc   :  TODO
  */
 
-@Component
+//@Component
 public class PulsarProducer {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarProducer.class);

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * desc   :  监听器
  */
 
-@Component
+
 public class MessageDtoListener implements MessageListener<MessageDto> {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageDtoListener.class);

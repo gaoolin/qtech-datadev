@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
  * desc   :  TODO
  */
 
-@Component
+//@Component
 public class PulsarConsume {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarConsume.class);
@@ -27,7 +27,7 @@ public class PulsarConsume {
     private String url;
     @Value("${pulsar.topicMap.aaList}")
     private String topic;
-    @Value("${pulsar.subscription}")
+    @Value("${pulsar.subMap.aaList}")
     private String subscription;
 
 
