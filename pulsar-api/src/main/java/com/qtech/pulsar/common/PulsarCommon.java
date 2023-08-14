@@ -44,6 +44,7 @@ public class PulsarCommon {
 
         try {
             return client.newProducer(schema)
+                    .topic(pulsarProperties.getCluster() + "/" + pulsarProperties.getNamespace() + "/" + topic)
                     // 是否开启批量处理消息，默认true,需要注意的是enableBatching只在异步发送sendAsync生效，同步发送send失效。因此建议生产环境若想使用批处理，则需使用异步发送，或者多线程同步发送
                     .enableBatching(true)
                     // 消息压缩（四种压缩方式：LZ4，ZLIB，ZSTD，SNAPPY），consumer端不用做改动就能消费，开启后大约可以降低3/4带宽消耗和存储（官方测试）
