@@ -16,21 +16,18 @@ import org.springframework.context.annotation.Configuration;
  * desc   :  消息生产者配置
  */
 
-/*@Configuration
+@Configuration
 public class PulsarConfig {
 
     @Autowired
     PulsarProperties pulsarProperties;
 
-    @Value("${pulsar.serviceUrl}")
-    String serviceUrl;
-
-    @Bean
-    public PulsarClient pulsarClient() {
+    @Bean(name = "qtech-pulsar-client")
+    public PulsarClient qtechPulsarClient() {
 
         try {
             return PulsarClient.builder()
-                    .authentication(AuthenticationFactory.token(pulsarProperties.getToken()))
+                    // .authentication(AuthenticationFactory.token(pulsarProperties.getToken()))
                     .serviceUrl(pulsarProperties.getServiceUrl())
                     .build();
         } catch (PulsarClientException e) {
@@ -38,4 +35,4 @@ public class PulsarConfig {
             throw new RuntimeException("初始化Pulsar Client失败");
         }
     }
-}*/
+}

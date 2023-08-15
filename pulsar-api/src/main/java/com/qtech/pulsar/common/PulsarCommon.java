@@ -10,6 +10,7 @@ import org.apache.pulsar.client.impl.schema.AvroSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +32,7 @@ public class PulsarCommon {
     private PulsarProperties pulsarProperties;
 
     @Autowired
+    @Qualifier(value = "qtech-pulsar-client")
     private PulsarClient client;
 
     @Autowired
