@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qtech.common.utils.HttpConnectUtils;
 import com.qtech.common.utils.Utils;
+import com.qtech.pulsar.common.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ class PulsarProducerControllerTest {
     @Test
     void topicProducer() {
         HashMap<String, String> map = new HashMap<>();
-        map.put("key", "hello pulsar");
+        map.put("key", Constants.MESSAGE);
         JSONObject s = JSONObject.parseObject(JSON.toJSONString(map));
         System.out.println(s);
-        String s1 = HttpConnectUtils.post("http://10.170.6.40:32140/pulsar/api/sendString", s);
+        String s1 = HttpConnectUtils.post("http://10.170.6.40:32140/pulsar/api/sendtest", s);
         System.out.println(s1);
     }
 }
