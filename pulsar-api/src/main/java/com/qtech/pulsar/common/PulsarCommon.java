@@ -137,7 +137,7 @@ public class PulsarCommon {
     //-----------consumer-----------
     @Bean(name = "aaList-byte-topic-consumer")
     public Consumer<byte[]> getAaListByteTopicConsumer() {
-        return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
+        return this.createConsumer(pulsarProperties.getTopicMap().get("byte"),
                 pulsarProperties.getSubMap().get("aaList"),
                 byteListener, Schema.BYTES);
     }
@@ -152,7 +152,7 @@ public class PulsarCommon {
 
     @Bean(name = "aaList-messageDto-topic-consumer")
     public Consumer<MessageDto> getAaListMessageDtoTopicConsumer() {
-        return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
+        return this.createConsumer(pulsarProperties.getTopicMap().get("pojo"),
                 pulsarProperties.getSubMap().get("aaList"),
                 messageDtoListener, AvroSchema.of(MessageDto.class));
     }
@@ -161,7 +161,7 @@ public class PulsarCommon {
     //-----------producer-----------
     @Bean(name = "aaList-byte-topic-producer")
     public Producer<byte[]> getAaListByteTopicProducer() {
-        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), Schema.BYTES);
+        return this.createProducer(pulsarProperties.getTopicMap().get("byte"), Schema.BYTES);
     }
 
     @Bean(name = "aaList-string-topic-producer")
@@ -172,6 +172,6 @@ public class PulsarCommon {
 
     @Bean(name = "aaList-messageDto-topic-producer")
     public Producer<MessageDto> getAaListMessageDtoTopicProducer() {
-        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), Schema.AVRO(MessageDto.class));
+        return this.createProducer(pulsarProperties.getTopicMap().get("pojo"), AvroSchema.of(MessageDto.class));
     }
 }

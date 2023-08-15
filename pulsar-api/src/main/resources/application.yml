@@ -32,6 +32,8 @@ pulsar:
     aaList: aaList
   topicMap:
     aaList: aaList
+    byte: byteTest
+    pojo: pojpTest
 
 
 
