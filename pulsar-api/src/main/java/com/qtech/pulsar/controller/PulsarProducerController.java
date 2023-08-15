@@ -50,7 +50,6 @@ public class PulsarProducerController<T> {
     @RequestMapping(value = "/sendByte", method = RequestMethod.POST)
     public String sendMsg(@RequestBody byte[] msg) {
         try {
-            // msg.getBytes(StandardCharsets.UTF_8
             aaListByteProducer.sendAsync(msg);
             logger.info(">>>> 消息已异步发送。");
             return "0";

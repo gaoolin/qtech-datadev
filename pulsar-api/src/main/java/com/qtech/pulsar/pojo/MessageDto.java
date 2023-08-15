@@ -9,6 +9,8 @@ package com.qtech.pulsar.pojo;
 
 public class MessageDto {
 
+    private static final long serialVersionUID = 1L;
+
     int id;
 
     String content;
@@ -27,5 +29,13 @@ public class MessageDto {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageDto{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

@@ -55,7 +55,6 @@ public class PulsarCommon {
      * @param <T>    泛型
      * @return Producer生产者
      */
-
     public <T> Producer<T> createProducer(String topic, Schema<T> schema) {
 
         try {
@@ -94,7 +93,6 @@ public class PulsarCommon {
      * @param <T>             泛型
      * @return Consumer消费者
      */
-
     public <T> Consumer<T> createConsumer(String topic, String subscription,
                                           MessageListener<T> messageListener, Schema<T> schema) {
         try {

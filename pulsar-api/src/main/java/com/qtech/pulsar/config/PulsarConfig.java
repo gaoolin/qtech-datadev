@@ -31,7 +31,7 @@ public class PulsarConfig {
                     .serviceUrl(pulsarProperties.getServiceUrl())
                     .build();
         } catch (PulsarClientException e) {
-            System.out.println(e);
+            e.printStackTrace();
             throw new RuntimeException("初始化Pulsar Client失败");
         }
     }
