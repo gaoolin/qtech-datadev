@@ -172,6 +172,6 @@ public class PulsarCommon {
 
     @Bean(name = "aaList-messageDto-topic-producer")
     public Producer<MessageDto> getAaListMessageDtoTopicProducer() {
-        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), AvroSchema.of(MessageDto.class));
+        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), Schema.AVRO(MessageDto.class));
     }
 }
