@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class ByteListener implements MessageListener<byte[]> {
+public class ByteMessageListener implements MessageListener<byte[]> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ByteListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(ByteMessageListener.class);
 
     @Override
     public void received(Consumer<byte[]> consumer, Message<byte[]> msg) {

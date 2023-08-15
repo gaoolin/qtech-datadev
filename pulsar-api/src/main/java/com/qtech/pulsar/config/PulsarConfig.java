@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
  * desc   :  消息生产者配置
  */
 
-@Configuration
+/*@Configuration
 public class PulsarConfig {
 
     @Autowired
@@ -38,4 +38,4 @@ public class PulsarConfig {
             throw new RuntimeException("初始化Pulsar Client失败");
         }
     }
-}
+}*/

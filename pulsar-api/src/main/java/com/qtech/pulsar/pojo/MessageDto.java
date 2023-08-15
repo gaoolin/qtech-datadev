@@ -1,7 +1,5 @@
 package com.qtech.pulsar.pojo;
 
-import org.springframework.stereotype.Component;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com

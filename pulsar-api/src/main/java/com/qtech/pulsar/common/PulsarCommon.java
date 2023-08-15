@@ -1,6 +1,6 @@
 package com.qtech.pulsar.common;
 
-import com.qtech.pulsar.listener.ByteListener;
+import com.qtech.pulsar.listener.ByteMessageListener;
 import com.qtech.pulsar.pojo.MessageDto;
 import com.qtech.pulsar.listener.MessageDtoListener;
 import com.qtech.pulsar.pojo.PulsarProperties;
@@ -40,7 +40,7 @@ public class PulsarCommon {
     MessageDtoListener messageDtoListener;
 
     @Autowired
-    ByteListener byteListener;
+    ByteMessageListener byteListener;
 
     public PulsarCommon() {
     }
