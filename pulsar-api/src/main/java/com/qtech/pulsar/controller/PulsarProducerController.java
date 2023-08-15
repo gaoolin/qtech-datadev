@@ -131,7 +131,6 @@ public class PulsarProducerController<T> {
                     .batcherBuilder(BatcherBuilder.DEFAULT)
                     .create();
 
-            producer.send("hello pulsar");
             producer.send(msg);
             return "0";
         } catch (Exception e) {

@@ -30,10 +30,13 @@ pulsar:
   # 消费者组
   subMap:
     aaList: aaList
+    byte: byteTest
+    pojo: pojpTest
   topicMap:
     aaList: aaList
     byte: byteTest
     pojo: pojpTest
+  onOff: false
 
 
 

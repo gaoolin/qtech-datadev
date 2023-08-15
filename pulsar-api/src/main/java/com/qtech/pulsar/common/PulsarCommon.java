@@ -1,16 +1,17 @@
 package com.qtech.pulsar.common;
 
 import com.qtech.pulsar.listener.ByteMessageListener;
-import com.qtech.pulsar.pojo.MessageDto;
 import com.qtech.pulsar.listener.MessageDtoListener;
-import com.qtech.pulsar.pojo.PulsarProperties;
 import com.qtech.pulsar.listener.StringMessageListener;
+import com.qtech.pulsar.pojo.MessageDto;
+import com.qtech.pulsar.pojo.PulsarProperties;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.schema.AvroSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -97,7 +98,7 @@ public class PulsarCommon {
                                           MessageListener<T> messageListener, Schema<T> schema) {
         try {
             return client.newConsumer(schema)
-                    .topic(pulsarProperties.getTenant() + "/" + pulsarProperties.getNamespace() + "/" + topic)
+                    .topic("persistent://" + pulsarProperties.getTenant() + "/" + pulsarProperties.getNamespace() + "/" + topic)
                     .subscriptionName(subscription)
                     .ackTimeout(10, TimeUnit.SECONDS)
                     .subscriptionType(SubscriptionType.Shared)
@@ -138,11 +139,12 @@ public class PulsarCommon {
     @Bean(name = "aaList-byte-topic-consumer")
     public Consumer<byte[]> getAaListByteTopicConsumer() {
         return this.createConsumer(pulsarProperties.getTopicMap().get("byte"),
-                pulsarProperties.getSubMap().get("aaList"),
+                pulsarProperties.getSubMap().get("byte"),
                 byteListener, Schema.BYTES);
     }
 
     @Bean(name = "aaList-string-topic-consumer")
+    @ConditionalOnProperty(prefix = "pulsar", name = "onOff", havingValue = "true", matchIfMissing = false)
     public Consumer<String> getAaListStringTopicConsumer() {
         return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
                 pulsarProperties.getSubMap().get("aaList"),
@@ -153,7 +155,7 @@ public class PulsarCommon {
     @Bean(name = "aaList-messageDto-topic-consumer")
     public Consumer<MessageDto> getAaListMessageDtoTopicConsumer() {
         return this.createConsumer(pulsarProperties.getTopicMap().get("pojo"),
-                pulsarProperties.getSubMap().get("aaList"),
+                pulsarProperties.getSubMap().get("pojo"),
                 messageDtoListener, AvroSchema.of(MessageDto.class));
     }
 
