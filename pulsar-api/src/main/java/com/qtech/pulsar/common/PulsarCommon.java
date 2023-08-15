@@ -1,10 +1,16 @@
 package com.qtech.pulsar.common;
 
+import com.qtech.pulsar.listener.ByteListener;
+import com.qtech.pulsar.pojo.MessageDto;
+import com.qtech.pulsar.listener.MessageDtoListener;
 import com.qtech.pulsar.pojo.PulsarProperties;
+import com.qtech.pulsar.listener.StringMessageListener;
 import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.impl.schema.AvroSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -27,6 +33,15 @@ public class PulsarCommon {
     @Autowired
     private PulsarClient client;
 
+    @Autowired
+    StringMessageListener stringMessageListener;
+
+    @Autowired
+    MessageDtoListener messageDtoListener;
+
+    @Autowired
+    ByteListener byteListener;
+
     public PulsarCommon() {
     }
 
@@ -38,12 +53,12 @@ public class PulsarCommon {
      * @param <T>    泛型
      * @return Producer生产者
      */
-//    @PostConstruct
+
     public <T> Producer<T> createProducer(String topic, Schema<T> schema) {
 
         try {
             return client.newProducer(schema)
-                    .topic(pulsarProperties.getCluster() + "/" + pulsarProperties.getNamespace() + "/" + topic)
+                    .topic("persistent://" + pulsarProperties.getTenant() + "/" + pulsarProperties.getNamespace() + "/" + topic)
                     // 是否开启批量处理消息，默认true,需要注意的是enableBatching只在异步发送sendAsync生效，同步发送send失效。因此建议生产环境若想使用批处理，则需使用异步发送，或者多线程同步发送
                     .enableBatching(true)
                     // 消息压缩（四种压缩方式：LZ4，ZLIB，ZSTD，SNAPPY），consumer端不用做改动就能消费，开启后大约可以降低3/4带宽消耗和存储（官方测试）
@@ -77,12 +92,12 @@ public class PulsarCommon {
      * @param <T>             泛型
      * @return Consumer消费者
      */
-//    @PostConstruct
+
     public <T> Consumer<T> createConsumer(String topic, String subscription,
-                                    MessageListener<T> messageListener, Schema<T> schema) {
+                                          MessageListener<T> messageListener, Schema<T> schema) {
         try {
             return client.newConsumer(schema)
-                    .topic(pulsarProperties.getCluster() + "/" + pulsarProperties.getNamespace() + "/" + topic)
+                    .topic(pulsarProperties.getTenant() + "/" + pulsarProperties.getNamespace() + "/" + topic)
                     .subscriptionName(subscription)
                     .ackTimeout(10, TimeUnit.SECONDS)
                     .subscriptionType(SubscriptionType.Shared)
@@ -91,5 +106,72 @@ public class PulsarCommon {
         } catch (PulsarClientException e) {
             throw new RuntimeException("初始化Pulsar Consumer失败");
         }
+    }
+
+    /**
+     * 异步发送一条消息
+     *
+     * @param message  消息体
+     * @param producer 生产者实例
+     * @param <T>      消息泛型
+     */
+    public <T> void sendAsyncMessage(T message, Producer<T> producer) {
+        producer.sendAsync(message).thenAccept(msgId -> {
+        });
+    }
+
+
+    /**
+     * 同步发送一条消息
+     *
+     * @param message  消息体
+     * @param producer 生产者实例
+     * @param <T>      泛型
+     * @throws PulsarClientException
+     */
+    public <T> void sendSyncMessage(T message, Producer<T> producer) throws PulsarClientException {
+        MessageId send = producer.send(message);
+        logger.info("已发送消息：{}。", send);
+    }
+
+    //-----------consumer-----------
+    @Bean(name = "aaList-byte-topic-consumer")
+    public Consumer<byte[]> getAaListByteTopicConsumer() {
+        return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
+                pulsarProperties.getSubMap().get("aaList"),
+                byteListener, Schema.BYTES);
+    }
+
+    @Bean(name = "aaList-string-topic-consumer")
+    public Consumer<String> getAaListStringTopicConsumer() {
+        return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
+                pulsarProperties.getSubMap().get("aaList"),
+                stringMessageListener, Schema.STRING);
+    }
+
+
+    @Bean(name = "aaList-messageDto-topic-consumer")
+    public Consumer<MessageDto> getAaListMessageDtoTopicConsumer() {
+        return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
+                pulsarProperties.getSubMap().get("aaList"),
+                messageDtoListener, AvroSchema.of(MessageDto.class));
+    }
+
+
+    //-----------producer-----------
+    @Bean(name = "aaList-byte-topic-producer")
+    public Producer<byte[]> getAaListByteTopicProducer() {
+        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), Schema.BYTES);
+    }
+
+    @Bean(name = "aaList-string-topic-producer")
+    public Producer<String> getAaListStringTopicProducer() {
+        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), Schema.STRING);
+    }
+
+
+    @Bean(name = "aaList-messageDto-topic-producer")
+    public Producer<MessageDto> getAaListMessageDtoTopicProducer() {
+        return this.createProducer(pulsarProperties.getTopicMap().get("aaList"), AvroSchema.of(MessageDto.class));
     }
 }

@@ -13,7 +13,7 @@ public class PulsarProperties {
     /**
      * 集群name
      */
-    private String cluster;
+    private String tenant;
 
     /**
      * 命名空间tdc
@@ -46,12 +46,12 @@ public class PulsarProperties {
      */
     private String onOff;
 
-    public String getCluster() {
-        return cluster;
+    public String getTenant() {
+        return tenant;
     }
 
-    public void setCluster(String cluster) {
-        this.cluster = cluster;
+    public void setTenant(String tenant) {
+        this.tenant = tenant;
     }
 
     public String getNamespace() {
@@ -105,7 +105,7 @@ public class PulsarProperties {
     @Override
     public String toString() {
         return "PulsarProperties{" +
-                "cluster='" + cluster + '\'' +
+                "tenant='" + tenant + '\'' +
                 ", namespace='" + namespace + '\'' +
                 ", topicMap=" + topicMap +
                 ", subMap=" + subMap +

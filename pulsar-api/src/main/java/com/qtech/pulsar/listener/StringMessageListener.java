@@ -1,6 +1,5 @@
-package com.qtech.pulsar.utils;
+package com.qtech.pulsar.listener;
 
-import com.qtech.pulsar.pojo.MessageDto;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.MessageListener;
@@ -12,19 +11,20 @@ import org.springframework.stereotype.Component;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2023/08/14 09:19:14
+ * date   :  2023/08/14 09:16:24
  * desc   :  监听器
  */
 
+@Component
+public class StringMessageListener implements MessageListener<String> {
 
-public class MessageDtoListener implements MessageListener<MessageDto> {
-
-    private static final Logger logger = LoggerFactory.getLogger(MessageDtoListener.class);
+    private static final Logger logger = LoggerFactory.getLogger(StringMessageListener.class);
 
     @Override
-    public void received(Consumer<MessageDto> consumer, Message<MessageDto> msg) {
+    public void received(Consumer<String> consumer, Message<String> msg) {
 
-        logger.info("接收到实体类：{}", msg.getValue());
+        logger.info("接收到String类型消息：{}", msg.getValue());
+
         try {
             consumer.acknowledge(msg);
         } catch (PulsarClientException e) {
@@ -33,7 +33,7 @@ public class MessageDtoListener implements MessageListener<MessageDto> {
     }
 
     @Override
-    public void reachedEndOfTopic(Consumer<MessageDto> consumer) {
+    public void reachedEndOfTopic(Consumer<String> consumer) {
 
     }
 }

@@ -1,7 +1,5 @@
 package com.qtech.pulsar.service;
 
-import com.qtech.pulsar.pojo.MessageDto;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com

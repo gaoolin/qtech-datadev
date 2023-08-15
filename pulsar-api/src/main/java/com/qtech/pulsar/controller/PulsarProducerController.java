@@ -1,16 +1,13 @@
 package com.qtech.pulsar.controller;
 
-import com.qtech.pulsar.common.PulsarCommon;
 import com.qtech.pulsar.pojo.MessageDto;
-import com.qtech.pulsar.service.IPulsarProducerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.pulsar.client.api.*;
-import org.apache.pulsar.client.impl.schema.AvroSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,29 +31,27 @@ public class PulsarProducerController<T> {
     private static final Logger logger = LoggerFactory.getLogger(PulsarProducerController.class);
 
     @Autowired
-    private IPulsarProducerService<byte[]> pulsarProducerService;
+    @Qualifier("aaList-byte-topic-producer")
+    private Producer<byte[]> aaListByteProducer;
 
     @Autowired
-    private IPulsarProducerService<String> stringProducerService;
+    @Qualifier("aaList-string-topic-producer")
+    private Producer<String> aaListStringProducer;
 
     @Autowired
-    private IPulsarProducerService<MessageDto> messageDtoIPulsarProducerService;
+    @Qualifier("aaList-messageDto-topic-producer")
+    private Producer<MessageDto> aaListMessageDtoProducer;
 
     @Autowired
-    private PulsarCommon pulsarCommon;
-
-    @Value("${pulsar.topicMap.aaList}")
-    private String topic1;
-
-    @Value("${pulsar.topicMap.aaList}")
-    private String topic2;
+    @Qualifier("aaList-string-topic-consumer")
+    private Consumer<String> aaListStringConsumer;
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/sendByte", method = RequestMethod.POST)
     public String sendMsg(@RequestBody byte[] msg) {
         try {
-            // msg.getBytes(StandardCharsets.UTF_8)
-            pulsarProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic1, Schema.BYTES));
+            // msg.getBytes(StandardCharsets.UTF_8
+            aaListByteProducer.sendAsync(msg);
             logger.info(">>>> 消息已异步发送。");
             return "0";
         } catch (Exception e) {
@@ -69,8 +64,7 @@ public class PulsarProducerController<T> {
     @RequestMapping(value = "/sendString", method = RequestMethod.POST)
     public String sendMsg(@RequestBody String msg) {
         try {
-            logger.info(topic1);
-            stringProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic1, Schema.STRING));
+            MessageId send = aaListStringProducer.send(msg);
             logger.info(">>>> 消息已异步发送。");
             return "0";
         } catch (Exception e) {
@@ -83,14 +77,30 @@ public class PulsarProducerController<T> {
     @RequestMapping(value = "/sendMessageDto", method = RequestMethod.POST)
     public String sendMsg(@RequestBody MessageDto msg) {
         try {
-            logger.info(topic2);
-            messageDtoIPulsarProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic2, AvroSchema.of(MessageDto.class)));
+            aaListMessageDtoProducer.send(msg);
             logger.info(">>>> 实体类消息已异步发送");
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
             return "-1";
         }
+    }
+
+    @ApiOperation("发送消息")
+    @RequestMapping(value = "/receiveString", method = RequestMethod.POST)
+    public String consume() {
+        Message<String> msg = null;
+        try {
+            msg = aaListStringConsumer.receive();
+            aaListStringConsumer.acknowledge(msg);
+            String s = new String(msg.getData());
+            logger.info(s);
+            return s;
+        } catch (PulsarClientException e) {
+            e.printStackTrace();
+            aaListStringConsumer.negativeAcknowledge(msg);
+        }
+        return null;
     }
 
     @ApiOperation("发送消息")
