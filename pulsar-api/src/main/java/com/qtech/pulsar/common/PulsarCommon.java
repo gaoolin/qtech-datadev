@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,7 +39,7 @@ public class PulsarCommon {
      * @return Producer生产者
      */
 //    @PostConstruct
-    public <T> Producer<T> producer(String topic, Schema<T> schema) {
+    public <T> Producer<T> createProducer(String topic, Schema<T> schema) {
 
         try {
             return client.newProducer(schema)
@@ -79,7 +78,7 @@ public class PulsarCommon {
      * @return Consumer消费者
      */
 //    @PostConstruct
-    public <T> Consumer<T> consumer(String topic, String subscription,
+    public <T> Consumer<T> createConsumer(String topic, String subscription,
                                     MessageListener<T> messageListener, Schema<T> schema) {
         try {
             return client.newConsumer(schema)

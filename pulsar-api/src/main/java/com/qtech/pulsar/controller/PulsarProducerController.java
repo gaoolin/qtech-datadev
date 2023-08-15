@@ -5,6 +5,9 @@ import com.qtech.pulsar.pojo.MessageDto;
 import com.qtech.pulsar.service.IPulsarProducerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.ProducerBuilder;
+import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.AvroSchema;
 import org.slf4j.Logger;
@@ -54,8 +57,8 @@ public class PulsarProducerController<T> {
     public String sendMsg(@RequestBody byte[] msg) {
         try {
             // msg.getBytes(StandardCharsets.UTF_8)
-            pulsarProducerService.sendAsyncMessage(msg, pulsarCommon.producer(topic1, Schema.BYTES));
-            logger.info("消息已异步发送。");
+            pulsarProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic1, Schema.BYTES));
+            logger.info(">>>> 消息已异步发送。");
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,8 +71,8 @@ public class PulsarProducerController<T> {
     public String sendMsg(@RequestBody String msg) {
         try {
             logger.info(topic1);
-            stringProducerService.sendAsyncMessage(msg, pulsarCommon.producer(topic1, Schema.STRING));
-            logger.info("消息已异步发送。");
+            stringProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic1, Schema.STRING));
+            logger.info(">>>> 消息已异步发送。");
             return "0";
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,8 +85,29 @@ public class PulsarProducerController<T> {
     public String sendMsg(@RequestBody MessageDto msg) {
         try {
             logger.info(topic2);
-            messageDtoIPulsarProducerService.sendAsyncMessage(msg, pulsarCommon.producer(topic2, AvroSchema.of(MessageDto.class)));
-            logger.info("实体类消息已异步发送");
+            messageDtoIPulsarProducerService.sendAsyncMessage(msg, pulsarCommon.createProducer(topic2, AvroSchema.of(MessageDto.class)));
+            logger.info(">>>> 实体类消息已异步发送");
+            return "0";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "-1";
+        }
+    }
+
+    @ApiOperation("发送消息")
+    @RequestMapping(value = "/sendtest", method = RequestMethod.POST)
+    public String sendTest(@RequestBody String msg) {
+        try {
+            PulsarClient client = PulsarClient.builder()
+                    .serviceUrl("pulsar://qtech-pulsar-broker.pulsar:6650")
+                    .build();
+
+            Producer<String> producer = client.newProducer(Schema.STRING)
+                    .topic("persistent://qtech-datadev/qtech-eq-aa/aaList")
+                    .create();
+
+            producer.send("hello pulsar");
+            producer.send(msg);
             return "0";
         } catch (Exception e) {
             e.printStackTrace();

@@ -41,7 +41,7 @@ public class PulsarProducerServiceImpl<T> implements IPulsarProducerService<T> {
     public void sendAsyncMessage(T message, Producer<T> producer) {
         producer.sendAsync(message).thenAccept(msgId -> {
         });
-        logger.info("消息已发");
+        logger.info(">>>> 消息已发");
     }
 
     /**
@@ -56,7 +56,7 @@ public class PulsarProducerServiceImpl<T> implements IPulsarProducerService<T> {
         try {
             MessageId send = producer.send(message);
             logger.info("");
-            logger.info("消息已发送：{}", send);
+            logger.info(">>>> 消息已发送：{}", send);
         } catch (PulsarClientException e) {
             e.printStackTrace();
         }
