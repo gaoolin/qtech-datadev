@@ -1,4 +1,4 @@
-package com.qtech.pulsar.common;
+package com.qtech.pulsar.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

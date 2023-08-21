@@ -20,6 +20,7 @@ public class Test {
     public static void main(String[] args) {
         HashMap<String, String> map = new HashMap<>();
         map.put("key", Constants.MESSAGE);
+        map.put("xx", "xx");
         JSONObject s = JSONObject.parseObject(JSON.toJSONString(map));
         System.out.println(s);
         String s1 = HttpConnectUtils.post("http://10.170.6.40:31920/pulsar/api/sendString", s);
