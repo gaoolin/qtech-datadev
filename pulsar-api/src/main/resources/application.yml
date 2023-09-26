@@ -22,6 +22,7 @@ pulsar:
   # 命名空间名称
   namespace: qtech-eq-aa
   # 服务接入地址
+  # pulsar://qtech-pulsar-broker.pulsar:6650
   serviceUrl: pulsar://qtech-pulsar-broker.pulsar:6650
   # 授权角色密钥
   # token:
