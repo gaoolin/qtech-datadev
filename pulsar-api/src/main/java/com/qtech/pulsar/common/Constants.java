@@ -4,7 +4,7 @@ package com.qtech.pulsar.common;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/08/08 09:44:17
- * desc   :  TODO
+ * desc   :  常量类
  */
 
 

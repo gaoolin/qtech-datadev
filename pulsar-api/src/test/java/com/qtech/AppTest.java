@@ -1,36 +1,70 @@
 package com.qtech;
 
-import static org.junit.Assert.assertTrue;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.qtech.common.utils.HttpConnectUtils;
+import org.apache.pulsar.client.admin.PulsarAdmin;
+import org.apache.pulsar.client.admin.PulsarAdminException;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.common.policies.data.PartitionedTopicStats;
 import org.junit.Test;
 
 import java.util.HashMap;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Unit test for simple App.
  */
-public class AppTest
-{
+public class AppTest {
     /**
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
     }
 
-    public static void main(String[] args) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("key", "hello pulsar");
-        JSONObject s = JSONObject.parseObject(JSON.toJSONString(map));
-        for (int i = 0; i < 1000; i++) {
+    public static void main(String[] args) throws PulsarClientException, PulsarAdminException {
+        /*
+         * 需要把pulsar-api服务停掉，生产者下线，这时才能删掉topic
+         */
 
-            String s1 = HttpConnectUtils.post("http://10.170.6.40:32140/pulsar/api/topicProducer", s);
-            System.out.println(s1);
+        String url = "http://broker-svc:8080";  // kt connect需要 service的dns
+        PulsarAdmin admin = PulsarAdmin.builder()
+                .serviceHttpUrl(url)
+                .build();
+
+//        admin.topics().createPartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", 4);
+
+//        admin.topics().updatePartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", 5);
+
+        PulsarClient client = PulsarClient.builder()
+                .serviceUrl("pulsar://qtech-pulsar-broker.pulsar:6650")
+                .build();
+
+        /*Producer<String> producer = client.newProducer(Schema.STRING)
+                .topic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1")
+                .blockIfQueueFull(true)
+                .create();
+
+        for (int i = 0; i < 100; ++i) {
+            producer.newMessage().value("test").send();
         }
+        producer.close();
+        client.close();
+
+        PartitionedTopicStats stats = admin.topics().getPartitionedStats("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", false);
+        System.out.println(stats.getMsgInCounter());*/
+
+//        admin.topics().deletePartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1");
+
+        admin.topics().deleteSubscription("persistent://qtech-datadev/qtech-eq-aa/aaList","my-aaList", true);
+
+        admin.topics().delete("persistent://qtech-datadev/qtech-eq-aa/aaList", true);
+
+
     }
 }

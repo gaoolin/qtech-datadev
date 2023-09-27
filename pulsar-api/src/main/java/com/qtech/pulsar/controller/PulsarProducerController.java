@@ -64,7 +64,7 @@ public class PulsarProducerController<T> {
     public String sendMsg(@RequestBody String msg) {
         try {
             MessageId send = aaListStringProducer.send(msg);
-            logger.info(">>>> 消息已异步发送。");
+            logger.info(">>>> 消息已同步发送， MessageId：" + send);
             return "0";
         } catch (Exception e) {
             e.printStackTrace();

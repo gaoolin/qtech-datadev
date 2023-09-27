@@ -6,7 +6,6 @@ import org.apache.pulsar.client.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/08/11 13:45:09
- * desc   :  TODO
+ * desc   :
  */
 
 //@Component
@@ -49,9 +48,9 @@ public class PulsarConsume {
             consumer = client.newConsumer()
                     .topic(topic.split(","))
                     .subscriptionName(subscription)
-                    .subscriptionType(SubscriptionType.Shared)//指定消费模式，包含：Exclusive，Failover，Shared，Key_Shared。默认Exclusive模式
-                    .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest)//指定从哪里开始消费还有Latest，valueof可选，默认Latest
-                    .negativeAckRedeliveryDelay(60, TimeUnit.SECONDS)//指定消费失败后延迟多久broker重新发送消息给consumer，默认60s
+                    .subscriptionType(SubscriptionType.Shared)  // 指定消费模式，包含：Exclusive，Failover，Shared，Key_Shared。默认Exclusive模式
+                    .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest)  // 指定从哪里开始消费还有Latest，valueof可选，默认Latest
+                    .negativeAckRedeliveryDelay(60, TimeUnit.SECONDS)  // 指定消费失败后延迟多久broker重新发送消息给consumer，默认60s
                     .subscribe();
 
             // 开始消费
