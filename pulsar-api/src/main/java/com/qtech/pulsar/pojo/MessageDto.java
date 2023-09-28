@@ -4,7 +4,7 @@ package com.qtech.pulsar.pojo;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/08/11 14:05:20
- * desc   :  TODO
+ * desc   :
  */
 
 public class MessageDto {

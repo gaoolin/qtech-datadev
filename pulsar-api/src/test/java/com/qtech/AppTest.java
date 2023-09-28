@@ -61,9 +61,9 @@ public class AppTest {
 
 //        admin.topics().deletePartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1");
 
-        admin.topics().deleteSubscription("persistent://qtech-datadev/qtech-eq-aa/aaList","my-aaList", true);
+//        admin.topics().deleteSubscription("persistent://qtech-datadev/qtech-eq-aa/aaList","byteTest", true);
 
-        admin.topics().delete("persistent://qtech-datadev/qtech-eq-aa/aaList", true);
+        admin.topics().delete("persistent://qtech-datadev/qtech-eq-aa/pojpTest", true);
 
 
     }
