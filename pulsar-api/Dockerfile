@@ -2,8 +2,8 @@ FROM maven:3.6-jdk-8 AS builder
 
 WORKDIR /usr/src/app
 COPY ./pom.xml /usr/src/app/pom.xml
-#COPY ./settings.xml /usr/src/app/settings.xml
-RUN mvn dependency:go-offline
+COPY ./settings.xml /usr/src/app/settings.xml
+RUN mvn dependency:go-offline -s /usr/src/app/settings.xml
 COPY ./src /usr/src/app/src
 RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests  -s /usr/src/app/settings.xml dependency:resolve
 
