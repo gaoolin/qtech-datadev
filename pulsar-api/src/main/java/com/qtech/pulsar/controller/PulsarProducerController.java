@@ -29,22 +29,27 @@ import java.util.concurrent.TimeUnit;
 public class PulsarProducerController<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(PulsarProducerController.class);
+/*
 
     @Autowired
     @Qualifier("aaList-byte-topic-producer")
     private Producer<byte[]> aaListByteProducer;
+*/
 
     @Autowired
     @Qualifier("aaList-string-topic-producer")
     private Producer<String> aaListStringProducer;
+/*
 
     @Autowired
     @Qualifier("aaList-messageDto-topic-producer")
     private Producer<MessageDto> aaListMessageDtoProducer;
+*/
 
     @Autowired
     @Qualifier("aaList-string-topic-consumer")
     private Consumer<String> aaListStringConsumer;
+/*
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/sendByte", method = RequestMethod.POST)
@@ -58,6 +63,7 @@ public class PulsarProducerController<T> {
             return "-1";
         }
     }
+*/
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/sendString", method = RequestMethod.POST)
@@ -71,6 +77,7 @@ public class PulsarProducerController<T> {
             return "-1";
         }
     }
+/*
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/sendMessageDto", method = RequestMethod.POST)
@@ -84,6 +91,7 @@ public class PulsarProducerController<T> {
             return "-1";
         }
     }
+*/
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/receiveString", method = RequestMethod.POST)
