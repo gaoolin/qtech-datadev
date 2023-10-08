@@ -89,7 +89,7 @@
     </dependencies>
 
     <build>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <!--复制打包jar包-->
                 <plugin>
@@ -103,6 +103,5 @@
                     <artifactId>maven-dependency-plugin</artifactId>
                 </plugin>
             </plugins>
-        </pluginManagement>
     </build>
 </project>
