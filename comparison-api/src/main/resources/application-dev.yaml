@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://10.170.6.40:32120/qtech_wb_comparison?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
+    username: qtech_pg_wb
+    password: qtech_pg_wb
+
+logging:
+  file:
+    path: D:/mylog
+  #  level:
+  #    root: debug
+  #    com.qtech.comparison.mapper.*: debug
+  # 若不配置，默认使用 ##logback-spring.xml，logback-udf.xml不能命名为 logback.xml，logback.xml的加载早于application.yml配置文件，在logback.xml中使用<springProperty>标签来获取配置文件中的变量值，读取不到而报出错误信息。
+  config: classpath:logback-udf.xml

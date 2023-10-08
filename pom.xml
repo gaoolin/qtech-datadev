@@ -19,6 +19,7 @@
         <module>ocr-api</module>
         <module>pulsar-api</module>
         <module>common-api</module>
+        <module>comparison-api</module>
     </modules>
 
     <properties>

@@ -9,18 +9,28 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ceph-api" />
         <module name="common-api" />
+        <module name="wb-comparison-api" />
+        <module name="comparison" />
         <module name="ocr-api" />
         <module name="pulsar-api" />
+        <module name="comparison-api" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="comparison" target="1.8" />
+      <module name="wb-comparison-api" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
+      <module name="comparison" options="" />
+      <module name="comparison-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />
       <module name="qtech-datadev-api" options="-parameters" />
+      <module name="wb-comparison-api" options="-parameters" />
     </option>
   </component>
 </project>

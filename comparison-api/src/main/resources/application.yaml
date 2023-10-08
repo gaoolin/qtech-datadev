@@ -1,0 +1,49 @@
+# 端口，项目上下文
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+    accept-count: 1300
+    threads:
+      max: 1000
+      min-spare: 20
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    active: prod
+
+  redis:
+    password: qtech@2022
+    lettuce:
+      pool:
+        max-active: 1000
+        max-idle: 20
+        min-idle: 5
+        max-wait: -1ms
+        enabled: true
+    cluster:
+      nodes:
+        - 10.244.3.180:6379
+        - 10.244.4.57:6379
+        - 10.244.4.58:6379
+        - 10.244.5.229:6379
+        - 10.244.6.237:6379
+        - 10.244.6.238:6379
+      # 获取失败 最大重定向次数
+      max-redirects: 3
+    database: 15
+
+# MyBatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.qtech.**.entity
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
+  # 在依赖为mybatis-starter的情况下，configuration、configLocation 二选一, mybatis-plus-starter好像可以同时存在
+#  configuration:
+#    jdbc-type-for-null: null
+#    call-setters-on-nulls: true
