@@ -11,4 +11,5 @@ package com.qtech.comparison.utils;
 public class Constants {
 
     public static final String WB_COMPARISON_REDIS_KEY_PREFIX = "wb:comparison:simId:";
+    public static final String WB_COMPARISON_REDIS_JOB_STAT_KEY_PREFIX = "wb:comparison:job:";
 }

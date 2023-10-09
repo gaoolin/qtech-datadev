@@ -1,6 +1,5 @@
 package com.qtech.pulsar.controller;
 
-import com.qtech.pulsar.pojo.MessageDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.pulsar.client.api.*;

@@ -11,4 +11,10 @@ package com.qtech.comparison.service;
 public interface IWbComparisonService {
 
     public String getComparisonResult(String simId);
+
+    Integer addComparisonResult(String redisKey, String redisVal, Integer days);
+
+    Integer updateJobStatus(String redisKey, String redisVal);
+
+    String getComparisonJobStatus();
 }
