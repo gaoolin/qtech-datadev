@@ -1,5 +1,6 @@
 package com.qtech.comparison.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qtech.comparison.entity.ComparisonResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface WbComparisonMapper {
+public interface ComparisonMapper extends BaseMapper<ComparisonResult> {
 
     ComparisonResult getComparisonResult(@Param("simId") String simId);
 }

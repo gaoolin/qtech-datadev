@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.comparison.mapper.WbComparisonMapper">
+<mapper namespace="com.qtech.comparison.mapper.ComparisonMapper">
     <resultMap id="comparisonResult" type="ComparisonResult">
         <result property="simId" column="sim_id"/>
         <result property="programName" column="program_name"/>

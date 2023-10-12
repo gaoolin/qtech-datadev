@@ -1,6 +1,6 @@
 package com.qtech.comparison;
 
-import com.qtech.comparison.service.IWbComparisonService;
+import com.qtech.comparison.service.IComparisonService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class RedisServiceApplication {
     private RedisTemplate<String, String> stringStringRedisTemplate;
 
     @Autowired
-    IWbComparisonService wbComparisonService;
+    IComparisonService wbComparisonService;
 
     @Test
     public void test(){
@@ -38,7 +38,7 @@ public class RedisServiceApplication {
 
     @Test
     public void testGetComparisonResult() {
-        String comparisonResult = wbComparisonService.getComparisonResult("861480034800625");
+        String comparisonResult = wbComparisonService.getComparisonResult("", "861480034800625");
         System.out.println(comparisonResult);
     }
 }

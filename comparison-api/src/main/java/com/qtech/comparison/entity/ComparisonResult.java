@@ -1,5 +1,7 @@
 package com.qtech.comparison.entity;
 
+import io.swagger.annotations.ApiModel;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -7,7 +9,7 @@ package com.qtech.comparison.entity;
  * desc   :  实体类
  */
 
-
+@ApiModel("打线图比对结果对象")
 public class ComparisonResult {
 
     public String simId;

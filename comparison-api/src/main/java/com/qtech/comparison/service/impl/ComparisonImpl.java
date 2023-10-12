@@ -1,9 +1,10 @@
 package com.qtech.comparison.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.qtech.comparison.entity.ComparisonResult;
-import com.qtech.comparison.mapper.WbComparisonMapper;
-import com.qtech.comparison.service.IWbComparisonService;
+import com.qtech.comparison.mapper.ComparisonMapper;
+import com.qtech.comparison.service.IComparisonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -20,24 +21,23 @@ import static com.qtech.comparison.utils.Constants.*;
  * desc   :
  */
 
-
+@DS("db1")
 @Service
-public class WbComparisonImpl implements IWbComparisonService {
+public class ComparisonImpl implements IComparisonService {
 
     @Resource
     private RedisTemplate<String, String> stringStringRedisTemplate;
 
     @Autowired
-    private WbComparisonMapper wbComparisonMapper;
-
+    ComparisonMapper comparisonMapper;
 
     @Override
-    public String getComparisonResult(String simId) {
+    public String getComparisonResult(String programName, String simId) {
         String comparisonResult;
         comparisonResult = stringStringRedisTemplate.opsForValue().get(WB_COMPARISON_REDIS_KEY_PREFIX + simId);
 
         if (StringUtils.isEmpty(comparisonResult)) {
-            ComparisonResult comparisonResultDao = wbComparisonMapper.getComparisonResult(simId);
+            ComparisonResult comparisonResultDao = comparisonMapper.getComparisonResult(simId);
 
             String codeStr = StringUtils.isEmpty(comparisonResultDao.getCode()) ? "/" : comparisonResultDao.getCode();
             String descStr = StringUtils.isEmpty(comparisonResultDao.getCode()) ? "/" : comparisonResultDao.getDescription();
