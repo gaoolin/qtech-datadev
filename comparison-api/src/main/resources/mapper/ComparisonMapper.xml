@@ -10,7 +10,7 @@
     </resultMap>
 
     <sql id="comparisonResultSql">
-        select sim_id, program_name, dt, code, description from public.qtech_eq_control_info
+        select sim_id, program_name, dt, code, description from qtech_wb.public.eq_control_info
     </sql>
     <select id="getComparisonResult" resultMap="comparisonResult">
         <include refid="comparisonResultSql"></include>

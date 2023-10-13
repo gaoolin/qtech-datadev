@@ -22,7 +22,7 @@ import lombok.ToString;
 public class JobStatus {
 
     @ApiModelProperty("项目名称")
-    String programName;
+    String jobName;
 
     @ApiModelProperty("作业运行时间")
     String preRunTime;

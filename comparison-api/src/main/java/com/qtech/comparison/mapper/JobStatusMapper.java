@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface JobStatusMapper extends BaseMapper<JobStatus> {
 
-    JobStatus getDbJobRunDt(@Param("programName") String programName);
+    JobStatus getDbJobRunDt(@Param("jobName") String jobName);
 
-    JobStatus getDbJobRunStat(@Param("programName") String programName);
+    JobStatus getDbJobRunStat(@Param("jobName") String jobName);
 }

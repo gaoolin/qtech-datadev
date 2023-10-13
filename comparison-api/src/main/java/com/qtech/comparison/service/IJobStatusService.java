@@ -10,12 +10,12 @@ package com.qtech.comparison.service;
 
 public interface IJobStatusService {
 
-    String getJobRunDt(String programName);
+    String getJobRunDt(String jobName);
 
-    String getJobRunStat(String programName);
+    String getJobRunStat(String jobName);
 
-    Integer updateJobRunDt(String programName, String jobRunDt);
+    Integer updateJobRunDt(String jobName, String jobRunDt);
 
-    Integer updateJobRunStat(String programName, String runDt);
+    Integer updateJobRunStat(String jobName, String runDt);
 
 }

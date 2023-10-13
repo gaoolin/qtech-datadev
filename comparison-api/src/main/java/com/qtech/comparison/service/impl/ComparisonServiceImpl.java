@@ -23,7 +23,7 @@ import static com.qtech.comparison.utils.Constants.*;
 
 @DS("db1")
 @Service
-public class ComparisonImpl implements IComparisonService {
+public class ComparisonServiceImpl implements IComparisonService {
 
     @Resource
     private RedisTemplate<String, String> stringStringRedisTemplate;

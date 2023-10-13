@@ -26,10 +26,10 @@ public class JobStatusController {
     @Autowired
     IJobStatusService jobStatusService;
 
-    @GetMapping("/getJobRunDt/{programName}")
-    public String getJobRunDt(@PathVariable String programName) {
+    @GetMapping("/getJobRunDt/{jobName}")
+    public String getJobRunDt(@PathVariable String jobName) {
 
-        String jobRunDt = jobStatusService.getJobRunDt(programName);
+        String jobRunDt = jobStatusService.getJobRunDt(jobName);
         System.out.println(jobRunDt);
         return jobRunDt;
     }
@@ -48,18 +48,24 @@ public class JobStatusController {
     }
 
 
-    @GetMapping("/getJobStat/{programName}")
-    public String getJobStat(@PathVariable String programName) {
-        return jobStatusService.getJobRunStat(programName);
+    @GetMapping("/getJobStat/{jobName}")
+    public String getJobStat(@PathVariable String jobName) {
+        return jobStatusService.getJobRunStat(jobName);
     }
 
     @PostMapping(value = "/updateJobStat")
     public Integer updateJobStat(@RequestBody String jsonObject) {
-        boolean flag;
+        boolean flag = true;
         JSONObject jsonStat = JSON.parseObject(jsonObject);
-        String status = jsonStat.getString("status");
-        Integer i = jobStatusService.updateJobRunStat("status", status);
-        flag = i == 0;
+
+        if (jsonStat.size() == 1) {
+            for (Map.Entry<String, Object> entry : jsonStat.entrySet()) {
+                String jobName = entry.getKey();
+                String status = (String) entry.getValue();
+                Integer i = jobStatusService.updateJobRunStat(jobName, status);
+                flag = i == 0;
+            }
+        }
         return flag ? 0 : -1;
     }
 }

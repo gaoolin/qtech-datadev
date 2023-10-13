@@ -3,6 +3,7 @@ package com.qtech.comparison.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.qtech.comparison.entity.JobStatus;
+import com.qtech.comparison.exception.DbNullPointerException;
 import com.qtech.comparison.mapper.JobStatusMapper;
 import com.qtech.comparison.service.IJobStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,13 @@ public class JobStatusServiceImpl implements IJobStatusService {
     JobStatusMapper jobStatusMapper;
 
     @Override
-    public String getJobRunDt(String programName) {
-        String jobRunDt = stringStringRedisTemplate.opsForValue().get(REDIS_JOB_RUN_DT_KEY_PREFIX + programName);
+    public String getJobRunDt(String jobName) {
+        String jobRunDt = stringStringRedisTemplate.opsForValue().get(REDIS_JOB_RUN_DT_KEY_PREFIX + jobName);
         if (StringUtils.isEmpty(jobRunDt)) {
-            JobStatus dbJobRunDt = jobStatusMapper.getDbJobRunDt(programName);
+            JobStatus dbJobRunDt = jobStatusMapper.getDbJobRunDt(jobName);
             if (dbJobRunDt != null) {
                 jobRunDt = dbJobRunDt.getPreRunTime();
-                stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_DT_KEY_PREFIX + programName, jobRunDt);
+                stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_DT_KEY_PREFIX + jobName, jobRunDt);
             } else {
                 return null;
             }
@@ -47,9 +48,9 @@ public class JobStatusServiceImpl implements IJobStatusService {
     }
 
     @Override
-    public Integer updateJobRunDt(String programName, String jobRunDt) {
+    public Integer updateJobRunDt(String jobName, String jobRunDt) {
         try {
-            stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_DT_KEY_PREFIX + programName, jobRunDt);
+            stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_DT_KEY_PREFIX + jobName, jobRunDt);
             return 0;
         } catch (Exception e) {
             return -1;
@@ -57,20 +58,28 @@ public class JobStatusServiceImpl implements IJobStatusService {
     }
 
     @Override
-    public String getJobRunStat(String programName) {
-        String jobRunStat = stringStringRedisTemplate.opsForValue().get(REDIS_JOB_RUN_STAT_KEY_PREFIX + programName);
+    public String getJobRunStat(String jobName) {
+        String jobRunStat = stringStringRedisTemplate.opsForValue().get(REDIS_JOB_RUN_STAT_KEY_PREFIX + jobName);
         if (StringUtils.isEmpty(jobRunStat)) {
-            jobRunStat = jobStatusMapper.getDbJobRunStat(programName).getStatus();
-            stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + programName, jobRunStat);
+            JobStatus dbJobRunStat = jobStatusMapper.getDbJobRunStat(jobName);
+            if (dbJobRunStat == null) {
+                throw new DbNullPointerException();
+            }
+            jobRunStat = dbJobRunStat.getStatus();
+            if (!StringUtils.isEmpty(jobRunStat)) {
+                stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + jobName, jobRunStat);
+            } else {
+                throw new DbNullPointerException();
+            }
         }
         return jobRunStat;
     }
 
     @Override
-    public Integer updateJobRunStat(String programName, String jobRunStat) {
+    public Integer updateJobRunStat(String jobName, String jobRunStat) {
 
         try {
-            stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + programName, jobRunStat);
+            stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + jobName, jobRunStat);
             return 0;
         } catch (Exception e) {
             return -1;
