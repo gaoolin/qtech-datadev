@@ -5,17 +5,17 @@ spring:
       strict: false
       datasource:
         db1:
-          url: jdbc:postgresql://10.170.6.40:32120/qtech_wb_comparison?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
+          url: jdbc:postgresql://qtech-pg-postgresql-ha-pgpool.postgresql-ha:5432/qtech_wb?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
           driver-class-name: org.postgresql.Driver
           username: qtech_pg_wb
-          password: qtech_pg_wb
+          password: Ft!*NcYe
           type:  com.alibaba.druid.pool.DruidDataSource
-        db2:
-          url: jdbc:postgresql://10.170.6.40:32120/qtech_datadev?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
-          driver-class-name: org.postgresql.Driver
-          username: qtech_pg_wb
-          password: qtech_pg_wb
-          type:  com.alibaba.druid.pool.DruidDataSource
+#        db2:
+#          url: jdbc:postgresql://10.170.6.40:32120/qtech_datadev?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
+#          driver-class-name: org.postgresql.Driver
+#          username: qtech_pg_wb
+#          password: Ft!*NcYe
+#          type:  com.alibaba.druid.pool.DruidDataSource
         druid:
           # 配置初始化大小、最小、最大
           initial-size: 5
