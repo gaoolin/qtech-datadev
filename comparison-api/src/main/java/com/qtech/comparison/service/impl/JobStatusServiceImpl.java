@@ -3,9 +3,9 @@ package com.qtech.comparison.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.qtech.comparison.entity.JobStatus;
-import com.qtech.comparison.exception.DbNullPointerException;
 import com.qtech.comparison.mapper.JobStatusMapper;
 import com.qtech.comparison.service.IJobStatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,7 @@ import static com.qtech.comparison.utils.Constants.REDIS_JOB_RUN_STAT_KEY_PREFIX
 
 @DS("db2")
 @Service
+@Slf4j
 public class JobStatusServiceImpl implements IJobStatusService {
 
     @Resource
@@ -63,13 +64,14 @@ public class JobStatusServiceImpl implements IJobStatusService {
         if (StringUtils.isEmpty(jobRunStat)) {
             JobStatus dbJobRunStat = jobStatusMapper.getDbJobRunStat(jobName);
             if (dbJobRunStat == null) {
-                throw new DbNullPointerException();
-            }
-            jobRunStat = dbJobRunStat.getStatus();
-            if (!StringUtils.isEmpty(jobRunStat)) {
-                stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + jobName, jobRunStat);
+                log.error("查询数据库返回空值，jobName：{}", jobName);
             } else {
-                throw new DbNullPointerException();
+                jobRunStat = dbJobRunStat.getStatus();
+                if (!StringUtils.isEmpty(jobRunStat)) {
+                    stringStringRedisTemplate.opsForValue().set(REDIS_JOB_RUN_STAT_KEY_PREFIX + jobName, jobRunStat);
+                } else {
+                    log.error("查询数据库返回空值，jobName：{}", jobRunStat);
+                }
             }
         }
         return jobRunStat;

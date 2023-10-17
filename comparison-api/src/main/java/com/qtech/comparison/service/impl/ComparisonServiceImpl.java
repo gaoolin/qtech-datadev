@@ -5,6 +5,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.qtech.comparison.entity.ComparisonResult;
 import com.qtech.comparison.mapper.ComparisonMapper;
 import com.qtech.comparison.service.IComparisonService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
-import static com.qtech.comparison.utils.Constants.*;
+import static com.qtech.comparison.utils.Constants.WB_COMPARISON_REDIS_JOB_STAT_KEY_PREFIX;
+import static com.qtech.comparison.utils.Constants.WB_COMPARISON_REDIS_KEY_PREFIX;
 
 /**
  * author :  gaozhilin
@@ -23,6 +25,7 @@ import static com.qtech.comparison.utils.Constants.*;
 
 @DS("db1")
 @Service
+@Slf4j
 public class ComparisonServiceImpl implements IComparisonService {
 
     @Resource
@@ -33,15 +36,24 @@ public class ComparisonServiceImpl implements IComparisonService {
 
     @Override
     public String getComparisonResult(String programName, String simId) {
-        String comparisonResult;
-        comparisonResult = stringStringRedisTemplate.opsForValue().get(WB_COMPARISON_REDIS_KEY_PREFIX + simId);
+        String codeStr = "";
+        String descStr = "";
+        String comparisonResult = stringStringRedisTemplate.opsForValue().get(WB_COMPARISON_REDIS_KEY_PREFIX + simId);
 
         if (StringUtils.isEmpty(comparisonResult)) {
             ComparisonResult comparisonResultDao = comparisonMapper.getComparisonResult(simId);
-
-            String codeStr = StringUtils.isEmpty(comparisonResultDao.getCode()) ? "/" : comparisonResultDao.getCode();
-            String descStr = StringUtils.isEmpty(comparisonResultDao.getCode()) ? "/" : comparisonResultDao.getDescription();
-            stringStringRedisTemplate.opsForValue().set(WB_COMPARISON_REDIS_KEY_PREFIX + simId, codeStr + "*" + descStr, 15, TimeUnit.DAYS);
+            if (comparisonResultDao == null) {
+                log.error("查询数据返回空值，simId：{}.", simId);
+            } else {
+                codeStr = comparisonResultDao.getCode();
+                descStr = comparisonResultDao.getDescription();
+                if (!StringUtils.isEmpty(codeStr) && !StringUtils.isEmpty(descStr)) {
+                    stringStringRedisTemplate.opsForValue().set(WB_COMPARISON_REDIS_KEY_PREFIX + simId, codeStr + "*" + descStr, 1, TimeUnit.DAYS);
+                } else {
+                    log.error("查询数据返回空值，simId：{}.", simId);
+                }
+            }
+            comparisonResult = codeStr + "*" + descStr;
         }
         return comparisonResult;
     }

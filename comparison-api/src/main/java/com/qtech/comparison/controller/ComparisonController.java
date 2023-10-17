@@ -24,7 +24,6 @@ public class ComparisonController {
     @Autowired
     IComparisonService comparisonService;
 
-
     @ApiOperation(value = "根据项目名称和盒子号获取结果", notes = "需传入项目名称和盒子编号两个参数", httpMethod = "GET", consumes = "application/json", produces = "application/json")
     @ApiResponses({
             @ApiResponse(code = 0, message = "qualified，描述：打线图OK"),
