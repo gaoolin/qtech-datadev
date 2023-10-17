@@ -20,7 +20,7 @@ spring:
       # 配置初始化大小、最小、最大
       initial-size: 5
       minIdle: 5
-      max-active: 16
+      max-active: 20
       # 配置获取连接等待超时的时间(单位：毫秒)
       max-wait: 60000
       # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
@@ -43,13 +43,15 @@ spring:
       maxOpenPreparedStatements: 20
       maxPoolPreparedStatementPerConnectionSize: 20
       useGlobalDataSourceStat: true
-      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
       # 连接池中的minIdle数量以内的连接，空闲时间超过minEvictableIdleTimeMillis，则会执行keepAlive操作
-      keepAlive: true
+      keep-alive: true
       # 配置检测连接是否有效
-      webStatFilter:
+      web-stat-filter:
         enabled: true
-      statViewServlet:
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" # 排除一些不必要的url
+        session-stat-enable: true       # 开启session统计功能
+        session-stat-max-count: 1000    # session的最大个数,默认100
+      stat-view-servlet:
         enabled: true
         # 允许清空统计数据
         reset-enable: true
@@ -62,6 +64,7 @@ spring:
       filter:
         stat:
           enabled: true
+          db-type: postgresql
           # 慢SQL记录
           log-slow-sql: true
           slow-sql-millis: 1000
@@ -69,6 +72,15 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+            delete-allow: false
+            drop-table-allow: false
+          enabled: true
+          db-type: postgresql
+#        slf4j:
+#          data-source-log-enabled: true
+#          data-source-logger-name: db1
+      aop-patterns: com.qtech.comparison.mapper.*,com.qtech.comparison.service.*
+
 
 logging:
   pattern: #配置日志格式 %d：日期 , %msg：日志信息 ，%n换行
