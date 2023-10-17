@@ -7,7 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/*
+/**
  * Project : WbStdModManage
  * Author  : zhilin.gao
  * Date    : 2022/5/10 8:27
