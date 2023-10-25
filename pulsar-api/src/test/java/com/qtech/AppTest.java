@@ -45,9 +45,12 @@ public class AppTest {
 
         Consumer<byte[]> subscribe = client.newConsumer().topic("persistent://qtech-datadev/qtech-eq-aa/aaList").subscriptionName("aaList-flink").subscribe();
 
-        byte[] data = subscribe.receive().getData();
+        Message<byte[]> receive = subscribe.receive();
+        subscribe.acknowledge(receive);
+        System.out.println(Arrays.toString(receive.getData()));
 
-        System.out.println(Arrays.toString(data));
+        // 取消订阅
+        subscribe.unsubscribe();
 
         /*Producer<String> producer = client.newProducer(Schema.STRING)
                 .topic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1")
@@ -71,4 +74,6 @@ public class AppTest {
 
 
     }
+
+
 }

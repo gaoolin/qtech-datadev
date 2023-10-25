@@ -145,13 +145,14 @@ public class PulsarCommon {
     }
 */
 
-    @Bean(name = "aaList-string-topic-consumer")
+/*    @Bean(name = "aaList-string-topic-consumer")
     @ConditionalOnProperty(prefix = "pulsar", name = "onOff", havingValue = "true", matchIfMissing = false)
     public Consumer<String> getAaListStringTopicConsumer() {
         return this.createConsumer(pulsarProperties.getTopicMap().get("aaList"),
                 pulsarProperties.getSubMap().get("aaList"),
                 stringMessageListener, Schema.STRING);
     }
+*/
 
 /*
 
