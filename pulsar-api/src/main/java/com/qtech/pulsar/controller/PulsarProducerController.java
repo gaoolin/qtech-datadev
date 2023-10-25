@@ -45,9 +45,11 @@ public class PulsarProducerController<T> {
     private Producer<MessageDto> aaListMessageDtoProducer;
 */
 
-    @Autowired
+/*    @Autowired
     @Qualifier("aaList-string-topic-consumer")
     private Consumer<String> aaListStringConsumer;
+*/
+
 /*
 
     @ApiOperation("发送消息")
@@ -92,7 +94,8 @@ public class PulsarProducerController<T> {
     }
 */
 
-    @ApiOperation("发送消息")
+/*
+    @ApiOperation("消费消息")
     @RequestMapping(value = "/receiveString", method = RequestMethod.POST)
     public String consume() {
         Message<String> msg = null;
@@ -108,6 +111,7 @@ public class PulsarProducerController<T> {
         }
         return null;
     }
+*/
 
     @ApiOperation("发送消息")
     @RequestMapping(value = "/sendtest", method = RequestMethod.POST)
