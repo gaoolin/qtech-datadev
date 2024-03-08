@@ -1,15 +1,9 @@
 package com.qtech;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.pulsar.client.admin.PulsarAdmin;
 import org.apache.pulsar.client.admin.PulsarAdminException;
 import org.apache.pulsar.client.api.*;
-import org.apache.pulsar.common.policies.data.PartitionedTopicStats;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.junit.Assert.assertTrue;
 
@@ -43,14 +37,18 @@ public class AppTest {
                 .serviceUrl("pulsar://qtech-pulsar-broker.pulsar:6650")
                 .build();
 
-        Consumer<byte[]> subscribe = client.newConsumer().topic("persistent://qtech-datadev/qtech-eq-aa/aaList").subscriptionName("aaList-flink").subscribe();
+        Consumer<byte[]> subscribe = client.newConsumer()
+                .topic("persistent://qtech-datadev/qtech-eq-aa/aaList").subscriptionName("aaList-flink")
+                .subscriptionType(SubscriptionType.Shared).subscribe();
+
 
         Message<byte[]> receive = subscribe.receive();
         subscribe.acknowledge(receive);
-        System.out.println(Arrays.toString(receive.getData()));
+        System.out.println(new String(receive.getData()));
+
 
         // 取消订阅
-        subscribe.unsubscribe();
+//        subscribe.unsubscribe();
 
         /*Producer<String> producer = client.newProducer(Schema.STRING)
                 .topic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1")
