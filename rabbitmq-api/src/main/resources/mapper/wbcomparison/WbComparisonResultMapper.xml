@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.rabbitmq.mapper.WbComparisonResultMapper">
+
+    <resultMap id="WbComparisonResultResult" type="WbComparisonResult">
+        <result column="sim_id" property="simId"/>
+        <result column="mc_id" property="mcId"/>
+        <result column="dt" property="dt"/>
+        <result column="code" property="code"/>
+        <result column="description" property="description"/>
+        <result column="program_name" property="programName"/>
+    </resultMap>
+
+    <insert id="add" parameterType="WbComparisonResult">
+        insert into qtech_eq_dwd.eq_control_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="simId != null and simId != ''">sim_id,</if>
+            <if test="programName != null and programName != ''">program_name,</if>
+            <if test="dt != null">dt,</if>
+            <if test="code != null">code,</if>
+            <if test="description != null and description != ''">description,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="simId != null and simId != ''">#{simId},</if>
+            <if test="programName != null and programName != ''">#{programName},</if>
+            <if test="dt != null">#{dt},</if>
+            <if test="code != null">#{code},</if>
+            <if test="description != null and description != ''">#{description},</if>
+        </trim>
+    </insert>
+</mapper>

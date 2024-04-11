@@ -12,6 +12,7 @@
         <module name="wb-comparison-api" />
         <module name="comparison" />
         <module name="ocr-api" />
+        <module name="rabbitmq-api" />
         <module name="pulsar-api" />
         <module name="comparison-api" />
       </profile>
@@ -30,6 +31,7 @@
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />
       <module name="qtech-datadev-api" options="-parameters" />
+      <module name="rabbitmq-api" options="-parameters" />
       <module name="wb-comparison-api" options="-parameters" />
     </option>
   </component>

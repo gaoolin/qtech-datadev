@@ -20,6 +20,7 @@
         <module>pulsar-api</module>
         <module>common-api</module>
         <module>comparison-api</module>
+        <module>rabbitmq-api</module>
     </modules>
 
     <properties>
