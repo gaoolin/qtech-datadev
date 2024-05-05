@@ -12,7 +12,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
 
   mvc:
     pathmatch:
