@@ -25,7 +25,7 @@ public class AaKafKaProducerTest {
     /**
      * 定时任务
      */
-    @Scheduled(cron = "0/1 * * * * ?")
+    // @Scheduled(cron = "0/1 * * * * ?")
     public void send() {
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send("qtech_im_aa_list_topic",
                 "{'OpCode': '864735050116133', 'WoCode': 'C3PS66#', 'FactoryName': 'LIST\t1\tInit\t\tTester\t\t5\t\tContinue\tEnable\t\n" +

@@ -33,21 +33,14 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
-  datasource:
-    druid:
-      statViewServlet:
-        enabled: true
-        # 设置白名单，不填则允许所有访问
-        allow:
-        url-pattern: /druid/*
-        # 控制台管理用户名和密码
-        login-username: qtech
-        login-password: 123456
-
 # Swagger配置
 swagger:
   # 是否开启swagger
   enabled: true
   # 请求前缀
   pathMapping: /dev-api
+
+logging:
+  level:
+    root: info
 
