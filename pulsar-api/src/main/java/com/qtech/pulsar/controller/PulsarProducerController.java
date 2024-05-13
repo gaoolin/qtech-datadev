@@ -74,7 +74,8 @@ public class PulsarProducerController<T> {
             logger.info(">>>> 消息已同步发送， MessageId：" + send);
             return "0";
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            logger.error(">>>> 消息发送失败， 异常信息：" + e.getMessage());
             return "-1";
         }
     }
