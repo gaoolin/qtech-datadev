@@ -19,26 +19,16 @@
         <module name="aa-params-check-api" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="comparison" target="1.8" />
-      <module name="kafka-api" target="1.8" />
-      <module name="qtech-datadev-api" target="1.8" />
-      <module name="wb-comparison-api" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="aa-params-check-api" options="-parameters" />
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
-      <module name="comparison" options="" />
-      <module name="kafka-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />
-      <module name="qtech-datadev-api" options="" />
       <module name="rabbitmq-api" options="-parameters" />
-      <module name="wb-comparison-api" options="-parameters" />
       <module name="wb-olp-check-api" options="-parameters" />
     </option>
   </component>
