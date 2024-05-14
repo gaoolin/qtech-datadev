@@ -1,7 +1,10 @@
 package com.qtech.message.config.apiKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,7 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Qualifier("apiKeySecurityConfig")
+@Order(Ordered.HIGHEST_PRECEDENCE)
+public class ApiKeySecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private ApiKeyFilter apiKeyFilter;
