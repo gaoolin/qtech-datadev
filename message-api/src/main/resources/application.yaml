@@ -45,7 +45,7 @@ springdoc:
 
 logging:
   level:
-    root: info
+    root: error
 
 
 

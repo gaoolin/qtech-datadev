@@ -25,7 +25,6 @@ public class MessageProcessor {
         // 使用ApplicationContext获取MessageHandler，确保init()已经被调用
         MessageHandlerRegistry messageHandlerRegistry = applicationContext.getBean(MessageHandlerRegistry.class);
         MessageHandler<?> messageHandler = messageHandlerRegistry.getMessageHandlerForType(clazz);
-        System.out.println("22222" + messageHandlerRegistry.getMessageHandlerMap());
         if (messageHandler != null) {
             try {
                 return clazz.cast(messageHandler.handleByType(clazz, msg));

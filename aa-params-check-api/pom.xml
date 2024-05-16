@@ -20,6 +20,12 @@
             <groupId>com.qtech</groupId>
             <artifactId>common-api</artifactId>
             <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>springfox-swagger2</artifactId>
+                    <groupId>io.springfox</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--springboot中的web依赖-->
@@ -36,6 +42,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!--作用是处理应用中的@ConfigurationProperties注解，生成配置属性的元数据。-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -62,7 +74,6 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.3.1</version>
         </dependency>
 
         <!--springboot中的redis依赖-->
@@ -104,29 +115,6 @@
             <version>3.0.0</version>
         </dependency>
 
-        <!--pulsar 依赖-->
-        <dependency>
-            <groupId>org.apache.pulsar</groupId>
-            <artifactId>pulsar-client-admin</artifactId>
-            <version>2.11.0</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                    <groupId>org.apache.logging.log4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-base_2.11</artifactId>
-            <version>1.10.1</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.majusko</groupId>
-            <artifactId>pulsar-java-spring-boot-starter</artifactId>
-            <version>${spring.pulsar.version}</version>
-        </dependency>
-
         <!--kafka依赖-->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -136,6 +124,16 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>scala-reflect</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>scala-library</artifactId>
+                    <groupId>org.scala-lang</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--默认的日志框架 logback-->
@@ -152,5 +150,43 @@
 
         <spring.pulsar.version>1.0.7</spring.pulsar.version>
     </properties>
+
+    <build>
+        <plugins>
+
+            <!--用此插件打包时候会默认寻找签名是public static void main(String[] args)的方法, 没有会报错。可以增加配置解决，或者直接修改maven插件，改用apache的maven插件-->
+            <!--
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+
+             <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            -->
+
+            <!--复制打包jar包-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <!--将依赖移到libs目录下-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

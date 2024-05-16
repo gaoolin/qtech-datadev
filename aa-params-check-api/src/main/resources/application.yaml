@@ -16,7 +16,9 @@ logging:
     org.springframework.web: debug
     io.lettuce.core: debug
     org.springframework.data.redis: debug
-
+    com.qtech.olp.config.druid: debug
+    org.apache.ibatis: DEBUG
+    org.mybatis.spring: DEBUG
 spring:
   profiles:
     active: dev
@@ -81,16 +83,3 @@ spring:
     restart:
       # 热部署开关
       enabled: true
-
-# MyBatis配置
-mybatis:
-  # 搜索指定包别名
-  typeAliasesPackage: com.qtech.**.entity
-  # 配置mapper的扫描，找到所有的mapper.xml映射文件
-  mapperLocations: classpath*:mapper/**/*Mapper.xml
-  # 加载全局的配置文件
-  configLocation: classpath:mybatis/mybatis-config.xml
-  # 在依赖为mybatis-starter的情况下，configuration、configLocation 二选一, mybatis-plus-starter好像可以同时存在
-#  configuration:
-#    jdbc-type-for-null: null
-#    call-setters-on-nulls: true

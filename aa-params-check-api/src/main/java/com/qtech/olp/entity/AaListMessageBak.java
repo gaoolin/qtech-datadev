@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AaListMessage {
+public class AaListMessageBak {
 
     private String mcId;
     private String prodType;
@@ -285,7 +285,7 @@ public class AaListMessage {
         for (int i = 1; i < parts.length; i++) {
             if (!parts[i].isEmpty()) { // 跳过空字符串
                 camelCaseStr.append(Character.toUpperCase(parts[i].charAt(0)));
-                camelCaseStr.append(parts[i].substring(1).toLowerCase()); // 其余字符转小写
+                camelCaseStr.append(parts[i].substring(1)); // 其余字符直接凭借
             }
         }
 
@@ -306,7 +306,7 @@ public class AaListMessage {
                 .collect(Collectors.toMap(entry -> underscoreToCamelCase(entry.getKey()), Map.Entry::getValue));
 
         try {
-            for (Field field : AaListMessage.class.getDeclaredFields()) {
+            for (Field field : AaListMessageBak.class.getDeclaredFields()) {
                 String camelCaseKey = field.getName();
                 // System.out.println(camelCaseData);
                 // System.out.println(camelCaseKey);

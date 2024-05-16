@@ -13,7 +13,7 @@ package com.qtech.olp.config.dynamic;
  * 数据源名称枚举
  */
 public enum DataSourceNames {
-    MASTER("master"), SLAVE("slave");
+    FIRST("first"), SECOND("second");
 
     private final String name;
 

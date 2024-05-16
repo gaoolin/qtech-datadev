@@ -1,11 +1,9 @@
 package com.qtech.olp.processor.handler.impl;
 
-import com.qtech.olp.entity.AaListMessage;
+import com.qtech.olp.entity.AaListParamsMessage;
 import com.qtech.olp.exception.AaListParseListActionIsEmptyException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * author :  gaozhilin
@@ -16,25 +14,32 @@ import java.util.StringTokenizer;
 
 
 public class LineParserProcessor {
-    private final AaListMessage aaListMessage = new AaListMessage();
+    private final AaListParamsMessage aaListParamsMessage = new AaListParamsMessage();
     private final Map<String, String> listMap = new HashMap<>();
     private final Map<String, String> listItemMap = new HashMap<>();
 
-    public AaListMessage doAaParamsParse(String msg) {
-        StringTokenizer tokenizer = new StringTokenizer(msg, " \t\r\n");
+    public AaListParamsMessage doAaParamsParse(String msg) {
+/*        StringTokenizer tokenizer = new StringTokenizer(msg, " \t\r\n");
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             if ("LIST".equals(token)) {
-                parseListStart(tokenizer, aaListMessage, token, listItemMap);
+                parseListStart(tokenizer, aaListParamsMessage, token, listItemMap);
             } else if ("ITEM".equals(token)) {
-                parseItemStart(tokenizer, aaListMessage, token);
+                parseItemStart(tokenizer, aaListParamsMessage, token);
             }
-        }
-        System.out.println(aaListMessage);
-        return aaListMessage;
+        }*/
+        String[] lines = msg.split("\n");
+        List<Command> commands = processStringList(lines);
+
+        commands.forEach(command -> {
+            // aaListParamsMessage.fillWithData(command);
+        });
+
+        System.out.println(aaListParamsMessage);
+        return aaListParamsMessage;
     }
 
-    public void parseListStart(StringTokenizer tokenizer, AaListMessage aaListMessage, String token, Map<String, String> listItemMap) {
+    public void parseListStart(StringTokenizer tokenizer, AaListParamsMessage aaListParamsMessage, String token, Map<String, String> listItemMap) {
 
         String num = tokenizer.nextToken(); // Skip the number (1)
         String action = tokenizer.nextToken(); // Get the action (Destroy_Start)
@@ -50,13 +55,13 @@ public class LineParserProcessor {
         aaParamsMap.put(listName, status);
         listItemMap.put(action, num);
 
-        aaListMessage.fillWithData(aaParamsMap);
+        // aaListParamsMessage.fillWithData(aaParamsMap);
 
         System.out.println(listItemMap);
-        System.out.println(aaListMessage);
+        System.out.println(aaListParamsMessage);
     }
 
-    public void parseItemStart(StringTokenizer tokenizer, AaListMessage aaListMessage, String token) {
+    public void parseItemStart(StringTokenizer tokenizer, AaListParamsMessage aaListParamsMessage, String token) {
 
         String num = tokenizer.nextToken();
 
@@ -73,7 +78,7 @@ public class LineParserProcessor {
                     String itemValue = tokenizer.nextToken();
                     HashMap<String, String> aaParamsMap = new HashMap<>();
                     aaParamsMap.put(itemName, itemValue);
-                    aaListMessage.fillWithData(aaParamsMap);
+                    // aaListParamsMessage.fillWithData(aaParamsMap);
                 }
             });
         }
@@ -107,5 +112,81 @@ public class LineParserProcessor {
                 String desc = tokenizer.nextToken();
             }
         }*/
+    }
+
+
+    public static class Command {
+        int num;
+        String command;
+        String subsystem;
+        String enable;
+
+        public Command(int num, String command, String subsystem, String enable) {
+            this.num = num;
+            this.command = command;
+            this.subsystem = subsystem;
+            this.enable = enable;
+        }
+
+        // Getters and setters if needed
+    }
+
+    public static List<Command> processStringList(String[] stringList) {
+        List<Command> commandList = new ArrayList<>();
+
+        for (String line : stringList) {
+            if (line.startsWith("LIST")) {
+                String[] parts = line.split("\\s+");
+                int num = Integer.parseInt(parts[1]);
+                String command = parts[2];
+                String subsystem = parts[3];
+                String enable = parts[parts.length - 1]; // Get the last part
+                Command currentCommand = new Command(num, command, subsystem, enable);
+                commandList.add(currentCommand);
+            }
+        }
+
+        return commandList;
+    }
+
+    public static void main(String[] args) {
+        String s = "LIST    1   Init    Tester  5   Continue    Enable  \n" +
+                "LIST    2   ClampOnOff  Motion  Continue    Stop    Enable  \n" +
+                "LIST    3   ReInit  Tester  Continue    -2  Enable  \n" +
+                "LIST    4   PRToBond    Motion  Continue    -2  Enable  \n" +
+                "LIST    5   SID Tester  Continue    Continue    Enable  \n" +
+                "LIST    6   AA1 ActiveAlign 8   Continue    Enable  \n" +
+                "LIST    7   AA2 ActiveAlign Continue    Stop    Enable  \n" +
+                "LIST    8   LP_ON_OC    Motion  Continue    Stop    Enable  \n" +
+                "LIST    9   OpticCenter CenterAlign Continue    Stop    Enable  \n" +
+                "LIST    10  LP_ON_Blemish   Motion  Continue    Stop    Enable  \n" +
+                "LIST    11  Blemish Tester  Continue    Stop    Enable  \n" +
+                "LIST    12  LP_OFF  Motion  Continue    Stop    Enable  \n" +
+                "LIST    13  RecordPosition  Motion  Continue    Stop    Enable  \n" +
+                "LIST    14  Dispense    Motion  Continue    Stop    Enable  \n" +
+                "LIST    15  EpoxyInspection Auto Motion 17  Continue    Enable  \n" +
+                "LIST    16  EpoxyInspection Motion  Continue    Stop    Enable  \n" +
+                "LIST    17  BackToPosition  Motion  Continue    Stop    Enable  \n" +
+                "LIST    18  UVON    Sync Motion Continue    Stop    Enable  \n" +
+                "LIST    19  Reinit2 Tester  Continue    Continue    Enable  \n" +
+                "LIST    20  UVOFF   Sync End    Continue    Stop    Enable  \n" +
+                "LIST    21  Gripper Open    Motion  Continue    Stop    Enable  \n" +
+                "LIST    22  OC_Check    Tester  Continue    Stop    Enable  \n" +
+                "PRE 0\n" +
+                "PRE2    0\n" +
+                "POST    51  Tester  \n" +
+                "POST2   52  Motion  \n";
+
+        String[] lines = s.split("\n");
+        List<Command> commands = processStringList(lines);
+
+        // 输出命令列表
+        for (Command command : commands) {
+            System.out.println("Command: " + command.num);
+            System.out.println("  Command: " + command.command);
+            System.out.println("  Subsystem: " + command.subsystem);
+            System.out.println("  Enable: " + command.enable);
+            System.out.println();
+        }
     }
 }

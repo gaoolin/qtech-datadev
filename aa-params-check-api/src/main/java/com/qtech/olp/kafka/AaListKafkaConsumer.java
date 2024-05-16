@@ -1,7 +1,8 @@
 package com.qtech.olp.kafka;
 
-import com.qtech.olp.entity.AaListMessage;
+import com.qtech.olp.entity.AaListParamsMessage;
 import com.qtech.olp.processor.MessageProcessor;
+import com.qtech.olp.service.IAaListParamsService;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -35,6 +36,9 @@ public class AaListKafkaConsumer {
     @Autowired
     private MessageProcessor messageProcessor;
 
+    @Autowired
+    private IAaListParamsService aaListParamsService;
+
     // 使用 ExecutorService 管理线程
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -51,8 +55,9 @@ public class AaListKafkaConsumer {
                             String aaListMessageStr = (String) record.value();
                             if (aaListMessageStr != null) {
                                 // 处理消息
-                                AaListMessage aaListMessage = messageProcessor.processMessage(AaListMessage.class, aaListMessageStr);
-                                System.out.println("11111" + aaListMessage);
+                                AaListParamsMessage aaListParamsMessage = messageProcessor.processMessage(AaListParamsMessage.class, aaListMessageStr);
+                                aaListParamsService.insertAaListParams(aaListParamsMessage);
+                                System.out.println(aaListParamsMessage);
                             }
 //                            logger.info("消费消息： " + record.value());
                         }

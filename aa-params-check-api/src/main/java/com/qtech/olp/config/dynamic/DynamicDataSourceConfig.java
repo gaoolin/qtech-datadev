@@ -11,6 +11,7 @@ package com.qtech.olp.config.dynamic;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,54 +26,52 @@ import java.util.HashMap;
 @Configuration
 public class DynamicDataSourceConfig {
 
+    @Value("${spring.datasource.druid.second.url}")
+    private String url;
+    @Value("${spring.datasource.druid.second.username}")
+    private String username;
+    @Value("${spring.datasource.druid.second.password}")
+    private String password;
 
     /**
      * 实例化数据源master
+     *
      * @return DataSource
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.master")
-    public DataSource masterDataSource() {
+    @ConfigurationProperties("spring.datasource.druid.first")
+    public DataSource firstDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
     /**
      * 实例化数据源slave
+     *
      * @return DataSource
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.slave")
-    public DataSource slaveDataSource() {
+    @ConfigurationProperties("spring.datasource.druid.second")
+    public DataSource secondDataSource() {
+        System.out.println("url:" + url);
+        System.out.println("username:" + username);
+        System.out.println("password:" + password);
         return DruidDataSourceBuilder.create().build();
     }
 
     /**
      * 实例化DynamicDataSource
      *
-     * @param masterDataSource masterDataSource
-     * @param slaveDataSource slaveDataSource
+     * @param firstDataSource  masterDataSource
+     * @param secondDataSource slaveDataSource
      * @return DynamicDataSource
      */
     @Bean
     @Primary
-    public DynamicDataSource dynamicDataSource(DataSource masterDataSource, DataSource slaveDataSource) {
+    public DynamicDataSource dynamicDataSource(DataSource firstDataSource, DataSource secondDataSource) {
         HashMap<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceNames.MASTER, masterDataSource);
-        targetDataSources.put(DataSourceNames.SLAVE, slaveDataSource);
+        targetDataSources.put(DataSourceNames.FIRST, firstDataSource);
+        targetDataSources.put(DataSourceNames.SECOND, secondDataSource);
 
-        return new DynamicDataSource(targetDataSources, masterDataSource);
-    }
-
-    /**
-     * 注入SqlSessionFactory
-     * @param dynamicDataSource dynamicDataSource
-     * @return SqlSessionFactory
-     * @throws Exception Exception
-     */
-    @Bean
-    public SqlSessionFactory sqlSessionFactory(DynamicDataSource dynamicDataSource) throws Exception {
-        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(dynamicDataSource);
-        return sqlSessionFactoryBean.getObject();
+        return new DynamicDataSource(targetDataSources, firstDataSource);
     }
 }
