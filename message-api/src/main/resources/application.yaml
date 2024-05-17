@@ -45,7 +45,15 @@ springdoc:
 
 logging:
   level:
-    root: error
+    root: info
+
+api:
+  keys:
+    admin: cde456
+    user: abc123
 
 
+exempt:
+  paths:
+    - /message/api/list/send
 

@@ -175,7 +175,7 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="com.qtech.pulsar.mapper" level="debug"/>
+        <logger name="com.qtech.message.mapper" level="debug"/>
     </springProfile>
 
     <root level="info">

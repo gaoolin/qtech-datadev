@@ -27,30 +27,31 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 
-@Configuration
-@EnableWebSecurity
-@Qualifier("jwtSecurityConfig")
-@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+//@Configuration
+//@EnableWebSecurity
+//@Qualifier("jwtSecurityConfig")
+//@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-    @Autowired
+//    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+//    @Autowired
     private JwtUtils jwtUtils;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/authenticate").permitAll() // 允许匿名访问登录接口
-            .anyRequest().authenticated() // 其他请求需要认证
-            .and()
-            .exceptionHandling().authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .addFilterBefore(new JwtRequestFilter(userDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class);
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/message/api/list/**").permitAll() // 允许匿名访问/message/api/list下的所有资源
+                .antMatchers("/authenticate").permitAll() // 允许匿名访问登录接口，只有非/authenticate接口的请求才需要认证。/authenticate接口被配置为允许匿名访问
+                .anyRequest().authenticated() // 其他请求需要认证
+                .and()
+                .exceptionHandling().authenticationEntryPoint((req, res, ex) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(new JwtRequestFilter(userDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -58,13 +59,13 @@ public class JwtSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Bean
+//    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    @Bean
+//    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

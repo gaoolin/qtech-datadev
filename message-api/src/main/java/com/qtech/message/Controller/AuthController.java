@@ -25,13 +25,13 @@ import java.util.Map;
  */
 
 
-@RestController
+//@RestController
 public class AuthController {
 
-    @Autowired
+//    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+//    @Autowired
     private JwtUtils jwtUtils;
 
     @PostMapping("/authenticate")

@@ -19,7 +19,7 @@ import java.util.Map;
  */
 
 
-@Component
+//@Component
 public class JwtUtils {
 
     private static final String SECRET_KEY = "your-secret-key"; // 替换为你的密钥

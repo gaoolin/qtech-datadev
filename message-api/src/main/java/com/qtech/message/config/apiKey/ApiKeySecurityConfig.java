@@ -8,7 +8,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -28,17 +27,21 @@ public class ApiKeySecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private ApiKeyFilter apiKeyFilter;
     @Autowired
-    private ApiKeyUserDetailsService userDetailsService;
+    private CustomAccessDeniedHandler accessDeniedHandler; // 访问拒绝处理器 CustomAccessDeniedHandler
     @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
+    private CustomAuthenticationEntryPoint authenticationEntryPoint; // 访问拒绝处理器 CustomAuthenticationEntryPoint
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                // 具体的豁免路径
+                .antMatchers("/message/api/list/**", "/exempted/path2").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint);
     }
 }
