@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = false;
+option java_package = "com.qtech.olp.entity";
+option java_outer_classname = "AaListParamsMessageStdModel";
+
+message AaListParamsMessage {
+    string sim_id = 1;
+    string prod_type = 2;
+    google.protobuf.Timestamp event_time = 3;
+    string clamp_on_off = 4;
+    string destroy_start = 5;
+    string init = 6;
+    string grab = 7;
+    string re_init = 8;
+    string senser_reset = 9;
+    string sid = 10;
+    string vcm_hall = 11;
+    string vcm_init = 12;
+    string vcm_hall2 = 13;
+    string vcm_power_off = 14;
+    string vcm_power_on = 15;
+    string vcm_top = 16;
+    string vcm_top_hall = 17;
+    string vcm_z = 18;
+    string vcm_z_hall = 19;
+    string vcm_ois_init = 20;
+    string chart_alignment1 = 21;
+    string AA1 = 22;
+    string AA2 = 23;
+    string mtf_check = 24;
+    string AA3 = 25;
+    string mtf_check2 = 26;
+    string lp_on = 27;
+    string lp_oc_check = 28;
+    string lp_oc = 29;
+    string lp_on_blemish = 30;
+    string blemish = 31;
+    string lp_off = 32;
+    string chart_alignment = 33;
+    string vcm_move_to_z = 34;
+    string delay = 35;
+    string vcm_power_off_check = 36;
+    string record_position = 37;
+    string dispense = 38;
+    string epoxy_inspection_auto = 39;
+    string epoxy_inspection = 40;
+    string back_to_position = 41;
+    string uvon = 42;
+    string y_level = 43;
+    string uvoff = 44;
+    string gripper_open = 45;
+    string save_oc = 46;
+    string save_mtf = 47;
+    string destroy = 48;
+    string move_to_blemish_pos = 49;
+    string mtf_check3 = 50;
+    string mtf_off_axis_check1 = 51;
+    string mtf_off_axis_check2 = 52;
+    string mtf_off_axis_check3 = 53;
+    string lp_blemish = 54;
+    string chart_alignment2 = 55;
+    string vcm_move_to_z_pos = 56;
+    string z_offset = 57;
+    string open_check = 58;
+}

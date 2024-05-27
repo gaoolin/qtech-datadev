@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.olp.mapper.AaListParamsMapper">
-    <resultMap id="AaListParamsMessageResultMap" type="AaListParamsMessage">
-        <result column="sim_id" property="simId" jdbcType="VARCHAR"/>
-        <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
-        <result column="event_time" property="eventTime" jdbcType="DATE"/>
+<mapper namespace="com.qtech.check.mapper.AaListParamsMapper">
+    <resultMap id="AaListParamsMessageResult" type="AaListParams">
+        <result property="simId" column="sim_id" jdbcType="VARCHAR"/>
+        <result property="prodType" column="prod_type" jdbcType="VARCHAR"/>
+        <result property="receivedTime" column="received_time" jdbcType="TIMESTAMP"/>
         <result property="clampOnOff" column="clamp_on_off" jdbcType="VARCHAR"/>
         <result property="destroyStart" column="destroy_start" jdbcType="VARCHAR"/>
         <result property="init" column="init" jdbcType="VARCHAR"/>
@@ -67,7 +67,7 @@
     <sql id="AaListParamsMessageSql">
         SELECT sim_id,
                prod_type,
-               event_time,
+               received_time,
                destroy_start,
                init,
                grab,
@@ -123,15 +123,15 @@
                vcm_move_to_z_pos,
                z_offset,
                open_check
-        FROM qtech_eq_dwd.param_aa_list_params_detail;
+        FROM qtech_eq_dwd.aa_list_params_parsed_detail;
     </sql>
 
     <insert id="insertAaListParams" parameterType="aaListKafkaMessage" >
-        insert into qtech_eq_dwd.param_aa_list_params_detail
+        insert into qtech_eq_dwd.aa_list_params_parsed_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>
             <if test="prodType != null">prod_type,</if>
-            <if test="eventTime != null">event_time,</if>
+            <if test="receivedTime != null">received_time,</if>
             <if test="clampOnOff != null">clamp_on_off,</if>
             <if test="destroyStart != null">destroy_start,</if>
             <if test="init != null">init,</if>
@@ -191,7 +191,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
             <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
-            <if test="eventTime != null">#{eventTime,jdbcType=TIMESTAMP},</if>
+            <if test="receivedTime != null">#{receivedTime,jdbcType=TIMESTAMP},</if>
             <if test="clampOnOff != null">#{clampOnOff,jdbcType=VARCHAR},</if>
             <if test="destroyStart != null">#{destroyStart,jdbcType=VARCHAR},</if>
             <if test="init != null">#{init,jdbcType=VARCHAR},</if>
@@ -250,11 +250,11 @@
         </trim>
     </insert>
 
-    <select id="selectAaListParamsList" resultMap="AaListParamsMessageResultMap">
+    <select id="selectAaListParamsList" resultMap="AaListParamsMessageResult">
         <include refid="AaListParamsMessageSql"/>
         <where>
-            <if test="eventTime != null">
-                event_time = #{eventTime,jdbcType=TIMESTAMP}
+            <if test="receivedTime != null">
+                received_time = #{receivedTime,jdbcType=TIMESTAMP}
             </if>
         </where>
     </select>

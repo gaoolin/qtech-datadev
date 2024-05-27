@@ -1,0 +1,34 @@
+package com.qtech.check.controller;
+
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * author :  gaozhilin
+ * email  :  gaoolin@gmail.com
+ * date   :  2024/05/10 14:17:22
+ * desc   :
+ */
+
+@SpringBootTest
+@RunWith(SpringRunner.class)
+class MsgReceiveControllerTest {
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Test
+    void t1() {
+        String key = "key1";
+        System.out.println("插入数据到redis");
+        redisTemplate.opsForValue().set(key, "value1");
+        Object value = redisTemplate.opsForValue().get(key);
+        System.out.println("从redis中获取到值为 " + value);
+        Boolean delete = redisTemplate.delete(key);
+        System.out.println("删除redis中值 " + delete);
+    }
+}

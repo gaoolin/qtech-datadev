@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.check.mapper.AaListParamsStdModelMapper">
+    <resultMap id="AaListParamsStdModelResult" type="AaListParamsStdModel">
+        <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
+        <result property="clampOnOff" column="clamp_on_off" jdbcType="VARCHAR"/>
+        <result property="destroyStart" column="destroy_start" jdbcType="VARCHAR"/>
+        <result property="init" column="init" jdbcType="VARCHAR"/>
+        <result property="grab" column="grab" jdbcType="VARCHAR"/>
+        <result property="reInit" column="re_init" jdbcType="VARCHAR"/>
+        <result property="senserReset" column="senser_reset" jdbcType="VARCHAR"/>
+        <result property="sid" column="sid" jdbcType="VARCHAR"/>
+        <result property="vcmHall" column="vcm_hall" jdbcType="VARCHAR"/>
+        <result property="vcmOisInit" column="vcm_ois_init" jdbcType="VARCHAR"/>
+        <result property="vcmHall2" column="vcm_hall2" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOff" column="vcm_power_off" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOn" column="vcm_power_on" jdbcType="VARCHAR"/>
+        <result property="vcmTop" column="vcm_top" jdbcType="VARCHAR"/>
+        <result property="vcmTopHall" column="vcm_top_hall" jdbcType="VARCHAR"/>
+        <result property="vcmZ" column="vcm_z" jdbcType="VARCHAR"/>
+        <result property="vcmZHall" column="vcm_z_hall" jdbcType="VARCHAR"/>
+        <result property="vcmOisInit" column="vcm_ois_init" jdbcType="VARCHAR"/>
+        <result property="chartAlignment1" column="chart_alignment1" jdbcType="VARCHAR"/>
+        <result property="AA1" column="aa1" jdbcType="VARCHAR"/>
+        <result property="AA2" column="aa2" jdbcType="VARCHAR"/>
+        <result property="mtfCheck" column="mtf_check" jdbcType="VARCHAR"/>
+        <result property="AA3" column="aa3" jdbcType="VARCHAR"/>
+        <result property="mtfCheck2" column="mtf_check2" jdbcType="VARCHAR"/>
+        <result property="lpOn" column="lp_on" jdbcType="VARCHAR"/>
+        <result property="lpOcCheck" column="lp_oc_check" jdbcType="VARCHAR"/>
+        <result property="lpOc" column="lp_oc" jdbcType="VARCHAR"/>
+        <result property="lpOnBlemish" column="lp_on_blemish" jdbcType="VARCHAR"/>
+        <result property="blemish" column="blemish" jdbcType="VARCHAR"/>
+        <result property="lpOff" column="lp_off" jdbcType="VARCHAR"/>
+        <result property="chartAlignment" column="chart_alignment" jdbcType="VARCHAR"/>
+        <result property="vcmMoveToZ" column="vcm_move_to_z" jdbcType="VARCHAR"/>
+        <result property="delay" column="delay" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOffCheck" column="vcm_power_off_check" jdbcType="VARCHAR"/>
+        <result property="recordPosition" column="record_position" jdbcType="VARCHAR"/>
+        <result property="dispense" column="dispense" jdbcType="VARCHAR"/>
+        <result property="epoxyInspectionAuto" column="epoxy_inspection_auto" jdbcType="VARCHAR"/>
+        <result property="epoxyInspection" column="epoxy_inspection" jdbcType="VARCHAR"/>
+        <result property="backToPosition" column="back_to_position" jdbcType="VARCHAR"/>
+        <result property="uvon" column="uvon" jdbcType="VARCHAR"/>
+        <result property="yLevel" column="y_level" jdbcType="VARCHAR"/>
+        <result property="uvoff" column="uvoff" jdbcType="VARCHAR"/>
+        <result property="gripperOpen" column="gripper_open" jdbcType="VARCHAR"/>
+        <result property="saveOc" column="save_oc" jdbcType="VARCHAR"/>
+        <result property="saveMtf" column="save_mtf" jdbcType="VARCHAR"/>
+        <result property="destroy" column="destroy" jdbcType="VARCHAR"/>
+        <result property="moveToBlemishPos" column="move_to_blemish_pos" jdbcType="VARCHAR"/>
+        <result property="mtfCheck3" column="mtf_check3" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck1" column="mtf_off_axis_check1" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck2" column="mtf_off_axis_check2" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck3" column="mtf_off_axis_check3" jdbcType="VARCHAR"/>
+        <result property="lpBlemish" column="lp_blemish" jdbcType="VARCHAR"/>
+        <result property="chartAlignment2" column="chart_alignment2" jdbcType="VARCHAR"/>
+        <result property="vcmMoveToZPos" column="vcm_move_to_z_pos" jdbcType="VARCHAR"/>
+        <result property="zOffset" column="z_offset" jdbcType="VARCHAR"/>
+        <result property="openCheck" column="open_check" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="AaListParamsStdModelSql">
+        SELECT prod_type,
+               destroy_start,
+               init,
+               grab,
+               clamp_on_off,
+               re_init,
+               senser_reset,
+               sid,
+               vcm_hall,
+               vcm_init,
+               vcm_hall2,
+               vcm_power_off,
+               vcm_power_on,
+               vcm_top,
+               vcm_top_hall,
+               vcm_z,
+               vcm_z_hall,
+               vcm_ois_init,
+               chart_alignment1,
+               aa1,
+               aa2,
+               mtf_check,
+               aa3,
+               mtf_check2,
+               lp_on,
+               lp_oc_check,
+               lp_oc,
+               lp_on_blemish,
+               blemish,
+               lp_off,
+               chart_alignment,
+               vcm_move_to_z,
+               delay,
+               vcm_power_off_check,
+               record_position,
+               dispense,
+               epoxy_inspection_auto,
+               epoxy_inspection,
+               back_to_position,
+               uvon,
+               y_level,
+               uvoff,
+               gripper_open,
+               save_oc,
+               save_mtf,
+               destroy,
+               move_to_blemish_pos,
+               mtf_check3,
+               mtf_off_axis_check1,
+               mtf_off_axis_check2,
+               mtf_off_axis_check3,
+               lp_blemish,
+               chart_alignment2,
+               vcm_move_to_z_pos,
+               z_offset,
+               open_check
+        FROM qtech_biz_1.aa_list_params_std_model
+    </sql>
+
+    <select id="selectAaListParamsStdModelList" resultMap="AaListParamsStdModelResult" parameterType="AaListParamsStdModel">
+        <include refid="AaListParamsStdModelSql" />
+        <where>
+            <if test="prodType != null and prodType != ''">
+                prod_type = #{prodType}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAaListParamsStdModel" parameterType="AaListParamsStdModel">
+        insert into qtech_biz_1.aa_list_params_std_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        </trim>
+    </insert>
+
+    <update id="updateAaListParamsStdModel" parameterType="AaListParamsStdModel">
+        update qtech_biz_1.aa_list_params_std_model
+        <trim prefix="set" suffixOverrides=",">
+        </trim>
+        <where>
+        </where>
+    </update>
+
+    <delete id="deleteAaListParamsStdModel" parameterType="AaListParamsStdModel">
+        delete from qtech_biz_1.aa_list_params_std_model
+        <where>
+        </where>
+    </delete>
+</mapper>
