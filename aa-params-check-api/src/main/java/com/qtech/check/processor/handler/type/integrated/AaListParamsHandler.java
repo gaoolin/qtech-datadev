@@ -1,12 +1,15 @@
-package com.qtech.check.algorithm.model;
+package com.qtech.check.processor.handler.type.integrated;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qtech.check.constant.ListItemMultiKeyMapConstants;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import com.qtech.check.utils.ToCamelCaseConverter;
+import com.qtech.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -21,15 +24,18 @@ import java.util.List;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/27 14:24:19
- * desc   :
+ * desc   :  List、Item 级联解析
  */
 
 @Slf4j
 @Component
-public class ParsingModel extends MessageHandler<AaListCommand> {
+public class AaListParamsHandler extends MessageHandler<AaListCommand> {
 
     @Autowired
     private CommandProcessor commandProcessor;
+
+    @Autowired
+    private ListItemMultiKeyMapConstants listItemMultiKeyMapConstants;
 
     private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
     private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
@@ -51,10 +57,12 @@ public class ParsingModel extends MessageHandler<AaListCommand> {
 
     // FIXME : 优化 根据mapper 获取对应的commandHandler
     public AaListCommand parseRowStartWithItem(String[] parts, String listItemMapperKey) {
-        if (!listItemMapper.get().isEmpty()) {
+        if (listItemMapperKey != null) {
             try {
+                String normalizedCommandStr = ToCamelCaseConverter.doConvert(listItemMapperKey);
+                // System.out.println("@@@@" + normalizedCommandStr);
                 // 获取处理器
-                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler("List");
+                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(normalizedCommandStr);
                 // 使用处理器处理命令
                 return handler.handle(parts);
                 // 处理结果...
@@ -88,16 +96,37 @@ public class ParsingModel extends MessageHandler<AaListCommand> {
         String[] lines = msg.split("\n");
         List<AaListCommand> aaListCommandList = new ArrayList<>();
         for (String line : lines) {
+            if (line.trim().isEmpty()) {
+                continue; // 跳过空行
+            }
             String[] parts = line.split("\\s+");
+            // System.out.println("&&&&" + Arrays.toString(parts));
+            if (parts.length == 0) {
+                log.warn("Empty line encountered: " + line);
+                continue;
+            }
             String startWithStr = parts[0];
-            if ("LIST".equals(startWithStr)) {
-                aaListCommandList.add(parseRowStartWithList(parts));
-            } else if ("ITEM".equals(startWithStr)) {
-                aaListCommandList.add(parseRowStartWithItem(parts, mapper.getOrDefault(Integer.parseInt(parts[1]), null)));
-            } else {
-                log.warn("Unsupported line: " + line);
+            try {
+                if ("LIST".equals(startWithStr)) {
+                    mapper.put(Integer.parseInt(parts[1]), parts[3]);
+                    aaListCommandList.add(parseRowStartWithList(parts));
+                } else if ("ITEM".equals(startWithStr)) {
+                    Integer key = Integer.parseInt(parts[1]);
+                    if (!StringUtils.isEmpty(listItemMultiKeyMapConstants.get(mapper.get(key)))) {
+                        aaListCommandList.add(parseRowStartWithItem(parts, listItemMultiKeyMapConstants.get(mapper.get(key))));
+                    } else {
+                        log.warn("Key not found in listItemMultiKeyMapConstants for key: " + key);
+                    }
+                } else {
+                    log.warn("Unsupported line: " + line);
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                log.error("ArrayIndexOutOfBoundsException: " + e.getMessage() + " for line: " + line, e);
+            } catch (Exception e) {
+                log.error("Exception occurred while processing line: " + line, e);
             }
         }
+
         aaListParams.fillWithData(aaListCommandList);
         return aaListParams;
     }
@@ -108,7 +137,13 @@ public class ParsingModel extends MessageHandler<AaListCommand> {
             AaListParams aaListParamsObj = null;
             JSONObject jsonObject = JSON.parseObject(msg);
             String aaListParamHexStr = jsonObject.getString("FactoryName");
-            String aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
+            String aaListParamStr = null;
+            try {
+                aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
+            } catch (DecoderException e) {
+                log.error("Hex解码异常，机型: {}", jsonObject.getString("WoCode"));
+                return null;
+            }
             aaListParamsObj = doParse(aaListParamStr);
             aaListParamsObj.setSimId(jsonObject.getString("OpCode"));
             aaListParamsObj.setProdType(jsonObject.getString("WoCode").split("#")[0]);

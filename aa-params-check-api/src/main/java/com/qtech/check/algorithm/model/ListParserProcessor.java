@@ -1,4 +1,4 @@
-package com.qtech.check.processor.handler.impl;
+package com.qtech.check.algorithm.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -95,6 +95,7 @@ public class AaListParamsParseMessageCommonConsumer {
                 // 处理消息并转换为 AaListParams
                 AaListParams aaListParams = messageProcessor.processMessage(AaListParams.class, aaListMessageStr);
 
+                logger.info("Received message: {}", aaListMessageStr);
                 // 将 AaListParams 对象转换为 JSON 字符串
                 String aaListParamsMessageStr = JSON.toJSONString(aaListParams);
 

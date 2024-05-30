@@ -53,36 +53,8 @@ public class MessageProcessor {
  * @description 这个注解会告诉Spring在实例化该Bean之后，但在该Bean的任何方法被调用之前，执行init()方法。这样可以确保在使用applicationContext.getBean()方法之前，ApplicationContext已经被刷新。
  * @param
  * @return void
+ *     @PostConstruct
+ *     public void init() {
+ *         this.messageHandlerRegistry = applicationContext.getBean(MessageHandlerRegistry.class);
+ *     }
  */
-
-/*
-@DependsOn("messageHandlerRegistry")
-@Lazy
-public class MessageProcessor {
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    private MessageHandlerRegistry messageHandlerRegistry;
-
-    @PostConstruct
-    public void init() {
-        this.messageHandlerRegistry = applicationContext.getBean(MessageHandlerRegistry.class);
-    }
-
-    public <R> R processMessage(Class<R> clazz, String msg) {
-        MessageHandler<?> messageHandler = messageHandlerRegistry.getMessageHandlerForType(clazz);
-        if (messageHandler != null) {
-            try {
-                return clazz.cast(messageHandler.handleByType(clazz, msg));
-            } catch (ClassCastException | DecoderException e) {
-                throw new IllegalStateException("Handler did not return expected type.", e);
-            }
-        } else {
-            String messageType = clazz.getSimpleName().replace("Handler", "");
-            System.out.println("No handler found for message type: " + messageType);
-            return null;
-        }
-    }
-}
-*/

@@ -1,4 +1,4 @@
-package com.qtech.check.processor.handler.impl;
+package com.qtech.check.algorithm.model;
 
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.exception.AaListParseListActionEmptyException;

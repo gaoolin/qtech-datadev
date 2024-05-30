@@ -1,10 +1,10 @@
-package com.qtech.check.processor.handler.impl;
+package com.qtech.check.processor.handler.type.integrated;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.pojo.AaListParams;
-import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.processor.handler.MessageHandler;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -18,19 +18,20 @@ import java.util.*;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/12 22:07:16
- * desc   :
+ * desc   :  xxHandler命名要和pojo类名一致
+ * 不想每次都重新创建一个新的 AaListParams 对象，而是希望重用同一个对象实例，那么可以去掉 remove() 调用，并保留 reset() 调用
  */
 
 @Component
-public class AaListParamsHandler implements MessageHandler<AaListParams> {
-
-    private static final Logger logger = LoggerFactory.getLogger(AaListParamsHandler.class);
+public class AaListParamsHandlerBak extends MessageHandler<AaListParams> {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsHandlerBak.class);
     private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
     private final Map<String, String> listItemMap = new HashMap<>();
 
     @Override
     public void handle(String msg) {
         if (msg != null) {
+            // 根据业务实现具体逻辑
             logger.info("Received message: " + msg);
         } else {
             throw new IllegalArgumentException("Expected a String message, but received: null");
@@ -40,8 +41,7 @@ public class AaListParamsHandler implements MessageHandler<AaListParams> {
     @Override
     public <R> R handleByType(Class<R> clazz, String msg) throws DecoderException {
         if (clazz == AaListParams.class) {
-            AaListParams aaListParamsObj = threadLocalAaListParamsMessage.get();
-            aaListParamsObj.reset();
+            AaListParams aaListParamsObj = null;
             JSONObject jsonObject = JSON.parseObject(msg);
             String aaListParamHexStr = jsonObject.getString("FactoryName");
             String aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
@@ -54,31 +54,32 @@ public class AaListParamsHandler implements MessageHandler<AaListParams> {
     }
 
     @Override
-    public boolean supportsType(Class<AaListParams> clazz) {
+    public <U> boolean supportsType(Class<U> clazz) {
         return clazz == AaListParams.class;
     }
 
-    public AaListParams doParse(String msg) {
+    private AaListParams getThreadLocalAaListParams() {
         AaListParams aaListParams = threadLocalAaListParamsMessage.get();
-        // 不想每次都重新创建一个新的 AaListParams 对象，而是希望重用同一个对象实例，那么可以去掉 remove() 调用，并保留 reset() 调用
         aaListParams.reset();
+        return aaListParams;
+    }
+
+    public AaListParams doParse(String msg) {
+        AaListParams aaListParams = getThreadLocalAaListParams();
         String[] lines = msg.split("\n");
         List<AaListCommand> aaListCommands = processStringList(lines);
         aaListParams.fillWithData(aaListCommands);
         return aaListParams;
     }
 
-
     public static List<AaListCommand> processStringList(String[] stringList) {
         List<AaListCommand> aaListCommandList = new ArrayList<>();
         for (String line : stringList) {
             if (line.startsWith("LIST")) {
                 String[] parts = line.split("\\s+");
-                int num = Integer.parseInt(parts[1]);
                 String command = parts[2];
-                String subsystem = parts[3];
                 String enable = parts[parts.length - 1];
-                AaListCommand currentAaListCommand = new AaListCommand(num, command, subsystem, enable);
+                AaListCommand currentAaListCommand = new AaListCommand(null, null, command, null, enable);
                 aaListCommandList.add(currentAaListCommand);
             }
         }

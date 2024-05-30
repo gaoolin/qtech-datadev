@@ -1,5 +1,8 @@
 package com.qtech.check.pojo;
 
+import com.qtech.check.utils.ToCamelCaseConverter;
+import com.qtech.common.utils.StringUtils;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -9,16 +12,32 @@ package com.qtech.check.pojo;
 
 
 public class AaListCommand {
-    int num;
+
+    String integration;
+    Integer num;
     String command;
     String subsystem;
-    String enable;
+    String value;
 
-    public int getNum() {
+    public String getIntegration() {
+        if (StringUtils.isBlank(integration)) {
+            if (StringUtils.isBlank(subsystem)) {
+                return command;
+            }
+            return StringUtils.joinWith("_", command, subsystem);
+        }
+        return integration;
+    }
+
+    public void setIntegration(String integration) {
+        this.integration = integration;
+    }
+
+    public Integer getNum() {
         return num;
     }
 
-    public void setNum(int num) {
+    public void setNum(Integer num) {
         this.num = num;
     }
 
@@ -38,20 +57,19 @@ public class AaListCommand {
         this.subsystem = subsystem;
     }
 
-    public String getEnable() {
-        return enable;
+    public String getValue() {
+        return value;
     }
 
-    public void setEnable(String enable) {
-        this.enable = enable;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public AaListCommand(int num, String command, String subsystem, String enable) {
+    public AaListCommand(String integration, Integer num, String command, String subsystem, String value) {
+        this.integration = integration;
         this.num = num;
         this.command = command;
         this.subsystem = subsystem;
-        this.enable = enable;
+        this.value = value;
     }
-
-    // Getters and setters if needed
 }

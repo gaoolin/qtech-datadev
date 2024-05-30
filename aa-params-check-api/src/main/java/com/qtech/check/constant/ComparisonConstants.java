@@ -71,18 +71,17 @@ public class ComparisonConstants {
             "openCheck"
             // ... 其他需要比较是否相等的属性名称
     );
-/*    public static final List<String> PROPERTIES_TO_COMPARE = Arrays.asList(
-            "init"
-    );*/
+//    public static final List<String> PROPERTIES_TO_COMPARE = Arrays.asList("init");
 
-    /*    public static final Map<String, Range<Integer>> PROPERTIES_WITH_RANGES = new HashMap<>();
+//        public static final Map<String, Range<Integer>> PROPERTIES_WITH_RANGES = new HashMap<>();
+//
+//        static {
+//            PROPERTIES_WITH_RANGES.put("propertyNameForRange1", new Range<>(0, 100)); // 示例范围
+//            PROPERTIES_WITH_RANGES.put("propertyNameForRange2", new Range<>(1, 10)); // 示例范围
+//            // ... 添加其他需要检查范围的属性及其范围
+//        }
 
-        static {
-            PROPERTIES_WITH_RANGES.put("propertyNameForRange1", new Range<>(0, 100)); // 示例范围
-            PROPERTIES_WITH_RANGES.put("propertyNameForRange2", new Range<>(1, 10)); // 示例范围
-            // ... 添加其他需要检查范围的属性及其范围
-        }*/
-    public static final List<String> ALL_PROPERTIES = Arrays.asList();
+//    public static final List<String> ALL_PROPERTIES = Arrays.asList();
 
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:aa:list:params:";
 }

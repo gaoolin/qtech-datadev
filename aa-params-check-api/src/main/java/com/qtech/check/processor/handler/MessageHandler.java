@@ -13,17 +13,8 @@ import org.apache.commons.codec.DecoderException;
  */
 
 
-public interface MessageHandler<T> {
-    void handle(String msg);
+public abstract class MessageHandler<T> implements QtechBaseHandler<T> {
 
-    // 根据Class类型处理消息
-    <R> R handleByType(Class<R> clazz, String msg) throws DecoderException;
-
-    default String getMessageType() {
-        return this.getClass().getSimpleName().replace("Handler", "");
-    }
-
-    // 验证是否支持处理指定类型
-    boolean supportsType(Class<T> clazz);
+    public void handle(String msg) {}
 }
 

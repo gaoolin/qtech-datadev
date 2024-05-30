@@ -79,6 +79,11 @@ public class AaListParams {
     private String vcmMoveToZPos;
     private String zOffset;
     private String openCheck;
+    private String roiCc;
+    private String roiUl;
+    private String roiUr;
+    private String roiLl;
+    private String roiLr;
 
     public String getSimId() {
         return simId;
@@ -544,6 +549,46 @@ public class AaListParams {
         this.openCheck = openCheck;
     }
 
+    public String getRoiCc() {
+        return roiCc;
+    }
+
+    public void setRoiCc(String roiCc) {
+        this.roiCc = roiCc;
+    }
+
+    public String getRoiUl() {
+        return roiUl;
+    }
+
+    public void setRoiUl(String roiUl) {
+        this.roiUl = roiUl;
+    }
+
+    public String getRoiUr() {
+        return roiUr;
+    }
+
+    public void setRoiUr(String roiUr) {
+        this.roiUr = roiUr;
+    }
+
+    public String getRoiLl() {
+        return roiLl;
+    }
+
+    public void setRoiLl(String roiLl) {
+        this.roiLl = roiLl;
+    }
+
+    public String getRoiLr() {
+        return roiLr;
+    }
+
+    public void setRoiLr(String roiLr) {
+        this.roiLr = roiLr;
+    }
+
     public void fillWithData(List<AaListCommand> aaListCommands) {
         if (aaListCommands.isEmpty()) {
             return;
@@ -552,7 +597,7 @@ public class AaListParams {
         List<Map<String, String>> camelCaseData = aaListCommands.stream()
                 .map(aaListCommand -> {
                     Map<String, String> map = new HashMap<>();
-                    map.put(ToCamelCaseConverter.doConvert(aaListCommand.getCommand()), aaListCommand.getEnable());
+                    map.put(ToCamelCaseConverter.doConvert(aaListCommand.getIntegration()), aaListCommand.getValue());
                     return map;
                 })
                 .collect(Collectors.toList());
@@ -632,6 +677,11 @@ public class AaListParams {
         this.vcmMoveToZPos = null;
         this.zOffset = null;
         this.openCheck = null;
+        this.roiCc = null;
+        this.roiUl = null;
+        this.roiUr = null;
+        this.roiLl = null;
+        this.roiLr = null;
     }
 
     @Override
@@ -695,10 +745,15 @@ public class AaListParams {
                 ", vcmMoveToZPos='" + vcmMoveToZPos + '\'' +
                 ", zOffset='" + zOffset + '\'' +
                 ", openCheck='" + openCheck + '\'' +
+                ", roiCc='" + roiCc + '\'' +
+                ", roiUl='" + roiUl + '\'' +
+                ", roiUr='" + roiUr + '\'' +
+                ", roiLl='" + roiLl + '\'' +
+                ", roiLr='" + roiLr + '\'' +
                 '}';
     }
 
-    // 通常用于定义排序顺序，而不是这种复杂的属性比较。
+// 通常用于定义排序顺序，而不是这种复杂的属性比较。
     /*@Override
     public int compareTo(AaListParams o) {
         return 0;

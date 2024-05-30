@@ -72,7 +72,7 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setStatusCode(2);
                     aaListParamsCheckResult.setDescription("Missing Template.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
-                    log.error(">>>> Can not find model for prodType: {}. Action skip.", actualObj.getProdType());
+                    log.warn(">>>> Can not find model for prodType: {}. Action skip.", actualObj.getProdType());
                     continue;
                 }
                 redisUtil.saveMessage(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType(), modelObj);

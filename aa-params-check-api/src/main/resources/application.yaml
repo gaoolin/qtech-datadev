@@ -14,7 +14,7 @@ logging:
     root: info
 #    com.qtech.olp: info
 #    org.springframework.web: info
-#    io.lettuce.core: warn
+    io.lettuce.core: error
 #    org.springframework.data.redis: warn
 #    com.qtech.olp.config.druid: info
 #    org.apache.ibatis: info

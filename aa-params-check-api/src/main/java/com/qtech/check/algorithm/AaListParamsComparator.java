@@ -78,7 +78,6 @@ public class AaListParamsComparator {
             }
         }
 
-        // 假设compareObjectsWithRanges方法已经相应优化
         boolean areEqualAndInRange = compareObjectsWithRanges(standardObj, actualObj, propertiesToCompare);
 
         return new ImmutableTriple<>(inconsistentProperties, emptyInActual, emptyInStandard);
