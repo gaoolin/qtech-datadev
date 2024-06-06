@@ -79,7 +79,7 @@ public class AaListParamsHandlerBak extends MessageHandler<AaListParams> {
                 String[] parts = line.split("\\s+");
                 String command = parts[2];
                 String enable = parts[parts.length - 1];
-                AaListCommand currentAaListCommand = new AaListCommand(null, null, command, null, enable);
+                AaListCommand currentAaListCommand = new AaListCommand(null, null, command, null, enable, null);
                 aaListCommandList.add(currentAaListCommand);
             }
         }

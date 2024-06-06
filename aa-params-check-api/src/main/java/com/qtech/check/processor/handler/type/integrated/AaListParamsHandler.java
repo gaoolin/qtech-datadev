@@ -8,7 +8,6 @@ import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
-import com.qtech.check.utils.ToCamelCaseConverter;
 import com.qtech.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
@@ -19,6 +18,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
 
 /**
  * author :  gaozhilin
@@ -59,17 +60,15 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
     public AaListCommand parseRowStartWithItem(String[] parts, String listItemMapperKey) {
         if (listItemMapperKey != null) {
             try {
-                String normalizedCommandStr = ToCamelCaseConverter.doConvert(listItemMapperKey);
-                // System.out.println("@@@@" + normalizedCommandStr);
                 // 获取处理器
-                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(normalizedCommandStr);
+                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(listItemMapperKey);
                 // 使用处理器处理命令
                 return handler.handle(parts);
                 // 处理结果...
             } catch (RuntimeException e) {
                 // 处理未找到处理器的情况
                 // 其他错误处理逻辑...
-                log.warn("未找到List处理器: {}", e.getMessage());
+                log.warn("未找到Item处理器:{}\n{}", listItemMapperKey, e.getMessage());
                 return null;
             }
         } else {
@@ -100,7 +99,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
                 continue; // 跳过空行
             }
             String[] parts = line.split("\\s+");
-            // System.out.println("&&&&" + Arrays.toString(parts));
+
             if (parts.length == 0) {
                 log.warn("Empty line encountered: " + line);
                 continue;
@@ -108,14 +107,23 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
             String startWithStr = parts[0];
             try {
                 if ("LIST".equals(startWithStr)) {
-                    mapper.put(Integer.parseInt(parts[1]), parts[3]);
-                    aaListCommandList.add(parseRowStartWithList(parts));
+
+                    String listNmb = parts[1];
+                    String command = parts[2];
+                    if (CONTROL_LIST_SET.contains(command)) {
+                        mapper.put(Integer.parseInt(listNmb), command);
+                    }
+                    AaListCommand aaListCommand = parseRowStartWithList(parts);
+                    if (aaListCommand != null) {
+                        aaListCommandList.add(aaListCommand);
+                    }
                 } else if ("ITEM".equals(startWithStr)) {
                     Integer key = Integer.parseInt(parts[1]);
                     if (!StringUtils.isEmpty(listItemMultiKeyMapConstants.get(mapper.get(key)))) {
-                        aaListCommandList.add(parseRowStartWithItem(parts, listItemMultiKeyMapConstants.get(mapper.get(key))));
-                    } else {
-                        log.warn("Key not found in listItemMultiKeyMapConstants for key: " + key);
+                        AaListCommand aaListCommand = parseRowStartWithItem(parts, listItemMultiKeyMapConstants.get(mapper.get(key)));
+                        if (aaListCommand != null) {
+                            aaListCommandList.add(aaListCommand);
+                        }
                     }
                 } else {
                     log.warn("Unsupported line: " + line);
@@ -128,6 +136,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         }
 
         aaListParams.fillWithData(aaListCommandList);
+        log.info(">>>>> 解析后aaListParams: {}", aaListParams);
         return aaListParams;
     }
 

@@ -7,21 +7,22 @@ import org.springframework.stereotype.Component;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/05/29 14:39:30
- * desc   :
+ * date   :  2024/05/28 11:21:44
+ * desc   :  ClampOnOff
  */
 
 @Component
-public class InitHandler extends AaListCommandHandler<AaListCommand> {
+public class EpoxyInspectionAutoHandler extends AaListCommandHandler<AaListCommand> {
     @Override
     public AaListCommand handle(String[] parts) {
-        Integer num = Integer.parseInt(parts[1]);
         String command = parts[2];
-        String subSystem = parts[3];
-        String val = parts[5];
-        return new AaListCommand(null, num, command, subSystem, val);
+        if ("EpoxyInspection".equals(command)) {
+            Integer num = Integer.parseInt(parts[1]);
+            String val = parts[3];
+            return new AaListCommand(null, num, command, null, val, null);
+        }
+        return null;
     }
-
 
     @Override
     public <R> R handleByType(Class<R> clazz, String msg) {
@@ -36,4 +37,5 @@ public class InitHandler extends AaListCommandHandler<AaListCommand> {
     public <U> boolean supportsType(Class<U> clazz) {
         return AaListCommand.class.equals(clazz);
     }
+
 }

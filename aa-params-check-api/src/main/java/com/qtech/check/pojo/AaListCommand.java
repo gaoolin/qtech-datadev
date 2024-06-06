@@ -1,6 +1,6 @@
 package com.qtech.check.pojo;
 
-import com.qtech.check.utils.ToCamelCaseConverter;
+import com.qtech.check.algorithm.Range;
 import com.qtech.common.utils.StringUtils;
 
 /**
@@ -13,11 +13,13 @@ import com.qtech.common.utils.StringUtils;
 
 public class AaListCommand {
 
-    String integration;
-    Integer num;
-    String command;
-    String subsystem;
-    String value;
+    private String integration;
+    private Integer num;
+    private String command;
+    private String subsystem;
+    private String value;
+
+    private Range<String> range;
 
     public String getIntegration() {
         if (StringUtils.isBlank(integration)) {
@@ -65,11 +67,25 @@ public class AaListCommand {
         this.value = value;
     }
 
-    public AaListCommand(String integration, Integer num, String command, String subsystem, String value) {
+    public Range<String> getRange() {
+        return range;
+    }
+
+    public void setRange(Range<String> range) {
+        this.range = range;
+    }
+
+    public AaListCommand(String integration, Integer num, String command, String subsystem, String value, Range<String> range) {
         this.integration = integration;
         this.num = num;
         this.command = command;
         this.subsystem = subsystem;
         this.value = value;
+        this.range = range;
+    }
+
+    // 定义静态方法 nonNull
+    public static boolean nonNull(AaListCommand aaListCommand) {
+        return aaListCommand != null;
     }
 }

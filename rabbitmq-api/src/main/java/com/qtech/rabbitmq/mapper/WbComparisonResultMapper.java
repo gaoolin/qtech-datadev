@@ -2,7 +2,6 @@ package com.qtech.rabbitmq.mapper;
 
 import com.qtech.rabbitmq.domain.WbComparisonResult;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 
 /**
  * author :  gaozhilin
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 
 
-@Repository
 @Mapper
 public interface WbComparisonResultMapper {
 

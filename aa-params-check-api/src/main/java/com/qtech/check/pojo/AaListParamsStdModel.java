@@ -1,7 +1,12 @@
 package com.qtech.check.pojo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.lang.reflect.Field;
 
 /**
  * author :  gaozhilin
@@ -11,61 +16,31 @@ import lombok.Data;
  */
 
 @Data
-public class AaListParamsStdModel {
+public class AaListParamsStdModel extends AaListParamsBaseEntity {
     private String prodType;
-    private String clampOnOff;
-    private String destroyStart;
-    private String init;
-    private String grab;
-    private String reInit;
-    private String senserReset;
-    private String sid;
-    private String vcmHall;
-    private String vcmInit;
-    private String vcmHall2;
-    private String vcmPowerOff;
-    private String vcmPowerOn;
-    private String vcmTop;
-    private String vcmTopHall;
-    private String vcmZ;
-    private String vcmZHall;
-    private String vcmOisInit;
-    private String chartAlignment1;
-    private String AA1;
-    private String AA2;
-    private String mtfCheck;
-    private String AA3;
-    private String mtfCheck2;
-    private String lpOn;
-    private String lpOcCheck;
-    private String lpOc;
-    private String lpOnBlemish;
-    private String blemish;
-    private String lpOff;
-    private String chartAlignment;
-    private String vcmMoveToZ;
-    private String delay;
-    private String vcmPowerOffCheck;
-    private String recordPosition;
-    private String dispense;
-    private String epoxyInspectionAuto;
-    private String epoxyInspection;
-    private String backToPosition;
-    private String uvon;
-    private String yLevel;
-    private String uvoff;
-    private String gripperOpen;
-    private String saveOc;
-    private String saveMtf;
-    private String destroy;
-    private String moveToBlemishPos;
-    private String mtfCheck3;
-    private String mtfOffAxisCheck1;
-    private String mtfOffAxisCheck2;
-    private String mtfOffAxisCheck3;
-    private String lpBlemish;
-    private String chartAlignment2;
-    private String vcmMoveToZPos;
-    private String zOffset;
-    private String openCheck;
+
+    public void reset() {
+        this.prodType = null;
+        super.reset();
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+    // equals 和 hashCode 方法使用 reflectionEquals 和 reflectionHashCode 方法，它们会递归地比较和计算对象的所有字段，因此无需额外处理父类的字段
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        AaListParams that = (AaListParams) o;
+        return EqualsBuilder.reflectionEquals(this, that, false);
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this, false);
+    }
 }

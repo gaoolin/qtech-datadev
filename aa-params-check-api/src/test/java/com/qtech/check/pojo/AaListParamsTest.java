@@ -31,7 +31,7 @@ class AaListParamsTest {
 //                "ChartAlignment,VCMMoveToZ#,Delay,VCMPowerOffCheck,RecordPosition,Dispense,EpoxyInspection_Auto,EpoxyInspection,BackToPosition,UVON," +
 //                "Y_Level,UVOFF,GripperOpen,Save_OC,Save_MTF,Destroy,MoveToBlemishPos,MTF_Check3,MTF_OffAxisCheck1,MTF_OffAxisCheck2,MTF_OffAxisCheck3," +
 //                "LP_Blemish,ChartAlignment2,VCMMoveToZPos,Z_Offset,Open_Check";
-        String commaSeparatedValues = "ROI_CC, ROI_UL, ROI_UR, ROI_LL, ROI_LR";
+        String commaSeparatedValues = "xResMin, xResMax";
 
         // 使用split方法按逗号分割字符串并创建数组
         String[] arrayValues = commaSeparatedValues.split(",");

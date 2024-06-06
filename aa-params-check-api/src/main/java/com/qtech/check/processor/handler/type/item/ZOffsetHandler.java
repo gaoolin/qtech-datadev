@@ -7,20 +7,19 @@ import org.springframework.stereotype.Component;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/05/28 11:18:51
- * desc   :  BackToPosition
+ * date   :  2024/05/28 11:23:36
+ * desc   :  Destroy
  */
 
 @Component
-public class BackToPositionHandler extends AaListCommandHandler<AaListCommand> {
-
+public class ZOffsetHandler extends AaListCommandHandler<AaListCommand> {
     @Override
     public AaListCommand handle(String[] parts) {
         Integer num = Integer.parseInt(parts[1]);
         String command = parts[2];
-        String subSystem = parts[3];
-        String val = parts[5];
-        return new AaListCommand(null, num, command, subSystem, val);
+//        String subSystem = parts[3];
+        String val = parts[3];
+        return new AaListCommand(null, num, command, null, val, null);
     }
 
     @Override
@@ -36,4 +35,5 @@ public class BackToPositionHandler extends AaListCommandHandler<AaListCommand> {
     public <U> boolean supportsType(Class<U> clazz) {
         return AaListCommand.class.equals(clazz);
     }
+
 }

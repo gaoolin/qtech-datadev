@@ -13,7 +13,5 @@ import java.util.List;
 
 
 public interface IAaListParamsService {
-    List<AaListParams> selectAaListParamsList(AaListParams aaListParams);
-
     public void insertAaListParams(AaListParams aaListParams);
 }

@@ -1,14 +1,9 @@
 package com.qtech.check.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qtech.check.utils.ToCamelCaseConverter;
 
-import java.lang.reflect.Field;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * author :  gaozhilin
@@ -18,72 +13,13 @@ import java.util.stream.Collectors;
  */
 
 
-public class AaListParams {
+public class AaListParams extends AaListParamsBaseEntity {
 
     private String simId;
     private String prodType;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedTime; // 新增字段
-    private String clampOnOff;
-    private String destroyStart;
-    private String init;
-    private String grab;
-    private String reInit;
-    private String senserReset;
-    private String sid;
-    private String vcmHall;
-    private String vcmInit;
-    private String vcmHall2;
-    private String vcmPowerOff;
-    private String vcmPowerOn;
-    private String vcmTop;
-    private String vcmTopHall;
-    private String vcmZ;
-    private String vcmZHall;
-    private String vcmOisInit;
-    private String chartAlignment1;
-    private String AA1;
-    private String AA2;
-    private String mtfCheck;
-    private String AA3;
-    private String mtfCheck2;
-    private String lpOn;
-    private String lpOcCheck;
-    private String lpOc;
-    private String lpOnBlemish;
-    private String blemish;
-    private String lpOff;
-    private String chartAlignment;
-    private String vcmMoveToZ;
-    private String delay;
-    private String vcmPowerOffCheck;
-    private String recordPosition;
-    private String dispense;
-    private String epoxyInspectionAuto;
-    private String epoxyInspection;
-    private String backToPosition;
-    private String uvon;
-    private String yLevel;
-    private String uvoff;
-    private String gripperOpen;
-    private String saveOc;
-    private String saveMtf;
-    private String destroy;
-    private String moveToBlemishPos;
-    private String mtfCheck3;
-    private String mtfOffAxisCheck1;
-    private String mtfOffAxisCheck2;
-    private String mtfOffAxisCheck3;
-    private String lpBlemish;
-    private String chartAlignment2;
-    private String vcmMoveToZPos;
-    private String zOffset;
-    private String openCheck;
-    private String roiCc;
-    private String roiUl;
-    private String roiUr;
-    private String roiLl;
-    private String roiLr;
+
 
     public String getSimId() {
         return simId;
@@ -109,651 +45,1229 @@ public class AaListParams {
         this.receivedTime = receivedTime;
     }
 
+    @Override
     public String getClampOnOff() {
-        return clampOnOff;
+        return super.getClampOnOff();
     }
 
-    public void setClampOnOff(String clampOnOff) {
-        this.clampOnOff = clampOnOff;
-    }
-
+    @Override
     public String getDestroyStart() {
-        return destroyStart;
+        return super.getDestroyStart();
     }
 
-    public void setDestroyStart(String destroyStart) {
-        this.destroyStart = destroyStart;
-    }
-
+    @Override
     public String getInit() {
-        return init;
+        return super.getInit();
     }
 
-    public void setInit(String init) {
-        this.init = init;
-    }
-
+    @Override
     public String getGrab() {
-        return grab;
+        return super.getGrab();
     }
 
-    public void setGrab(String grab) {
-        this.grab = grab;
-    }
-
+    @Override
     public String getReInit() {
-        return reInit;
+        return super.getReInit();
     }
 
-    public void setReInit(String reInit) {
-        this.reInit = reInit;
-    }
-
+    @Override
     public String getSenserReset() {
-        return senserReset;
+        return super.getSenserReset();
     }
 
-    public void setSenserReset(String senserReset) {
-        this.senserReset = senserReset;
-    }
-
+    @Override
     public String getSid() {
-        return sid;
+        return super.getSid();
     }
 
-    public void setSid(String sid) {
-        this.sid = sid;
-    }
-
+    @Override
     public String getVcmHall() {
-        return vcmHall;
+        return super.getVcmHall();
     }
 
-    public void setVcmHall(String vcmHall) {
-        this.vcmHall = vcmHall;
-    }
-
+    @Override
     public String getVcmInit() {
-        return vcmInit;
+        return super.getVcmInit();
     }
 
-    public void setVcmInit(String vcmInit) {
-        this.vcmInit = vcmInit;
-    }
-
+    @Override
     public String getVcmHall2() {
-        return vcmHall2;
+        return super.getVcmHall2();
     }
 
-    public void setVcmHall2(String vcmHall2) {
-        this.vcmHall2 = vcmHall2;
-    }
-
+    @Override
     public String getVcmPowerOff() {
-        return vcmPowerOff;
+        return super.getVcmPowerOff();
     }
 
-    public void setVcmPowerOff(String vcmPowerOff) {
-        this.vcmPowerOff = vcmPowerOff;
-    }
-
+    @Override
     public String getVcmPowerOn() {
-        return vcmPowerOn;
+        return super.getVcmPowerOn();
     }
 
-    public void setVcmPowerOn(String vcmPowerOn) {
-        this.vcmPowerOn = vcmPowerOn;
-    }
-
+    @Override
     public String getVcmTop() {
-        return vcmTop;
+        return super.getVcmTop();
     }
 
-    public void setVcmTop(String vcmTop) {
-        this.vcmTop = vcmTop;
-    }
-
+    @Override
     public String getVcmTopHall() {
-        return vcmTopHall;
+        return super.getVcmTopHall();
     }
 
-    public void setVcmTopHall(String vcmTopHall) {
-        this.vcmTopHall = vcmTopHall;
-    }
-
+    @Override
     public String getVcmZ() {
-        return vcmZ;
+        return super.getVcmZ();
     }
 
-    public void setVcmZ(String vcmZ) {
-        this.vcmZ = vcmZ;
-    }
-
+    @Override
     public String getVcmZHall() {
-        return vcmZHall;
+        return super.getVcmZHall();
     }
 
-    public void setVcmZHall(String vcmZHall) {
-        this.vcmZHall = vcmZHall;
-    }
-
+    @Override
     public String getVcmOisInit() {
-        return vcmOisInit;
+        return super.getVcmOisInit();
     }
 
-    public void setVcmOisInit(String vcmOisInit) {
-        this.vcmOisInit = vcmOisInit;
-    }
-
+    @Override
     public String getChartAlignment1() {
-        return chartAlignment1;
+        return super.getChartAlignment1();
     }
 
-    public void setChartAlignment1(String chartAlignment1) {
-        this.chartAlignment1 = chartAlignment1;
-    }
-
+    @Override
     public String getAA1() {
-        return AA1;
+        return super.getAA1();
     }
 
-    public void setAA1(String AA1) {
-        this.AA1 = AA1;
-    }
-
+    @Override
     public String getAA2() {
-        return AA2;
+        return super.getAA2();
     }
 
-    public void setAA2(String AA2) {
-        this.AA2 = AA2;
-    }
-
+    @Override
     public String getMtfCheck() {
-        return mtfCheck;
+        return super.getMtfCheck();
     }
 
-    public void setMtfCheck(String mtfCheck) {
-        this.mtfCheck = mtfCheck;
-    }
-
+    @Override
     public String getAA3() {
-        return AA3;
+        return super.getAA3();
     }
 
-    public void setAA3(String AA3) {
-        this.AA3 = AA3;
-    }
-
+    @Override
     public String getMtfCheck2() {
-        return mtfCheck2;
+        return super.getMtfCheck2();
     }
 
-    public void setMtfCheck2(String mtfCheck2) {
-        this.mtfCheck2 = mtfCheck2;
-    }
-
+    @Override
     public String getLpOn() {
-        return lpOn;
+        return super.getLpOn();
     }
 
-    public void setLpOn(String lpOn) {
-        this.lpOn = lpOn;
-    }
-
+    @Override
     public String getLpOcCheck() {
-        return lpOcCheck;
+        return super.getLpOcCheck();
     }
 
-    public void setLpOcCheck(String lpOcCheck) {
-        this.lpOcCheck = lpOcCheck;
-    }
-
+    @Override
     public String getLpOc() {
-        return lpOc;
+        return super.getLpOc();
     }
 
-    public void setLpOc(String lpOc) {
-        this.lpOc = lpOc;
-    }
-
+    @Override
     public String getLpOnBlemish() {
-        return lpOnBlemish;
+        return super.getLpOnBlemish();
     }
 
-    public void setLpOnBlemish(String lpOnBlemish) {
-        this.lpOnBlemish = lpOnBlemish;
-    }
-
+    @Override
     public String getBlemish() {
-        return blemish;
+        return super.getBlemish();
     }
 
-    public void setBlemish(String blemish) {
-        this.blemish = blemish;
-    }
-
+    @Override
     public String getLpOff() {
-        return lpOff;
+        return super.getLpOff();
     }
 
-    public void setLpOff(String lpOff) {
-        this.lpOff = lpOff;
-    }
-
+    @Override
     public String getChartAlignment() {
-        return chartAlignment;
+        return super.getChartAlignment();
     }
 
-    public void setChartAlignment(String chartAlignment) {
-        this.chartAlignment = chartAlignment;
-    }
-
+    @Override
     public String getVcmMoveToZ() {
-        return vcmMoveToZ;
+        return super.getVcmMoveToZ();
     }
 
-    public void setVcmMoveToZ(String vcmMoveToZ) {
-        this.vcmMoveToZ = vcmMoveToZ;
-    }
-
+    @Override
     public String getDelay() {
-        return delay;
+        return super.getDelay();
     }
 
-    public void setDelay(String delay) {
-        this.delay = delay;
-    }
-
+    @Override
     public String getVcmPowerOffCheck() {
-        return vcmPowerOffCheck;
+        return super.getVcmPowerOffCheck();
     }
 
-    public void setVcmPowerOffCheck(String vcmPowerOffCheck) {
-        this.vcmPowerOffCheck = vcmPowerOffCheck;
-    }
-
+    @Override
     public String getRecordPosition() {
-        return recordPosition;
+        return super.getRecordPosition();
     }
 
-    public void setRecordPosition(String recordPosition) {
-        this.recordPosition = recordPosition;
-    }
-
+    @Override
     public String getDispense() {
-        return dispense;
+        return super.getDispense();
     }
 
-    public void setDispense(String dispense) {
-        this.dispense = dispense;
-    }
-
+    @Override
     public String getEpoxyInspectionAuto() {
-        return epoxyInspectionAuto;
+        return super.getEpoxyInspectionAuto();
     }
 
-    public void setEpoxyInspectionAuto(String epoxyInspectionAuto) {
-        this.epoxyInspectionAuto = epoxyInspectionAuto;
-    }
-
+    @Override
     public String getEpoxyInspection() {
-        return epoxyInspection;
+        return super.getEpoxyInspection();
     }
 
-    public void setEpoxyInspection(String epoxyInspection) {
-        this.epoxyInspection = epoxyInspection;
-    }
-
+    @Override
     public String getBackToPosition() {
-        return backToPosition;
+        return super.getBackToPosition();
     }
 
-    public void setBackToPosition(String backToPosition) {
-        this.backToPosition = backToPosition;
-    }
-
+    @Override
     public String getUvon() {
-        return uvon;
+        return super.getUvon();
     }
 
-    public void setUvon(String uvon) {
-        this.uvon = uvon;
+    @Override
+    public String getYLevel() {
+        return super.getYLevel();
     }
 
-    public String getyLevel() {
-        return yLevel;
-    }
-
-    public void setyLevel(String yLevel) {
-        this.yLevel = yLevel;
-    }
-
+    @Override
     public String getUvoff() {
-        return uvoff;
+        return super.getUvoff();
     }
 
-    public void setUvoff(String uvoff) {
-        this.uvoff = uvoff;
-    }
-
+    @Override
     public String getGripperOpen() {
-        return gripperOpen;
+        return super.getGripperOpen();
     }
 
-    public void setGripperOpen(String gripperOpen) {
-        this.gripperOpen = gripperOpen;
-    }
-
+    @Override
     public String getSaveOc() {
-        return saveOc;
+        return super.getSaveOc();
     }
 
-    public void setSaveOc(String saveOc) {
-        this.saveOc = saveOc;
-    }
-
+    @Override
     public String getSaveMtf() {
-        return saveMtf;
+        return super.getSaveMtf();
     }
 
-    public void setSaveMtf(String saveMtf) {
-        this.saveMtf = saveMtf;
-    }
-
+    @Override
     public String getDestroy() {
-        return destroy;
+        return super.getDestroy();
     }
 
-    public void setDestroy(String destroy) {
-        this.destroy = destroy;
-    }
-
+    @Override
     public String getMoveToBlemishPos() {
-        return moveToBlemishPos;
+        return super.getMoveToBlemishPos();
     }
 
-    public void setMoveToBlemishPos(String moveToBlemishPos) {
-        this.moveToBlemishPos = moveToBlemishPos;
-    }
-
+    @Override
     public String getMtfCheck3() {
-        return mtfCheck3;
+        return super.getMtfCheck3();
     }
 
-    public void setMtfCheck3(String mtfCheck3) {
-        this.mtfCheck3 = mtfCheck3;
-    }
-
+    @Override
     public String getMtfOffAxisCheck1() {
-        return mtfOffAxisCheck1;
+        return super.getMtfOffAxisCheck1();
     }
 
-    public void setMtfOffAxisCheck1(String mtfOffAxisCheck1) {
-        this.mtfOffAxisCheck1 = mtfOffAxisCheck1;
-    }
-
+    @Override
     public String getMtfOffAxisCheck2() {
-        return mtfOffAxisCheck2;
+        return super.getMtfOffAxisCheck2();
     }
 
-    public void setMtfOffAxisCheck2(String mtfOffAxisCheck2) {
-        this.mtfOffAxisCheck2 = mtfOffAxisCheck2;
-    }
-
+    @Override
     public String getMtfOffAxisCheck3() {
-        return mtfOffAxisCheck3;
+        return super.getMtfOffAxisCheck3();
     }
 
-    public void setMtfOffAxisCheck3(String mtfOffAxisCheck3) {
-        this.mtfOffAxisCheck3 = mtfOffAxisCheck3;
-    }
-
+    @Override
     public String getLpBlemish() {
-        return lpBlemish;
+        return super.getLpBlemish();
     }
 
-    public void setLpBlemish(String lpBlemish) {
-        this.lpBlemish = lpBlemish;
-    }
-
+    @Override
     public String getChartAlignment2() {
-        return chartAlignment2;
+        return super.getChartAlignment2();
     }
 
-    public void setChartAlignment2(String chartAlignment2) {
-        this.chartAlignment2 = chartAlignment2;
-    }
-
+    @Override
     public String getVcmMoveToZPos() {
-        return vcmMoveToZPos;
+        return super.getVcmMoveToZPos();
     }
 
-    public void setVcmMoveToZPos(String vcmMoveToZPos) {
-        this.vcmMoveToZPos = vcmMoveToZPos;
+    @Override
+    public String getZOffset() {
+        return super.getZOffset();
     }
 
-    public String getzOffset() {
-        return zOffset;
-    }
-
-    public void setzOffset(String zOffset) {
-        this.zOffset = zOffset;
-    }
-
+    @Override
     public String getOpenCheck() {
-        return openCheck;
+        return super.getOpenCheck();
     }
 
-    public void setOpenCheck(String openCheck) {
-        this.openCheck = openCheck;
-    }
-
+    @Override
     public String getRoiCc() {
-        return roiCc;
+        return super.getRoiCc();
     }
 
-    public void setRoiCc(String roiCc) {
-        this.roiCc = roiCc;
-    }
-
+    @Override
     public String getRoiUl() {
-        return roiUl;
+        return super.getRoiUl();
     }
 
-    public void setRoiUl(String roiUl) {
-        this.roiUl = roiUl;
-    }
-
+    @Override
     public String getRoiUr() {
-        return roiUr;
+        return super.getRoiUr();
     }
 
-    public void setRoiUr(String roiUr) {
-        this.roiUr = roiUr;
-    }
-
+    @Override
     public String getRoiLl() {
-        return roiLl;
+        return super.getRoiLl();
     }
 
-    public void setRoiLl(String roiLl) {
-        this.roiLl = roiLl;
-    }
-
+    @Override
     public String getRoiLr() {
-        return roiLr;
+        return super.getRoiLr();
     }
 
+    @Override
+    public String getResult1() {
+        return super.getResult1();
+    }
+
+    @Override
+    public String getResult2() {
+        return super.getResult2();
+    }
+
+    @Override
+    public String getResult3() {
+        return super.getResult3();
+    }
+
+    @Override
+    public String getResult4() {
+        return super.getResult4();
+    }
+
+    @Override
+    public String getResult5() {
+        return super.getResult5();
+    }
+
+    @Override
+    public String getResult6() {
+        return super.getResult6();
+    }
+
+    @Override
+    public String getResult7() {
+        return super.getResult7();
+    }
+
+    @Override
+    public String getResult8() {
+        return super.getResult8();
+    }
+
+    @Override
+    public String getResult9() {
+        return super.getResult9();
+    }
+
+    @Override
+    public String getResult10() {
+        return super.getResult10();
+    }
+
+    @Override
+    public String getResult11() {
+        return super.getResult11();
+    }
+
+    @Override
+    public String getResult12() {
+        return super.getResult12();
+    }
+
+    @Override
+    public String getResult13() {
+        return super.getResult13();
+    }
+
+    @Override
+    public String getResult14() {
+        return super.getResult14();
+    }
+
+    @Override
+    public String getResult15() {
+        return super.getResult15();
+    }
+
+    @Override
+    public String getResult16() {
+        return super.getResult16();
+    }
+
+    @Override
+    public String getResult17() {
+        return super.getResult17();
+    }
+
+    @Override
+    public String getResult18() {
+        return super.getResult18();
+    }
+
+    @Override
+    public String getResult19() {
+        return super.getResult19();
+    }
+
+    @Override
+    public String getResult20() {
+        return super.getResult20();
+    }
+
+    @Override
+    public String getResult21() {
+        return super.getResult21();
+    }
+
+    @Override
+    public String getResult22() {
+        return super.getResult22();
+    }
+
+    @Override
+    public String getResult23() {
+        return super.getResult23();
+    }
+
+    @Override
+    public String getResult24() {
+        return super.getResult24();
+    }
+
+    @Override
+    public String getResult25() {
+        return super.getResult25();
+    }
+
+    @Override
+    public String getResult26() {
+        return super.getResult26();
+    }
+
+    @Override
+    public String getResult27() {
+        return super.getResult27();
+    }
+
+    @Override
+    public String getResult28() {
+        return super.getResult28();
+    }
+
+    @Override
+    public String getResult29() {
+        return super.getResult29();
+    }
+
+    @Override
+    public String getResult30() {
+        return super.getResult30();
+    }
+
+    @Override
+    public String getResult31() {
+        return super.getResult31();
+    }
+
+    @Override
+    public String getResult32() {
+        return super.getResult32();
+    }
+
+    @Override
+    public String getResult33() {
+        return super.getResult33();
+    }
+
+    @Override
+    public String getResult34() {
+        return super.getResult34();
+    }
+
+    @Override
+    public String getResult35() {
+        return super.getResult35();
+    }
+
+    @Override
+    public String getResult36() {
+        return super.getResult36();
+    }
+
+    @Override
+    public String getResult37() {
+        return super.getResult37();
+    }
+
+    @Override
+    public String getResult38() {
+        return super.getResult38();
+    }
+
+    @Override
+    public String getResult39() {
+        return super.getResult39();
+    }
+
+    @Override
+    public String getResult40() {
+        return super.getResult40();
+    }
+
+    @Override
+    public String getResult41() {
+        return super.getResult41();
+    }
+
+    @Override
+    public String getResult42() {
+        return super.getResult42();
+    }
+
+    @Override
+    public String getResult43() {
+        return super.getResult43();
+    }
+
+    @Override
+    public String getResult44() {
+        return super.getResult44();
+    }
+
+    @Override
+    public String getResult45() {
+        return super.getResult45();
+    }
+
+    @Override
+    public String getResult46() {
+        return super.getResult46();
+    }
+
+    @Override
+    public String getResult47() {
+        return super.getResult47();
+    }
+
+    @Override
+    public String getResult48() {
+        return super.getResult48();
+    }
+
+    @Override
+    public String getResult49() {
+        return super.getResult49();
+    }
+
+    @Override
+    public String getResult50() {
+        return super.getResult50();
+    }
+
+    @Override
+    public String getResult51() {
+        return super.getResult51();
+    }
+
+    @Override
+    public String getResult52() {
+        return super.getResult52();
+    }
+
+    @Override
+    public String getXResMin() {
+        return super.getXResMin();
+    }
+
+    @Override
+    public String getXResMax() {
+        return super.getXResMax();
+    }
+
+    @Override
+    public String getYResMin() {
+        return super.getYResMin();
+    }
+
+    @Override
+    public String getYResMax() {
+        return super.getYResMax();
+    }
+
+    @Override
+    public String getEpoxyInspectionInterval() {
+        return super.getEpoxyInspectionInterval();
+    }
+
+    @Override
+    public String getResultCheckMin() {
+        return super.getResultCheckMin();
+    }
+
+    @Override
+    public String getResultCheckMax() {
+        return super.getResultCheckMax();
+    }
+
+    @Override
+    public void setClampOnOff(String clampOnOff) {
+        super.setClampOnOff(clampOnOff);
+    }
+
+    @Override
+    public void setDestroyStart(String destroyStart) {
+        super.setDestroyStart(destroyStart);
+    }
+
+    @Override
+    public void setInit(String init) {
+        super.setInit(init);
+    }
+
+    @Override
+    public void setGrab(String grab) {
+        super.setGrab(grab);
+    }
+
+    @Override
+    public void setReInit(String reInit) {
+        super.setReInit(reInit);
+    }
+
+    @Override
+    public void setSenserReset(String senserReset) {
+        super.setSenserReset(senserReset);
+    }
+
+    @Override
+    public void setSid(String sid) {
+        super.setSid(sid);
+    }
+
+    @Override
+    public void setVcmHall(String vcmHall) {
+        super.setVcmHall(vcmHall);
+    }
+
+    @Override
+    public void setVcmInit(String vcmInit) {
+        super.setVcmInit(vcmInit);
+    }
+
+    @Override
+    public void setVcmHall2(String vcmHall2) {
+        super.setVcmHall2(vcmHall2);
+    }
+
+    @Override
+    public void setVcmPowerOff(String vcmPowerOff) {
+        super.setVcmPowerOff(vcmPowerOff);
+    }
+
+    @Override
+    public void setVcmPowerOn(String vcmPowerOn) {
+        super.setVcmPowerOn(vcmPowerOn);
+    }
+
+    @Override
+    public void setVcmTop(String vcmTop) {
+        super.setVcmTop(vcmTop);
+    }
+
+    @Override
+    public void setVcmTopHall(String vcmTopHall) {
+        super.setVcmTopHall(vcmTopHall);
+    }
+
+    @Override
+    public void setVcmZ(String vcmZ) {
+        super.setVcmZ(vcmZ);
+    }
+
+    @Override
+    public void setVcmZHall(String vcmZHall) {
+        super.setVcmZHall(vcmZHall);
+    }
+
+    @Override
+    public void setVcmOisInit(String vcmOisInit) {
+        super.setVcmOisInit(vcmOisInit);
+    }
+
+    @Override
+    public void setChartAlignment1(String chartAlignment1) {
+        super.setChartAlignment1(chartAlignment1);
+    }
+
+    @Override
+    public void setAA1(String AA1) {
+        super.setAA1(AA1);
+    }
+
+    @Override
+    public void setAA2(String AA2) {
+        super.setAA2(AA2);
+    }
+
+    @Override
+    public void setMtfCheck(String mtfCheck) {
+        super.setMtfCheck(mtfCheck);
+    }
+
+    @Override
+    public void setAA3(String AA3) {
+        super.setAA3(AA3);
+    }
+
+    @Override
+    public void setMtfCheck2(String mtfCheck2) {
+        super.setMtfCheck2(mtfCheck2);
+    }
+
+    @Override
+    public void setLpOn(String lpOn) {
+        super.setLpOn(lpOn);
+    }
+
+    @Override
+    public void setLpOcCheck(String lpOcCheck) {
+        super.setLpOcCheck(lpOcCheck);
+    }
+
+    @Override
+    public void setLpOc(String lpOc) {
+        super.setLpOc(lpOc);
+    }
+
+    @Override
+    public void setLpOnBlemish(String lpOnBlemish) {
+        super.setLpOnBlemish(lpOnBlemish);
+    }
+
+    @Override
+    public void setBlemish(String blemish) {
+        super.setBlemish(blemish);
+    }
+
+    @Override
+    public void setLpOff(String lpOff) {
+        super.setLpOff(lpOff);
+    }
+
+    @Override
+    public void setChartAlignment(String chartAlignment) {
+        super.setChartAlignment(chartAlignment);
+    }
+
+    @Override
+    public void setVcmMoveToZ(String vcmMoveToZ) {
+        super.setVcmMoveToZ(vcmMoveToZ);
+    }
+
+    @Override
+    public void setDelay(String delay) {
+        super.setDelay(delay);
+    }
+
+    @Override
+    public void setVcmPowerOffCheck(String vcmPowerOffCheck) {
+        super.setVcmPowerOffCheck(vcmPowerOffCheck);
+    }
+
+    @Override
+    public void setRecordPosition(String recordPosition) {
+        super.setRecordPosition(recordPosition);
+    }
+
+    @Override
+    public void setDispense(String dispense) {
+        super.setDispense(dispense);
+    }
+
+    @Override
+    public void setEpoxyInspectionAuto(String epoxyInspectionAuto) {
+        super.setEpoxyInspectionAuto(epoxyInspectionAuto);
+    }
+
+    @Override
+    public void setEpoxyInspection(String epoxyInspection) {
+        super.setEpoxyInspection(epoxyInspection);
+    }
+
+    @Override
+    public void setBackToPosition(String backToPosition) {
+        super.setBackToPosition(backToPosition);
+    }
+
+    @Override
+    public void setUvon(String uvon) {
+        super.setUvon(uvon);
+    }
+
+    @Override
+    public void setYLevel(String yLevel) {
+        super.setYLevel(yLevel);
+    }
+
+    @Override
+    public void setUvoff(String uvoff) {
+        super.setUvoff(uvoff);
+    }
+
+    @Override
+    public void setGripperOpen(String gripperOpen) {
+        super.setGripperOpen(gripperOpen);
+    }
+
+    @Override
+    public void setSaveOc(String saveOc) {
+        super.setSaveOc(saveOc);
+    }
+
+    @Override
+    public void setSaveMtf(String saveMtf) {
+        super.setSaveMtf(saveMtf);
+    }
+
+    @Override
+    public void setDestroy(String destroy) {
+        super.setDestroy(destroy);
+    }
+
+    @Override
+    public void setMoveToBlemishPos(String moveToBlemishPos) {
+        super.setMoveToBlemishPos(moveToBlemishPos);
+    }
+
+    @Override
+    public void setMtfCheck3(String mtfCheck3) {
+        super.setMtfCheck3(mtfCheck3);
+    }
+
+    @Override
+    public void setMtfOffAxisCheck1(String mtfOffAxisCheck1) {
+        super.setMtfOffAxisCheck1(mtfOffAxisCheck1);
+    }
+
+    @Override
+    public void setMtfOffAxisCheck2(String mtfOffAxisCheck2) {
+        super.setMtfOffAxisCheck2(mtfOffAxisCheck2);
+    }
+
+    @Override
+    public void setMtfOffAxisCheck3(String mtfOffAxisCheck3) {
+        super.setMtfOffAxisCheck3(mtfOffAxisCheck3);
+    }
+
+    @Override
+    public void setLpBlemish(String lpBlemish) {
+        super.setLpBlemish(lpBlemish);
+    }
+
+    @Override
+    public void setChartAlignment2(String chartAlignment2) {
+        super.setChartAlignment2(chartAlignment2);
+    }
+
+    @Override
+    public void setVcmMoveToZPos(String vcmMoveToZPos) {
+        super.setVcmMoveToZPos(vcmMoveToZPos);
+    }
+
+    @Override
+    public void setZOffset(String zOffset) {
+        super.setZOffset(zOffset);
+    }
+
+    @Override
+    public void setOpenCheck(String openCheck) {
+        super.setOpenCheck(openCheck);
+    }
+
+    @Override
+    public void setRoiCc(String roiCc) {
+        super.setRoiCc(roiCc);
+    }
+
+    @Override
+    public void setRoiUl(String roiUl) {
+        super.setRoiUl(roiUl);
+    }
+
+    @Override
+    public void setRoiUr(String roiUr) {
+        super.setRoiUr(roiUr);
+    }
+
+    @Override
+    public void setRoiLl(String roiLl) {
+        super.setRoiLl(roiLl);
+    }
+
+    @Override
     public void setRoiLr(String roiLr) {
-        this.roiLr = roiLr;
+        super.setRoiLr(roiLr);
     }
 
-    public void fillWithData(List<AaListCommand> aaListCommands) {
-        if (aaListCommands.isEmpty()) {
-            return;
-        }
-
-        List<Map<String, String>> camelCaseData = aaListCommands.stream()
-                .map(aaListCommand -> {
-                    Map<String, String> map = new HashMap<>();
-                    map.put(ToCamelCaseConverter.doConvert(aaListCommand.getIntegration()), aaListCommand.getValue());
-                    return map;
-                })
-                .collect(Collectors.toList());
-
-        try {
-            for (Field field : getClass().getDeclaredFields()) {
-                String camelCaseKey = field.getName();
-                for (Map<String, String> map : camelCaseData) {
-                    if (map.containsKey(camelCaseKey)) {
-                        field.setAccessible(true);
-                        field.set(this, map.get(camelCaseKey));
-                        break; // Once the field is set, no need to check further maps
-                    }
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Failed to set properties due to reflection error", e);
-        }
+    @Override
+    public void setResult1(String result1) {
+        super.setResult1(result1);
     }
 
-    public void reset() {
+    @Override
+    public void setResult2(String result2) {
+        super.setResult2(result2);
+    }
+
+    @Override
+    public void setResult3(String result3) {
+        super.setResult3(result3);
+    }
+
+    @Override
+    public void setResult4(String result4) {
+        super.setResult4(result4);
+    }
+
+    @Override
+    public void setResult5(String result5) {
+        super.setResult5(result5);
+    }
+
+    @Override
+    public void setResult6(String result6) {
+        super.setResult6(result6);
+    }
+
+    @Override
+    public void setResult7(String result7) {
+        super.setResult7(result7);
+    }
+
+    @Override
+    public void setResult8(String result8) {
+        super.setResult8(result8);
+    }
+
+    @Override
+    public void setResult9(String result9) {
+        super.setResult9(result9);
+    }
+
+    @Override
+    public void setResult10(String result10) {
+        super.setResult10(result10);
+    }
+
+    @Override
+    public void setResult11(String result11) {
+        super.setResult11(result11);
+    }
+
+    @Override
+    public void setResult12(String result12) {
+        super.setResult12(result12);
+    }
+
+    @Override
+    public void setResult13(String result13) {
+        super.setResult13(result13);
+    }
+
+    @Override
+    public void setResult14(String result14) {
+        super.setResult14(result14);
+    }
+
+    @Override
+    public void setResult15(String result15) {
+        super.setResult15(result15);
+    }
+
+    @Override
+    public void setResult16(String result16) {
+        super.setResult16(result16);
+    }
+
+    @Override
+    public void setResult17(String result17) {
+        super.setResult17(result17);
+    }
+
+    @Override
+    public void setResult18(String result18) {
+        super.setResult18(result18);
+    }
+
+    @Override
+    public void setResult19(String result19) {
+        super.setResult19(result19);
+    }
+
+    @Override
+    public void setResult20(String result20) {
+        super.setResult20(result20);
+    }
+
+    @Override
+    public void setResult21(String result21) {
+        super.setResult21(result21);
+    }
+
+    @Override
+    public void setResult22(String result22) {
+        super.setResult22(result22);
+    }
+
+    @Override
+    public void setResult23(String result23) {
+        super.setResult23(result23);
+    }
+
+    @Override
+    public void setResult24(String result24) {
+        super.setResult24(result24);
+    }
+
+    @Override
+    public void setResult25(String result25) {
+        super.setResult25(result25);
+    }
+
+    @Override
+    public void setResult26(String result26) {
+        super.setResult26(result26);
+    }
+
+    @Override
+    public void setResult27(String result27) {
+        super.setResult27(result27);
+    }
+
+    @Override
+    public void setResult28(String result28) {
+        super.setResult28(result28);
+    }
+
+    @Override
+    public void setResult29(String result29) {
+        super.setResult29(result29);
+    }
+
+    @Override
+    public void setResult30(String result30) {
+        super.setResult30(result30);
+    }
+
+    @Override
+    public void setResult31(String result31) {
+        super.setResult31(result31);
+    }
+
+    @Override
+    public void setResult32(String result32) {
+        super.setResult32(result32);
+    }
+
+    @Override
+    public void setResult33(String result33) {
+        super.setResult33(result33);
+    }
+
+    @Override
+    public void setResult34(String result34) {
+        super.setResult34(result34);
+    }
+
+    @Override
+    public void setResult35(String result35) {
+        super.setResult35(result35);
+    }
+
+    @Override
+    public void setResult36(String result36) {
+        super.setResult36(result36);
+    }
+
+    @Override
+    public void setResult37(String result37) {
+        super.setResult37(result37);
+    }
+
+    @Override
+    public void setResult38(String result38) {
+        super.setResult38(result38);
+    }
+
+    @Override
+    public void setResult39(String result39) {
+        super.setResult39(result39);
+    }
+
+    @Override
+    public void setResult40(String result40) {
+        super.setResult40(result40);
+    }
+
+    @Override
+    public void setResult41(String result41) {
+        super.setResult41(result41);
+    }
+
+    @Override
+    public void setResult42(String result42) {
+        super.setResult42(result42);
+    }
+
+    @Override
+    public void setResult43(String result43) {
+        super.setResult43(result43);
+    }
+
+    @Override
+    public void setResult44(String result44) {
+        super.setResult44(result44);
+    }
+
+    @Override
+    public void setResult45(String result45) {
+        super.setResult45(result45);
+    }
+
+    @Override
+    public void setResult46(String result46) {
+        super.setResult46(result46);
+    }
+
+    @Override
+    public void setResult47(String result47) {
+        super.setResult47(result47);
+    }
+
+    @Override
+    public void setResult48(String result48) {
+        super.setResult48(result48);
+    }
+
+    @Override
+    public void setResult49(String result49) {
+        super.setResult49(result49);
+    }
+
+    @Override
+    public void setResult50(String result50) {
+        super.setResult50(result50);
+    }
+
+    @Override
+    public void setResult51(String result51) {
+        super.setResult51(result51);
+    }
+
+    @Override
+    public void setResult52(String result52) {
+        super.setResult52(result52);
+    }
+
+    @Override
+    public void setXResMin(String xResMin) {
+        super.setXResMin(xResMin);
+    }
+
+    @Override
+    public void setXResMax(String xResMax) {
+        super.setXResMax(xResMax);
+    }
+
+    @Override
+    public void setYResMin(String yResMin) {
+        super.setYResMin(yResMin);
+    }
+
+    @Override
+    public void setYResMax(String yResMax) {
+        super.setYResMax(yResMax);
+    }
+
+    @Override
+    public void setEpoxyInspectionInterval(String epoxyInspectionInterval) {
+        super.setEpoxyInspectionInterval(epoxyInspectionInterval);
+    }
+
+    @Override
+    public void setResultCheckMin(String resultCheckMin) {
+        super.setResultCheckMin(resultCheckMin);
+    }
+
+    @Override
+    public void setResultCheckMax(String resultCheckMax) {
+        super.setResultCheckMax(resultCheckMax);
+    }
+
+    public AaListParams() {
+        super();
         this.simId = null;
         this.prodType = null;
         this.receivedTime = null;
-        this.clampOnOff = null;
-        this.destroyStart = null;
-        this.init = null;
-        this.grab = null;
-        this.reInit = null;
-        this.senserReset = null;
-        this.sid = null;
-        this.vcmHall = null;
-        this.vcmInit = null;
-        this.vcmHall2 = null;
-        this.vcmPowerOff = null;
-        this.vcmPowerOn = null;
-        this.vcmTop = null;
-        this.vcmTopHall = null;
-        this.vcmZ = null;
-        this.vcmZHall = null;
-        this.vcmOisInit = null;
-        this.chartAlignment1 = null;
-        this.AA1 = null;
-        this.AA2 = null;
-        this.mtfCheck = null;
-        this.AA3 = null;
-        this.mtfCheck2 = null;
-        this.lpOn = null;
-        this.lpOcCheck = null;
-        this.lpOc = null;
-        this.lpOnBlemish = null;
-        this.blemish = null;
-        this.lpOff = null;
-        this.chartAlignment = null;
-        this.vcmMoveToZ = null;
-        this.delay = null;
-        this.vcmPowerOffCheck = null;
-        this.recordPosition = null;
-        this.dispense = null;
-        this.epoxyInspectionAuto = null;
-        this.epoxyInspection = null;
-        this.backToPosition = null;
-        this.uvon = null;
-        this.yLevel = null;
-        this.uvoff = null;
-        this.gripperOpen = null;
-        this.saveOc = null;
-        this.saveMtf = null;
-        this.destroy = null;
-        this.moveToBlemishPos = null;
-        this.mtfCheck3 = null;
-        this.mtfOffAxisCheck1 = null;
-        this.mtfOffAxisCheck2 = null;
-        this.mtfOffAxisCheck3 = null;
-        this.lpBlemish = null;
-        this.chartAlignment2 = null;
-        this.vcmMoveToZPos = null;
-        this.zOffset = null;
-        this.openCheck = null;
-        this.roiCc = null;
-        this.roiUl = null;
-        this.roiUr = null;
-        this.roiLl = null;
-        this.roiLr = null;
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+    }
+
+    @Override
+    public void fillWithData(List<AaListCommand> aaListCommands) {
+        super.fillWithData(aaListCommands);
     }
 
     @Override
     public String toString() {
-        return "AaListParams{" +
-                "simId='" + simId + '\'' +
-                ", prodType='" + prodType + '\'' +
-                ", receivedTime=" + receivedTime +
-                ", clampOnOff='" + clampOnOff + '\'' +
-                ", destroyStart='" + destroyStart + '\'' +
-                ", init='" + init + '\'' +
-                ", grab='" + grab + '\'' +
-                ", reInit='" + reInit + '\'' +
-                ", senserReset='" + senserReset + '\'' +
-                ", sid='" + sid + '\'' +
-                ", vcmHall='" + vcmHall + '\'' +
-                ", vcmInit='" + vcmInit + '\'' +
-                ", vcmHall2='" + vcmHall2 + '\'' +
-                ", vcmPowerOff='" + vcmPowerOff + '\'' +
-                ", vcmPowerOn='" + vcmPowerOn + '\'' +
-                ", vcmTop='" + vcmTop + '\'' +
-                ", vcmTopHall='" + vcmTopHall + '\'' +
-                ", vcmZ='" + vcmZ + '\'' +
-                ", vcmZHall='" + vcmZHall + '\'' +
-                ", vcmOisInit='" + vcmOisInit + '\'' +
-                ", chartAlignment1='" + chartAlignment1 + '\'' +
-                ", AA1='" + AA1 + '\'' +
-                ", AA2='" + AA2 + '\'' +
-                ", mtfCheck='" + mtfCheck + '\'' +
-                ", AA3='" + AA3 + '\'' +
-                ", mtfCheck2='" + mtfCheck2 + '\'' +
-                ", lpOn='" + lpOn + '\'' +
-                ", lpOcCheck='" + lpOcCheck + '\'' +
-                ", lpOc='" + lpOc + '\'' +
-                ", lpOnBlemish='" + lpOnBlemish + '\'' +
-                ", blemish='" + blemish + '\'' +
-                ", lpOff='" + lpOff + '\'' +
-                ", chartAlignment='" + chartAlignment + '\'' +
-                ", vcmMoveToZ='" + vcmMoveToZ + '\'' +
-                ", delay='" + delay + '\'' +
-                ", vcmPowerOffCheck='" + vcmPowerOffCheck + '\'' +
-                ", recordPosition='" + recordPosition + '\'' +
-                ", dispense='" + dispense + '\'' +
-                ", epoxyInspectionAuto='" + epoxyInspectionAuto + '\'' +
-                ", epoxyInspection='" + epoxyInspection + '\'' +
-                ", backToPosition='" + backToPosition + '\'' +
-                ", uvon='" + uvon + '\'' +
-                ", yLevel='" + yLevel + '\'' +
-                ", uvoff='" + uvoff + '\'' +
-                ", gripperOpen='" + gripperOpen + '\'' +
-                ", saveOc='" + saveOc + '\'' +
-                ", saveMtf='" + saveMtf + '\'' +
-                ", destroy='" + destroy + '\'' +
-                ", moveToBlemishPos='" + moveToBlemishPos + '\'' +
-                ", mtfCheck3='" + mtfCheck3 + '\'' +
-                ", mtfOffAxisCheck1='" + mtfOffAxisCheck1 + '\'' +
-                ", mtfOffAxisCheck2='" + mtfOffAxisCheck2 + '\'' +
-                ", mtfOffAxisCheck3='" + mtfOffAxisCheck3 + '\'' +
-                ", lpBlemish='" + lpBlemish + '\'' +
-                ", chartAlignment2='" + chartAlignment2 + '\'' +
-                ", vcmMoveToZPos='" + vcmMoveToZPos + '\'' +
-                ", zOffset='" + zOffset + '\'' +
-                ", openCheck='" + openCheck + '\'' +
-                ", roiCc='" + roiCc + '\'' +
-                ", roiUl='" + roiUl + '\'' +
-                ", roiUr='" + roiUr + '\'' +
-                ", roiLl='" + roiLl + '\'' +
-                ", roiLr='" + roiLr + '\'' +
-                '}';
+        return super.toString();
     }
 
-// 通常用于定义排序顺序，而不是这种复杂的属性比较。
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    // 通常用于定义排序顺序，而不是这种复杂的属性比较。
     /*@Override
     public int compareTo(AaListParams o) {
         return 0;

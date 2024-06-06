@@ -14,10 +14,4 @@ import java.util.List;
 
 public interface IAaListParamsCheckResultService {
     public int save(AaListParamsCheckResult aaListParamsCheckResult);
-
-    public int update(AaListParamsCheckResult aaListParamsCheckResult);
-
-    public int delete(AaListParamsCheckResult aaListParamsCheckResult);
-
-    public List<AaListParamsCheckResult> selectAaListParamsCheckResultList(AaListParamsCheckResult aaListParamsCheckResult);
 }

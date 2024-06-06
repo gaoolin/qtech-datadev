@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
   servlet:
     context-path: /
   tomcat:
@@ -111,6 +111,9 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       #指定value使用的反序列化类
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+mybatis:
+  type-aliases-package: com.qtech.check.pojo
 
   # 服务模块
   devtools:

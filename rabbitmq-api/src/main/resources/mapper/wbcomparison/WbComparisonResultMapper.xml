@@ -16,18 +16,18 @@
     <insert id="add" parameterType="WbComparisonResult">
         insert into qtech_eq_dwd.eq_control_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="simId != null and simId != ''">sim_id,</if>
-            <if test="programName != null and programName != ''">program_name,</if>
+            <if test="simId != null">sim_id,</if>
+            <if test="programName != null">program_name,</if>
             <if test="dt != null">dt,</if>
             <if test="code != null">code,</if>
-            <if test="description != null and description != ''">description,</if>
+            <if test="description != null">description,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="simId != null and simId != ''">#{simId},</if>
-            <if test="programName != null and programName != ''">#{programName},</if>
+            <if test="simId != null">#{simId},</if>
+            <if test="programName != null">#{programName},</if>
             <if test="dt != null">#{dt},</if>
             <if test="code != null">#{code},</if>
-            <if test="description != null and description != ''">#{description},</if>
+            <if test="description != null">#{description},</if>
         </trim>
     </insert>
 </mapper>

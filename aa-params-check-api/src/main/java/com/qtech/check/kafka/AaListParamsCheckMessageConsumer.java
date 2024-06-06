@@ -55,8 +55,6 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             // String key = record.key();
             String value = record.value();
-            System.out.println(value);
-
             AaListParams actualObj = JSON.parseObject(value, new TypeReference<AaListParams>() {
             }.getType());
             modelObj = redisUtil.getMessage(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType());
@@ -65,7 +63,6 @@ public class AaListParamsCheckMessageConsumer {
                 stdModelParam.setProdType(actualObj.getProdType());
                 modelObj = aaListParamsStdModelService.selectOneAaListParamsStdModel(stdModelParam);
                 if (modelObj == null) {
-                    aaListParamsCheckResult.setProjectId("aa_list_params");
                     aaListParamsCheckResult.setSimId(actualObj.getSimId());
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());
@@ -92,7 +89,6 @@ public class AaListParamsCheckMessageConsumer {
             // 输出空在标准参数对象的属性
 
             if (inconsistentProperties.isEmpty() && emptyInActual.isEmpty()) {
-                aaListParamsCheckResult.setProjectId("aa_list_params");
                 aaListParamsCheckResult.setSimId(actualObj.getSimId());
                 aaListParamsCheckResult.setProdType(actualObj.getProdType());
                 aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());
@@ -130,7 +126,6 @@ public class AaListParamsCheckMessageConsumer {
                     });
                 }
 
-                aaListParamsCheckResult.setProjectId("aa_list_params");
                 aaListParamsCheckResult.setSimId(actualObj.getSimId());
                 aaListParamsCheckResult.setProdType(actualObj.getProdType());
                 aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());

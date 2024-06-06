@@ -14,8 +14,6 @@ import java.util.Date;
 
 @Data
 public class AaListParamsCheckResult {
-
-    private String projectId;
     private String simId;
     private String prodType;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

@@ -6,7 +6,7 @@ spring:
     druid:
       # 主库数据源
       first:
-        url: jdbc:mysql://127.0.0.1:3306/qtech_biz_1?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+        url: jdbc:mysql://10.170.6.40:32125/qtech_biz_1?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
         username: root
         password: root
       # 从库数据源
@@ -58,4 +58,3 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-

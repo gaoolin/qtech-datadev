@@ -34,8 +34,7 @@ public class AaListParamsComparator {
      * @param propertiesToCompare 需要比较的属性列表
      * @return 包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
      */
-    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(
-            Object standardObj, Object actualObj, List<String> propertiesToCompare) {
+    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(Object standardObj, Object actualObj, List<String> propertiesToCompare) {
 
         if (propertiesToCompare == null || propertiesToCompare.isEmpty()) {
             // 如果没有属性需要比较，则直接返回表示没有不一致的结果
@@ -48,13 +47,13 @@ public class AaListParamsComparator {
 
         for (String propertyName : propertiesToCompare) {
             try {
-                Field field1 = standardObj.getClass().getDeclaredField(propertyName);
-                Field field2 = actualObj.getClass().getDeclaredField(propertyName);
-                field1.setAccessible(true);
-                field2.setAccessible(true);
+                Field modelField = standardObj.getClass().getDeclaredField(propertyName);
+                Field actualField = actualObj.getClass().getDeclaredField(propertyName);
+                modelField.setAccessible(true);
+                actualField.setAccessible(true);
 
-                Object modelVal = field1.get(standardObj);
-                Object actualVal = field2.get(actualObj);
+                Object modelVal = modelField.get(standardObj);
+                Object actualVal = actualField.get(actualObj);
 
                 // 使用Objects.equals简化null检查和相等性检查
                 if (!Objects.equals(modelVal, actualVal)) {
@@ -78,21 +77,20 @@ public class AaListParamsComparator {
             }
         }
 
-        boolean areEqualAndInRange = compareObjectsWithRanges(standardObj, actualObj, propertiesToCompare);
+        // boolean areEqualAndInRange = compareObjectsWithRanges(standardObj, actualObj, propertiesToCompare);
 
         return new ImmutableTriple<>(inconsistentProperties, emptyInActual, emptyInStandard);
     }
 
 
     // 原有的compareObjectsWithRanges方法保持不变
-    public static boolean compareObjectsWithRanges(
-//            Object obj1, Object obj2, List<String> propertiesToCompare, Map<String, Range<Integer>> propertiesWithRanges) {
-            Object obj1, Object obj2, List<String> propertiesToCompare) {
+    public static boolean compareObjectsWithRanges(Object obj1, Object obj2, List<String> propertiesToCompare, Map<String, Range<Integer>> propertiesWithRanges) {
+//            Object obj1, Object obj2, List<String> propertiesToCompare) {
         if (obj1 == obj2) return true;
         if (obj1 == null || obj2 == null) return false;
 
         // 比较相等的属性
-        for (String propertyName : propertiesToCompare) {
+        /*for (String propertyName : propertiesToCompare) {
             try {
                 Field field1 = obj1.getClass().getDeclaredField(propertyName);
                 Field field2 = obj2.getClass().getDeclaredField(propertyName);
@@ -108,10 +106,10 @@ public class AaListParamsComparator {
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new IllegalArgumentException("Error accessing field: " + propertyName, e);
             }
-        }
+        }*/
 
         // 检查范围
-        /*for (Map.Entry<String, Range<Integer>> entry : propertiesWithRanges.entrySet()) {
+        for (Map.Entry<String, Range<Integer>> entry : propertiesWithRanges.entrySet()) {
             try {
                 Field field1 = obj1.getClass().getDeclaredField(entry.getKey());
                 Field field2 = obj2.getClass().getDeclaredField(entry.getKey());
@@ -121,14 +119,13 @@ public class AaListParamsComparator {
                 Integer value1 = (Integer) field1.get(obj1);
                 Integer value2 = (Integer) field2.get(obj2);
 
-                if (value1 == null || value1 < entry.getValue().getMin() || value1 > entry.getValue().getMax()
-                        || value2 == null || value2 < entry.getValue().getMin() || value2 > entry.getValue().getMax()) {
+                if (value1 == null || value1 < entry.getValue().getMin() || value1 > entry.getValue().getMax() || value2 == null || value2 < entry.getValue().getMin() || value2 > entry.getValue().getMax()) {
                     return false;
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new IllegalArgumentException("Error accessing field: " + entry.getKey(), e);
             }
-        }*/
+        }
 
         return true;
     }

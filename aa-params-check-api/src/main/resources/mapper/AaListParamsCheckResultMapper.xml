@@ -4,7 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.check.mapper.AaListParamsCheckResultMapper">
     <resultMap id="AaListParamsCheckResult" type="AaListParamsCheckResult">
-        <result column="project_id" property="projectId" jdbcType="VARCHAR"/>
         <result column="sim_id" property="simId" jdbcType="VARCHAR"/>
         <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
         <result column="check_dt" property="checkDt" jdbcType="TIMESTAMP"/>
@@ -13,74 +12,59 @@
     </resultMap>
 
     <sql id="AaListParamsCheckResultSql">
-        SELECT prod_type, sim_id, check_dt, project_id, status_code, description
-        FROM qtech_eq_ods.aa_list_params_check_result_detail
+        SELECT prod_type, sim_id, check_dt, status_code, description
+        FROM qtech_eq_dwd.aa_list_params_check_result_detail
+    </sql>
+
+    <sql id="AaListParamsLatestCheckResultSql">
+        SELECT prod_type, sim_id, check_dt, status_code, description
+        FROM qtech_eq_ods.aa_list_params_check_result_latest
     </sql>
 
     <insert id="insertAaListParamsCheckResult" parameterType="aaListParamsCheckResult">
-        insert into qtech_eq_ods.aa_list_params_check_result_detail
+        insert into qtech_eq_dwd.aa_list_params_check_result_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="projectId != null">
-                project_id,
-            </if>
-            <if test="simId != null">
-                sim_id,
-            </if>
-            <if test="prodType != null">
-                prod_type,
-            </if>
-            <if test="checkDt != null">
-                check_dt,
-            </if>
-            <if test="statusCode != null">
-                status_code,
-            </if>
-            <if test="description != null">
-                description,
-            </if>
+            <if test="simId != null">sim_id,</if>
+            <if test="prodType != null">prod_type,</if>
+            <if test="checkDt != null">check_dt,</if>
+            <if test="statusCode != null">status_code,</if>
+            <if test="description != null">description,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="projectId != null">
-                #{projectId,jdbcType=VARCHAR},
-            </if>
-            <if test="simId != null">
-                #{simId,jdbcType=VARCHAR},
-            </if>
-            <if test="prodType != null">
-                #{prodType,jdbcType=VARCHAR},
-            </if>
-            <if test="checkDt != null">
-                #{checkDt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="statusCode != null">
-                #{statusCode,jdbcType=INTEGER},
-            </if>
-            <if test="description != null">
-                #{description,jdbcType=VARCHAR},
-            </if>
+            <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
+            <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
+            <if test="checkDt != null">#{checkDt,jdbcType=TIMESTAMP},</if>
+            <if test="statusCode != null">#{statusCode,jdbcType=INTEGER},</if>
+            <if test="description != null">#{description,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
+
+    <insert id="insertAaListParamsLatestCheckResult" parameterType="aaListParamsCheckResult">
+        insert into qtech_eq_ods.aa_list_params_check_result_latest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="simId != null">sim_id,</if>
+            <if test="prodType != null">prod_type,</if>
+            <if test="checkDt != null">check_dt,</if>
+            <if test="statusCode != null">status_code,</if>
+            <if test="description != null">description,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
+            <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
+            <if test="checkDt != null">#{checkDt,jdbcType=TIMESTAMP},</if>
+            <if test="statusCode != null">#{statusCode,jdbcType=INTEGER},</if>
+            <if test="description != null">#{description,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
     <select id="selectAaListParamsCheckResultList" resultMap="AaListParamsCheckResult" parameterType="aaListParamsCheckResult">
         <include refid="AaListParamsCheckResultSql"></include>
         <where>
-            <if test="projectId != null">
-                project_id = #{projectId,jdbcType=VARCHAR}
-            </if>
-            <if test="simId != null">
-                and sim_id = #{simId,jdbcType=VARCHAR}
-            </if>
-            <if test="prodType != null">
-                and prod_type = #{prodType,jdbcType=VARCHAR}
-            </if>
-            <if test="checkDt != null">
-                and check_dt = #{checkDt,jdbcType=TIMESTAMP}
-            </if>
-            <if test="statusCode != null">
-                and status_code = #{statusCode,jdbcType=INTEGER}
-            </if>
-            <if test="description != null">
-                and description = #{description,jdbcType=VARCHAR}
-            </if>
+            <if test="simId != null">and sim_id = #{simId,jdbcType=VARCHAR}</if>
+            <if test="prodType != null">and prod_type = #{prodType,jdbcType=VARCHAR}</if>
+            <if test="checkDt != null">and check_dt = #{checkDt,jdbcType=TIMESTAMP}</if>
+            <if test="statusCode != null">and status_code = #{statusCode,jdbcType=INTEGER}</if>
+            <if test="description != null">and description = #{description,jdbcType=VARCHAR}</if>
         </where>
     </select>
 </mapper>

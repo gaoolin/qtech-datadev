@@ -1,28 +1,38 @@
 package com.qtech.check.processor.handler.type.item;
 
-import com.qtech.check.algorithm.Range;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/05/28 11:20:49
- * desc   :  ChartAlignment
+ * date   :  2024/05/28 11:18:51
+ * desc   :  BackToPosition
  */
 
 @Component
-public class ChartAlignmentHandler extends AaListCommandHandler<AaListCommand> {
+public class MtfCheckHandler extends AaListCommandHandler<AaListCommand> {
+
     @Override
     public AaListCommand handle(String[] parts) {
         String command = parts[2];
-        if ("X_RES".equals(command) || "Y_RES".equals(command)) {
+        if ("RESULT".equals(command)) {
             Integer num = Integer.parseInt(parts[1]);
-            String max = parts[3];
-            String min = parts[4];
-            Range<String> chartAlignmentRange = new Range<>(min, max);
-            return new AaListCommand(null, num, command, null, null, chartAlignmentRange);
+
+            String subSystem = null;
+            Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
+            Matcher matcher = pattern.matcher(parts[3]);
+            if (matcher.find()) {
+                subSystem = matcher.group(1); // Return the first capturing group (the number)
+            } else {
+                throw new IllegalArgumentException("MtfCheckHandler string does not match the expected pattern");
+            }
+            String val = parts[6];
+            return new AaListCommand(null, num, command, subSystem, val, null);
         }
         return null;
     }
@@ -40,5 +50,4 @@ public class ChartAlignmentHandler extends AaListCommandHandler<AaListCommand> {
     public <U> boolean supportsType(Class<U> clazz) {
         return AaListCommand.class.equals(clazz);
     }
-
 }

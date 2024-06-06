@@ -1,7 +1,6 @@
 package com.qtech.check.constant;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * author :  gaozhilin
@@ -68,20 +67,23 @@ public class ComparisonConstants {
             "chartAlignment2",
             "vcmMoveToZPos",
             "zOffset",
-            "openCheck"
+            "openCheck",
+            "roiCc", "roiUl", "roiUr", "roiLl", "roiLr",
+            "result1", "result2", "result3", "result4", "result5", "result6", "result7", "result8", "result9", "result10",
+            "result11", "result12", "result13", "result14", "result15", "result16", "result17", "result18", "result19", "result20",
+            "result21", "result22", "result23", "result24", "result25", "result26", "result27", "result28", "result29", "result30",
+            "result31", "result32", "result33", "result34", "result35", "result36", "result37", "result38", "result39", "result40",
+            "result41", "result42", "result43", "result44", "result45", "result46", "result47", "result48", "result49", "result50",
+            "result51", "result52",
+            "xResMin", "xResMax", "yResMin", "yResMax",
+            "epoxyInspectionInterval",
+            "resultCheckMin", "resultCheckMax"
             // ... 其他需要比较是否相等的属性名称
     );
-//    public static final List<String> PROPERTIES_TO_COMPARE = Arrays.asList("init");
-
-//        public static final Map<String, Range<Integer>> PROPERTIES_WITH_RANGES = new HashMap<>();
-//
-//        static {
-//            PROPERTIES_WITH_RANGES.put("propertyNameForRange1", new Range<>(0, 100)); // 示例范围
-//            PROPERTIES_WITH_RANGES.put("propertyNameForRange2", new Range<>(1, 10)); // 示例范围
-//            // ... 添加其他需要检查范围的属性及其范围
-//        }
-
-//    public static final List<String> ALL_PROPERTIES = Arrays.asList();
 
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:aa:list:params:";
+
+    public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            "AA1", "AA2", "AA3", "ChartAlignment", "ChartAlignment1", "ChartAlignment2", "EpoxyInspection_Auto", "LP_OC", "MTF_Check", "MTF_Check2", "MTF_Check3",
+            "MTF_OffAxisCheck1", "MTF_OffAxisCheck2", "MTF_OffAxisCheck3", "Save_MTF", "VCM_Init", "VCMPowerOffCheck", "Z_Offset")));
 }

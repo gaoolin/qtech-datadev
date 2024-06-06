@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -40,10 +41,10 @@ public class MyBatisConfig {
                 .getResources("classpath*:mapper/**/*.xml")); // 根据实际情况调整路径
 
         // 如果有配置文件，也可以在这里设置
-        // factory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+         factory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
 
         // 硬编码类型别名的包
-        factory.setTypeAliasesPackage("com.qtech.**.pojo"); // 替换为你的实际包路径
+        factory.setTypeAliasesPackage("com.qtech.check.pojo"); // 替换为你的实际包路径
 
         return factory.getObject();
     }

@@ -36,19 +36,4 @@ public class AaListParamsStdModelServiceImpl implements IAaListParamsStdModelSer
         }
         return null;
     }
-
-    @Override
-    public int insertAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
-        return 0;
-    }
-
-    @Override
-    public int updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
-        return 0;
-    }
-
-    @Override
-    public int deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel) {
-        return 0;
-    }
 }

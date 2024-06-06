@@ -18,7 +18,7 @@ public class ListHandler extends AaListCommandHandler<AaListCommand> {
     public AaListCommand handle(String[] parts) {
         String command = parts[2];
         String enable = parts[parts.length - 1];
-        return new AaListCommand(null, null, command, null, enable);
+        return new AaListCommand(null, null, command, null, enable, null);
     }
 
     @Override

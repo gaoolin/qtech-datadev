@@ -1,5 +1,6 @@
 package com.qtech.check.processor.handler.type.item;
 
+import com.qtech.check.algorithm.Range;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import org.springframework.stereotype.Component;
@@ -7,19 +8,25 @@ import org.springframework.stereotype.Component;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/05/28 11:21:44
- * desc   :  ClampOnOff
+ * date   :  2024/05/28 11:19:56
+ * desc   :  Blemish
  */
 
 @Component
-public class ClampOnOffHandler extends AaListCommandHandler<AaListCommand> {
+public class VcmCheckHandler extends AaListCommandHandler<AaListCommand> {
+
     @Override
     public AaListCommand handle(String[] parts) {
-        Integer num = Integer.parseInt(parts[1]);
         String command = parts[2];
-        String subSystem = parts[3];
-        String val = parts[5];
-        return new AaListCommand(null, num, command, subSystem, val);
+        String subsystem = parts[4];
+        if ("RESULT".equals(command) && "Check".equals(subsystem)) {
+            Integer num = Integer.parseInt(parts[1]);
+            String max = parts[6];
+            String min = parts[5];
+            Range<String> vcmZRange = new Range<>(min, max);
+            return new AaListCommand(null, num, command, subsystem, null, vcmZRange);
+        }
+        return null;
     }
 
     @Override
@@ -35,5 +42,4 @@ public class ClampOnOffHandler extends AaListCommandHandler<AaListCommand> {
     public <U> boolean supportsType(Class<U> clazz) {
         return AaListCommand.class.equals(clazz);
     }
-
 }

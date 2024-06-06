@@ -15,11 +15,14 @@ import org.springframework.stereotype.Component;
 public class AaHandler extends AaListCommandHandler<AaListCommand> {
     @Override
     public AaListCommand handle(String[] parts) {
-        Integer num = Integer.parseInt(parts[1]);
         String command = parts[2];
         String subSystem = parts[3];
-        String val = parts[5];
-        return new AaListCommand(null, num, command, subSystem, val);
+        if ("ROI".equals(command) && ("CC".equals(subSystem) || "UL".equals(subSystem) || "UR".equals(subSystem) || "LL".equals(subSystem) || "LR".equals(subSystem))) {
+            Integer num = Integer.parseInt(parts[1]);
+            String val = parts[6];
+            return new AaListCommand(null, num, command, subSystem, val, null);
+        }
+        return null;
     }
 
     @Override

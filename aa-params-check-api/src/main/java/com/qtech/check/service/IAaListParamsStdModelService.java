@@ -11,12 +11,5 @@ import com.qtech.check.pojo.AaListParamsStdModel;
 
 
 public interface IAaListParamsStdModelService {
-
     public AaListParamsStdModel selectOneAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
-    public int insertAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
-    public int updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
-    public int deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
 }
