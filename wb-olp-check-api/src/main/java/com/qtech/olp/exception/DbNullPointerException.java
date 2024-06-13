@@ -4,7 +4,7 @@ package com.qtech.olp.exception;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2023/10/13 10:54:44
- * desc   :  TODO
+ * desc   :
  */
 
 

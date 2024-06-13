@@ -12,8 +12,6 @@ import org.springframework.stereotype.Repository;
  * desc   :
  */
 
-
-@Repository
 @Mapper
 public interface WbOlpCheckMapper {
 

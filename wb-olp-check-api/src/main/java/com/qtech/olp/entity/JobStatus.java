@@ -14,7 +14,6 @@ import lombok.ToString;
  * desc   :
  */
 
-@ApiModel("spark作业信息对象")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
