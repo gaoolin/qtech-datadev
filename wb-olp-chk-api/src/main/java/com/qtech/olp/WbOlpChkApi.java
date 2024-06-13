@@ -11,8 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @MapperScan(basePackages = "com.qtech.olp.mapper")
 @SpringBootApplication
-public class WbOlpCheckApi {
+public class WbOlpChkApi
+{
     public static void main(String[] args) {
-        SpringApplication.run(WbOlpCheckApi.class, args);
+        SpringApplication.run(WbOlpChkApi.class, args);
     }
 }

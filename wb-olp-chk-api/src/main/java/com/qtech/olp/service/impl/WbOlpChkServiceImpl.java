@@ -1,20 +1,17 @@
 package com.qtech.olp.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
-import com.qtech.olp.entity.WbOlpCheckResult;
-import com.qtech.olp.mapper.WbOlpCheckMapper;
-import com.qtech.olp.service.IWbOlpCheckService;
+import com.qtech.olp.entity.WbOlpChkResult;
+import com.qtech.olp.mapper.WbOlpChkMapper;
+import com.qtech.olp.service.IWbOlpChkService;
+import com.qtech.olp.service.IWbOlpChkService;
 import com.qtech.olp.utils.RedisClusterUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
-
-import static com.qtech.olp.utils.Constants.*;
+import static com.qtech.olp.utils.Constants.WB_OLP_CHECK_REDIS_KEY_PREFIX;
 
 /**
  * author :  gaozhilin
@@ -25,14 +22,14 @@ import static com.qtech.olp.utils.Constants.*;
 
 @Service
 @Slf4j
-public class WbOlpCheckServiceImpl implements IWbOlpCheckService {
+public class WbOlpChkServiceImpl implements IWbOlpChkService {
 
     private static final Long REDIS_EXPIRE_TIME = 60L; // 过期时间单位：分钟
     private static final String REDIS_KEY_PREFIX = WB_OLP_CHECK_REDIS_KEY_PREFIX; // 避免直接在字符串中拼接
 
     @Autowired
-    @Qualifier("wbOlpCheckMapper")
-    private WbOlpCheckMapper wbOlpCheckMapper;
+    @Qualifier("wbOlpChkMapper")
+    private WbOlpChkMapper wbOlpCheckMapper;
 
     @Override
     public String getOlpCheckResult(String simId) {
@@ -46,7 +43,7 @@ public class WbOlpCheckServiceImpl implements IWbOlpCheckService {
 
         if (StringUtils.isEmpty(olpCheckResult)) {
             try {
-                WbOlpCheckResult wbOlpCheckResultDao = wbOlpCheckMapper.getOlpCheckResult(simId);
+                WbOlpChkResult wbOlpCheckResultDao = wbOlpCheckMapper.getOlpChkResult(simId);
                 if (wbOlpCheckResultDao != null) {
                     String codeStr = wbOlpCheckResultDao.getCode();
                     String descStr = wbOlpCheckResultDao.getDescription();

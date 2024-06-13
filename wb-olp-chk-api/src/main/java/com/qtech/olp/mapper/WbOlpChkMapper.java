@@ -1,6 +1,6 @@
 package com.qtech.olp.mapper;
 
-import com.qtech.olp.entity.WbOlpCheckResult;
+import com.qtech.olp.entity.WbOlpChkResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface WbOlpCheckMapper {
+public interface WbOlpChkMapper {
 
-    WbOlpCheckResult getOlpCheckResult(@Param("simId") String simId);
+    WbOlpChkResult getOlpChkResult(@Param("simId") String simId);
 }
