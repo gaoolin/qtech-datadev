@@ -24,7 +24,7 @@
     <packaging>pom</packaging>
 
     <groupId>com.qtech</groupId>
-    <artifactId>api</artifactId>
+    <artifactId>qtech-datadev-api</artifactId>
     <version>1.0</version>
 
     <modules>
@@ -32,7 +32,6 @@
         <module>ocr-api</module>
         <module>pulsar-api</module>
         <module>common-api</module>
-        <module>wb-olp-check-api</module>
         <module>rabbitmq-api</module>
         <module>aa-params-check-api</module>
         <module>message-api</module>

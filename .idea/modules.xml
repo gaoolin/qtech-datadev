@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/api.iml" filepath="$PROJECT_DIR$/api.iml" />
       <module fileurl="file://$PROJECT_DIR$/pulsar-api/pulsar-api.iml" filepath="$PROJECT_DIR$/pulsar-api/pulsar-api.iml" />
     </modules>
   </component>
