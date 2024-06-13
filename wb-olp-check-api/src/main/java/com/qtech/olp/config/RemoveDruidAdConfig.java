@@ -21,7 +21,6 @@ import java.io.IOException;
  */
 
 
-
 @Configuration
 @ConditionalOnWebApplication
 @AutoConfigureAfter(DruidDataSourceAutoConfigure.class)
@@ -32,6 +31,7 @@ public class RemoveDruidAdConfig {
     /**
      * 方法名: removeDruidAdFilterRegistrationBean
      * 方法描述 除去页面底部的广告
+     *
      * @param properties com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties
      * @return org.springframework.boot.web.servlet.FilterRegistrationBean
      */
@@ -49,7 +49,8 @@ public class RemoveDruidAdConfig {
         //创建filter进行过滤
         Filter filter = new Filter() {
             @Override
-            public void init(FilterConfig filterConfig) throws ServletException {}
+            public void init(FilterConfig filterConfig) throws ServletException {
+            }
 
             @Override
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -63,8 +64,10 @@ public class RemoveDruidAdConfig {
                 text = text.replaceAll("powered.*?shrek.wang</a>", "");
                 response.getWriter().write(text);
             }
+
             @Override
-            public void destroy() {}
+            public void destroy() {
+            }
         };
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);

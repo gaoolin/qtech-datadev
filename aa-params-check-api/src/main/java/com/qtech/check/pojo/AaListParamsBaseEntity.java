@@ -1,10 +1,9 @@
 package com.qtech.check.pojo;
 
 import com.qtech.check.utils.ToCamelCaseConverter;
-import com.qtech.common.utils.StringUtils;
 import lombok.Data;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -21,6 +20,8 @@ import java.util.stream.Collectors;
  */
 
 @Data
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = false)
 public class AaListParamsBaseEntity {
     private String clampOnOff;
     private String destroyStart;
@@ -146,8 +147,6 @@ public class AaListParamsBaseEntity {
     // vcmZ Item 指标
     private String resultCheckMin;
     private String resultCheckMax;
-    // zOffset Item 指标
-
 
     public void reset() {
         try {
@@ -167,13 +166,15 @@ public class AaListParamsBaseEntity {
             return;
         }
 
-        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(AaListCommand::nonNull).map(aaListCommand -> {
+        List<Map<String, String>> camelCaseData = aaListCommands.stream()
+                .filter(AaListCommand::nonNull)
+                .map(aaListCommand -> {
                     Map<String, String> map = new HashMap<>();
                     Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
                         String cmdObjVal = aaListCommand.getValue();
                         if (cmdObjVal == null) {
-                            String metricsMin = StringUtils.join(ToCamelCaseConverter.doConvert(integration), "Min");
-                            String metricsMax = StringUtils.join(ToCamelCaseConverter.doConvert(integration), "Max");
+                            String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
+                            String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
                             map.put(metricsMin, aaListCommand.getRange().getMin());
                             map.put(metricsMax, aaListCommand.getRange().getMax());
                         } else {
@@ -181,7 +182,8 @@ public class AaListParamsBaseEntity {
                         }
                     });
                     return map;
-                }).filter(map -> !map.isEmpty()) // 过滤掉空的 Map
+                })
+                .filter(map -> !map.isEmpty())
                 .collect(Collectors.toList());
 
         try {
@@ -191,49 +193,12 @@ public class AaListParamsBaseEntity {
                     if (map.containsKey(camelCaseKey)) {
                         field.setAccessible(true);
                         field.set(this, map.get(camelCaseKey));
-                        break; // Once the field is set, no need to check further maps
+                        break;
                     }
                 }
             }
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Failed to set properties due to reflection error", e);
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append(" {");
-
-        Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            try {
-                sb.append(field.getName()).append("=").append(field.get(this)).append(", ");
-            } catch (IllegalAccessException e) {
-                sb.append(field.getName()).append("=access denied, ");
-            }
-        }
-
-        if (sb.length() > 2) {
-            sb.setLength(sb.length() - 2); // 移除最后的逗号和空格
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-
-    // equals 和 hashCode 方法使用 reflectionEquals 和 reflectionHashCode 方法，它们会递归地比较和计算对象的所有字段，因此无需额外处理父类的字段
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        AaListParamsBaseEntity that = (AaListParamsBaseEntity) o;
-        return EqualsBuilder.reflectionEquals(this, that, false);
-    }
-
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this, false);
     }
 }

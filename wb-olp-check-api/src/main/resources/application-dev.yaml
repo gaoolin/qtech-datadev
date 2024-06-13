@@ -1,73 +1,54 @@
 spring:
   datasource:
-    # dynamic是基于mybatis-plus的标签，mybatis没有这个标签
-    dynamic:
-      primary: db1
-      strict: false
-      datasource:
-        db1:
-          url: jdbc:postgresql://10.170.6.40:32120/qtech_wb?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
-          driver-class-name: org.postgresql.Driver
-          username: qtech_pg_wb
-          password: Ft!*NcYe
-          type:  com.alibaba.druid.pool.DruidDataSource
-#        db2:
-#          url: jdbc:postgresql://10.170.6.40:32120/qtech_datadev?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
-#          driver-class-name: org.postgresql.Driver
-#          username: qtech_pg_wb
-#          password: Ft!*NcYe
-#          type:  com.alibaba.druid.pool.DruidDataSource
-        druid:
-          # 配置初始化大小、最小、最大
-          initial-size: 5
-          minIdle: 5
-          max-active: 16
-          # 配置获取连接等待超时的时间(单位：毫秒)
-          max-wait: 60000
-          # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
-          time-between-eviction-runs-millis: 2000
-          # 配置一个连接在池中最小生存的时间，单位是毫秒
-          min-evictable-idle-time-millis: 600000
-          max-evictable-idle-time-millis: 900000
-          # 用来测试连接是否可用的SQL语句,默认值每种数据库都不相同,这是mysql
-          validationQuery: select 1
-          # 应用向连接池申请连接，并且testOnBorrow为false时，连接池将会判断连接是否处于空闲状态，如果是，则验证这条连接是否可用
-          testWhileIdle: true
-          # 如果为true，默认是false，应用向连接池申请连接时，连接池会判断这条连接是否是可用的
-          testOnBorrow: false
-          # 如果为true（默认false），当应用使用完连接，连接池回收连接的时候会判断该连接是否还可用
-          testOnReturn: false
-          # 是否缓存preparedStatement，也就是PSCache。PSCache对支持游标的数据库性能提升巨大，比如说oracle
-          poolPreparedStatements: true
-          # 要启用PSCache，必须配置大于0，当大于0时， poolPreparedStatements自动触发修改为true，在Druid中，不会存在Oracle下
-          # PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
-          maxOpenPreparedStatements: 20
-          maxPoolPreparedStatementPerConnectionSize: 20
-          useGlobalDataSourceStat: true
-          connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
-          # 连接池中的minIdle数量以内的连接，空闲时间超过minEvictableIdleTimeMillis，则会执行keepAlive操作
-          keepAlive: true
-          # 配置检测连接是否有效
-          webStatFilter:
-            enabled: true
-          statViewServlet:
-            enabled: true
-            # 设置白名单，不填则允许所有访问
-            allow:
-            url-pattern: /druid/*
-            # 控制台管理用户名和密码
-            login-username: qtech
-            login-password: 123456
-          filter:
-            stat:
-              enabled: true
-              # 慢SQL记录
-              log-slow-sql: true
-              slow-sql-millis: 1000
-              merge-sql: true
-            wall:
-              config:
-                multi-statement-allow: true
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      url: jdbc:postgresql://10.170.6.40:32120/qtech_wb?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
+      driver-class-name: org.postgresql.Driver
+      username: qtech_pg_wb
+      password: Ft!*NcYe
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置连接超时时间
+      connectTimeout: 30000
+      # 配置网络超时时间
+      socketTimeout: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: qtech
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
 
 logging:
   file:

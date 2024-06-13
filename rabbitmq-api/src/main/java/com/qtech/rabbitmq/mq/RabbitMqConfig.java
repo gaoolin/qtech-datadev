@@ -18,17 +18,17 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     @Bean
-    public Queue wbComparisonResultQueue() {
-        return new Queue("wbComparisonResultQueue", true);
+    public Queue wbOlpCheckResultQueue() {
+        return new Queue("wbOlpCheckResultQueue", true);
     }
 
     @Bean
-    public DirectExchange wbComparisonResultExchange() {
-        return new DirectExchange("wbComparisonResultExchange", true, false);
+    public DirectExchange wbOlpCheckResultExchange() {
+        return new DirectExchange("wbOlpCheckResultExchange", true, false);
     }
 
     @Bean
-    public Binding wbComparisonResultBinding() {
-        return new Binding("wbComparisonResultQueue", Binding.DestinationType.QUEUE, "wbComparisonResultExchange", "wbComparisonResultQueue", null);
+    public Binding wbOlpCheckResultBinding() {
+        return new Binding("wbOlpCheckResultQueue", Binding.DestinationType.QUEUE, "wbOlpCheckResultExchange", "wbOlpCheckResultQueue", null);
     }
 }

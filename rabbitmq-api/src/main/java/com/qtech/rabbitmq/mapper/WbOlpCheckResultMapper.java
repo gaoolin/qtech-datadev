@@ -1,6 +1,6 @@
 package com.qtech.rabbitmq.mapper;
 
-import com.qtech.rabbitmq.domain.WbComparisonResult;
+import com.qtech.rabbitmq.domain.WbOlpCheckResult;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 
 @Mapper
-public interface WbComparisonResultMapper {
+public interface WbOlpCheckResultMapper {
 
-    int add(WbComparisonResult wbComparisonResult);
+    int add(WbOlpCheckResult wbOlpCheckResult);
 }

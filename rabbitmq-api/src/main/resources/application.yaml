@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
   tomcat:
     uri-encoding: UTF-8
     accept-count: 1300
@@ -11,7 +11,7 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: dev
 
   mvc:
     pathmatch:

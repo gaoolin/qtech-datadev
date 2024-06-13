@@ -10,11 +10,9 @@ import io.swagger.annotations.ApiModel;
  */
 
 @ApiModel("打线图比对结果对象")
-public class ComparisonResult {
+public class WbOlpCheckResult {
 
     public String simId;
-
-    public String programName;
 
     public String dt;
 
@@ -28,14 +26,6 @@ public class ComparisonResult {
 
     public void setSimId(String simId) {
         this.simId = simId;
-    }
-
-    public String getProgramName() {
-        return programName;
-    }
-
-    public void setProgramName(String programName) {
-        this.programName = programName;
     }
 
     public String getDt() {
@@ -64,9 +54,8 @@ public class ComparisonResult {
 
     @Override
     public String toString() {
-        return "ComparisonResult{" +
+        return "WbOlpCheckResult{" +
                 "simId='" + simId + '\'' +
-                ", programName='" + programName + '\'' +
                 ", dt='" + dt + '\'' +
                 ", code='" + code + '\'' +
                 ", description='" + description + '\'' +

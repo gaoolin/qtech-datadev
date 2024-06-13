@@ -1,7 +1,6 @@
 package com.qtech.olp.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qtech.olp.entity.ComparisonResult;
+import com.qtech.olp.entity.WbOlpCheckResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,9 +12,10 @@ import org.springframework.stereotype.Repository;
  * desc   :
  */
 
+
 @Repository
 @Mapper
-public interface ComparisonMapper extends BaseMapper<ComparisonResult> {
+public interface WbOlpCheckMapper {
 
-    ComparisonResult getComparisonResult(@Param("simId") String simId);
+    WbOlpCheckResult getOlpCheckResult(@Param("simId") String simId);
 }

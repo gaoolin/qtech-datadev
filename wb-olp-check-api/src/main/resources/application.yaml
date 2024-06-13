@@ -12,42 +12,54 @@ server:
 
 spring:
   profiles:
-    active: prod
+    active: dev
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  #redis配置信息
   redis:
-    password: qtech@2022
+    ## Redis数据库索引（默认为0）
+    database: 0
+    ## Redis服务器连接密码（默认为空）
+    password: im@2024
+    ## 连接超时时间（毫秒）
+    timeout: 5000
+    ## 集群配置
+    cluster:
+      ### 集群中所有节点
+      nodes:
+        - 10.170.6.24:6379
+        - 10.170.6.25:6379
+        - 10.170.6.26:6379
+        - 10.170.6.141:6379
+        - 10.170.6.142:6379
+      ### 最大重定向数，最好为集群节点数，比如第一台挂了，连第二台，第二台挂了连第三台，这个是重新连接的最大数量
+      max-redirects: 6
     lettuce:
       pool:
-        max-active: 1000
-        max-idle: 20
-        min-idle: 5
-        max-wait: -1ms
-        enabled: true
-    cluster:
-      nodes:
-        - 10.244.4.235:6379
-        - 10.244.6.248:6379
-        - 10.244.3.182:6379
-        - 10.244.4.234:6379
-        - 10.244.6.247:6379
-        - 10.244.3.181:6379
-      # 获取失败 最大重定向次数
-      max-redirects: 3
-    database: 15
+        ## 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        ## 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        ## 连接池中的最大空闲连接
+        max-idle: 8
+        ## 连接池中的最小空闲连接
+        min-idle: 1
+      ## 集群配置
+      cluster:
+        refresh:
+          # 支持集群拓扑动态感应刷新,自适应拓扑刷新是否使用所有可用的更新，默认false关闭，类似nacos定时刷新服务列表
+          adaptive: true
+          # 定时刷新时间 毫秒
+          period: 2000
 
-# MyBatis配置
-mybatis:
-  # 搜索指定包别名
-  typeAliasesPackage: com.qtech.**.entity
-  # 配置mapper的扫描，找到所有的mapper.xml映射文件
-  mapperLocations: classpath*:mapper/**/*Mapper.xml
-  # 加载全局的配置文件
-  configLocation: classpath:mybatis/mybatis-config.xml
-  # 在依赖为mybatis-starter的情况下，configuration、configLocation 二选一, mybatis-plus-starter好像可以同时存在
-#  configuration:
-#    jdbc-type-for-null: null
-#    call-setters-on-nulls: true
+springfox:
+  documentation:
+    # 总开关（同时设置auto-startup=false，否则/v3/api-docs等接口仍能继续访问）
+    enabled: false
+    auto-startup: false
+    swagger-ui:
+      enabled: false
+

@@ -1,4 +1,4 @@
-package com.qtech.olp.utils;
+package com.qtech.olp.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -15,7 +15,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 
 /**
@@ -29,21 +28,6 @@ import java.util.Arrays;
 @Configuration
 @EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
-
-
-    @Resource
-    private LettuceConnectionFactory lettuceConnectionFactory;
-
-
-    /*@Bean
-    public LettuceConnectionFactory redisConnectionFactory() {
-
-        RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-        redisClusterConfiguration.setClusterNodes(null);
-        redisClusterConfiguration.setPassword("");
-        return new LettuceConnectionFactory(redisClusterConfiguration);
-    }*/
-
     /**
      * RedisTemplate配置
      */
@@ -67,42 +51,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
-    /*@Bean
-    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
-        // Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        // 对象的序列化，GenericJackson2JsonRedisSerializer实现了RedisSerializer接口
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();
-        template.setDefaultSerializer(serializer);
-        return template;
-    }*/
-
-    /**
-     * redis jedis 连接方式
-     */
-    /*@Bean
-    @SuppressWarnings(value = {"unchecked", "rawtypes"})
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(connectionFactory);
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        mapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        serializer.setObjectMapper(mapper);
-
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(serializer);
-
-        // Hash的key也采用StringRedisSerializer的序列化方式
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(serializer);
-
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }*/
 
 
     /**

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.olp.mapper.WbOlpCheckMapper">
+    <resultMap id="olpCheckResult" type="WbOlpCheckResult">
+        <result property="simId" column="sim_id"/>
+        <result property="dt" column="dt"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <sql id="olpCheckResultSql">
+        select sim_id, dt, code, description from qtech_wb.public.eq_control_info
+    </sql>
+    <select id="getOlpCheckResult" resultMap="olpCheckResult">
+        <include refid="olpCheckResultSql"></include>
+         <where>
+             sim_id = #{simId}
+         </where>
+    </select>
+</mapper>

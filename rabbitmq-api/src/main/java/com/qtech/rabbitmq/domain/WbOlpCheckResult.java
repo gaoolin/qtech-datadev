@@ -1,5 +1,6 @@
 package com.qtech.rabbitmq.domain;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
@@ -12,12 +13,13 @@ import java.util.Date;
  * desc   :  打线图比对结果
  */
 
-public class WbComparisonResult implements Serializable {
+public class WbOlpCheckResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    @JSONField(name = "sim_id")
     private String simId;
+    @JSONField(name = "program_name")
     private String programName;
-    private String mcId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dt;
     private Integer code;
@@ -37,14 +39,6 @@ public class WbComparisonResult implements Serializable {
 
     public void setProgramName(String programName) {
         this.programName = programName;
-    }
-
-    public String getMcId() {
-        return mcId;
-    }
-
-    public void setMcId(String mcId) {
-        this.mcId = mcId;
     }
 
     public Date getDt() {
@@ -73,10 +67,9 @@ public class WbComparisonResult implements Serializable {
 
     @Override
     public String toString() {
-        return "WbComparisonResult{" +
+        return "WbOlpCheckResult{" +
                 "simId='" + simId + '\'' +
                 ", programName='" + programName + '\'' +
-                ", mcId='" + mcId + '\'' +
                 ", dt=" + dt +
                 ", code=" + code +
                 ", description='" + description + '\'' +

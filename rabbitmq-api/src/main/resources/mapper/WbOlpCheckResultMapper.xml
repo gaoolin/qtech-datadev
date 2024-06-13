@@ -2,18 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qtech.rabbitmq.mapper.WbComparisonResultMapper">
+<mapper namespace="com.qtech.rabbitmq.mapper.WbOlpCheckResultMapper">
 
-    <resultMap id="WbComparisonResultResult" type="WbComparisonResult">
+    <resultMap id="WbComparisonResultResult" type="WbOlpCheckResult">
         <result column="sim_id" property="simId"/>
-        <result column="mc_id" property="mcId"/>
         <result column="dt" property="dt"/>
         <result column="code" property="code"/>
         <result column="description" property="description"/>
         <result column="program_name" property="programName"/>
     </resultMap>
 
-    <insert id="add" parameterType="WbComparisonResult">
+    <insert id="add" parameterType="WbOlpCheckResult">
         insert into qtech_eq_dwd.eq_control_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>

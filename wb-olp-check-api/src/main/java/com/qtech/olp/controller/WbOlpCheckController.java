@@ -1,13 +1,9 @@
 package com.qtech.olp.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.qtech.olp.service.IComparisonService;
+import com.qtech.olp.service.IWbOlpCheckService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -19,10 +15,10 @@ import java.util.Map;
 @Api(tags = "ECheck相关接口", value = "返回打线图比对结果", protocols = "HTTP")
 @RestController
 @RequestMapping(value = "/comparison/api")
-public class ComparisonController {
+public class WbOlpCheckController {
 
     @Autowired
-    IComparisonService comparisonService;
+    private IWbOlpCheckService wbOlpCheckService;
 
     @ApiOperation(value = "根据项目名称和盒子号获取结果", notes = "需传入项目名称和盒子编号两个参数", httpMethod = "GET", consumes = "application/json", produces = "application/json")
     @ApiResponses({
@@ -32,29 +28,12 @@ public class ComparisonController {
             @ApiResponse(code = 3, message = "overWire，描述：打线图多线")
     })
     @GetMapping("/getRes/{programName}/{simId}")
-    public String getComparisonResult(
+    public String getOlpCheckResult(
             // @ApiParam(name = "项目名称", value = "例如：wb_comparison", defaultValue = "wb_comparison", required = true)
             @PathVariable("programName") String programName,
             // @ApiParam(name = "盒子编码", value = "例如：86xxxx", required = true)
             @PathVariable("simId") String simId) {
 
-        return comparisonService.getComparisonResult(programName, simId);
-    }
-
-
-    @ApiOperation(value = "根据项目名称和盒子号更新结果", notes = "需传入项目名称和key-value键值对", httpMethod = "POST", consumes = "application/json", produces = "*/*", hidden = true)
-    @PostMapping(value = "/updateRes")
-    public Integer addComparisonResult(
-            @ApiParam(name = "request", value = "更新Redis数据请求")
-            @RequestBody String jsonObject) {
-        boolean flag = true;
-        JSONObject jsonRedisMap = JSON.parseObject(jsonObject);
-        for (Map.Entry<String, Object> entry : jsonRedisMap.entrySet()) {
-            String redisKey = entry.getKey();
-            String redisVal = (String) entry.getValue();
-            Integer i = comparisonService.addComparisonResult(redisKey, redisVal, 1);
-            flag = flag && (i == 0);
-        }
-        return flag ? 0 : -1;
+        return wbOlpCheckService.getOlpCheckResult(simId);
     }
 }
