@@ -54,12 +54,3 @@ spring:
           adaptive: true
           # 定时刷新时间 毫秒
           period: 2000
-
-springfox:
-  documentation:
-    # 总开关（同时设置auto-startup=false，否则/v3/api-docs等接口仍能继续访问）
-    enabled: false
-    auto-startup: false
-    swagger-ui:
-      enabled: false
-
