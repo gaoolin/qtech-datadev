@@ -18,8 +18,6 @@ public class WbOlpCheckResult implements Serializable {
     private static final long serialVersionUID = 1L;
     @JSONField(name = "sim_id")
     private String simId;
-    @JSONField(name = "program_name")
-    private String programName;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dt;
     private Integer code;
@@ -31,14 +29,6 @@ public class WbOlpCheckResult implements Serializable {
 
     public void setSimId(String simId) {
         this.simId = simId;
-    }
-
-    public String getProgramName() {
-        return programName;
-    }
-
-    public void setProgramName(String programName) {
-        this.programName = programName;
     }
 
     public Date getDt() {
@@ -69,7 +59,6 @@ public class WbOlpCheckResult implements Serializable {
     public String toString() {
         return "WbOlpCheckResult{" +
                 "simId='" + simId + '\'' +
-                ", programName='" + programName + '\'' +
                 ", dt=" + dt +
                 ", code=" + code +
                 ", description='" + description + '\'' +

@@ -2,6 +2,8 @@ package com.qtech.rabbitmq.service;
 
 import com.qtech.rabbitmq.domain.WbOlpCheckResult;
 
+import java.util.List;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -13,4 +15,5 @@ import com.qtech.rabbitmq.domain.WbOlpCheckResult;
 public interface IWbOlpCheckResultService {
 
     int add(WbOlpCheckResult wbOlpCheckResult);
+    void addBatch(List<WbOlpCheckResult> wbOlpCheckResults);
 }

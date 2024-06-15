@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/rabbitmq/msg")
-public class RabbitMqProducerController {
+public class WbOlpCheckProducerController {
 
     @Autowired
     private RabbitMqProducer rabbitMqProducer;
 
-    @RequestMapping(value = "/wbComparison", method = RequestMethod.POST)
+    @RequestMapping(value = "/wbOlpCheck", method = RequestMethod.POST)
     public String sendMsg(@RequestBody WbOlpCheckResult wbOlpCheckResult) {
         // 对象转换为json字符串
         String jsonString = JSON.toJSONString(wbOlpCheckResult);
         // 3个参数：交换机，路由键（队列名），消息。
-        rabbitMqProducer.send("wbComparisonResultExchange", "wbComparisonResultQueue", jsonString);
+        rabbitMqProducer.send("wbOlpCheckResultExchange", "wbOlpCheckResultQueue", jsonString);
         return "ok!";
     }
 }

@@ -9,21 +9,18 @@
         <result column="dt" property="dt"/>
         <result column="code" property="code"/>
         <result column="description" property="description"/>
-        <result column="program_name" property="programName"/>
     </resultMap>
 
     <insert id="add" parameterType="WbOlpCheckResult">
         insert into qtech_eq_dwd.eq_control_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>
-            <if test="programName != null">program_name,</if>
             <if test="dt != null">dt,</if>
             <if test="code != null">code,</if>
             <if test="description != null">description,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="simId != null">#{simId},</if>
-            <if test="programName != null">#{programName},</if>
             <if test="dt != null">#{dt},</if>
             <if test="code != null">#{code},</if>
             <if test="description != null">#{description},</if>

@@ -56,6 +56,8 @@ spring:
     username: qtech
     password: Ee786549
 
+DORIS_STREAM_LOAD_URL: http://doris-follower-bak.doris-bak:9030/api/qtech_eq_dwd/eq_control_info/_stream_load
+
 logging:
   level:
     root: warn
