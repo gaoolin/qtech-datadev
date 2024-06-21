@@ -2,6 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
 <mapper namespace="com.qtech.rabbitmq.mapper.WbOlpCheckResultMapper">
 
     <resultMap id="WbComparisonResultResult" type="WbOlpCheckResult">
@@ -26,4 +28,17 @@
             <if test="description != null">#{description},</if>
         </trim>
     </insert>
+    <insert id="addBatch" parameterType="java.util.List">
+        INSERT INTO qtech_eq_dwd.eq_control_info
+        (<include refid="columnList"/>)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.simId}, #{item.dt}, #{item.code}, #{item.description})
+        </foreach>
+    </insert>
+
+    <!-- 定义列名列表，用于在批量插入中复用 -->
+    <sql id="columnList">
+        sim_id, dt, code, description
+    </sql>
 </mapper>

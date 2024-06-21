@@ -21,7 +21,7 @@ logging:
 #    org.mybatis.spring: info
 spring:
   profiles:
-    active: dev
+    active: prod
 
   mvc:
     pathmatch:

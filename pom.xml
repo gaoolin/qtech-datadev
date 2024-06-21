@@ -35,7 +35,7 @@
         <module>rabbitmq-api</module>
         <module>aa-params-check-api</module>
         <module>message-api</module>
-        <module>wb-olp-chk-api</module>
+        <module>im-check-api</module>
     </modules>
 
     <properties>

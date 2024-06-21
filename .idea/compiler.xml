@@ -14,7 +14,7 @@
         <module name="ocr-api" />
         <module name="rabbitmq-api" />
         <module name="message-api" />
-        <module name="wb-olp-chk-api" />
+        <module name="im-check-api" />
         <module name="pulsar-api" />
         <module name="aa-params-check-api" />
       </profile>
@@ -28,12 +28,12 @@
       <module name="aa-params-check-api" options="-parameters" />
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
+      <module name="im-check-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />
       <module name="rabbitmq-api" options="-parameters" />
       <module name="wb-olp-check-api" options="-parameters" />
-      <module name="wb-olp-chk-api" options="-parameters" />
     </option>
   </component>
 </project>
