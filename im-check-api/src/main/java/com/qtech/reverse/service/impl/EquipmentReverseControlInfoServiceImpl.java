@@ -3,6 +3,7 @@ package com.qtech.reverse.service.impl;
 import com.qtech.reverse.entity.EquipmentReverseControlInfo;
 import com.qtech.reverse.mapper.EquipmentReverseControlInfoMapper;
 import com.qtech.reverse.service.IEquipmentReverseControlInfoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.List;
  * desc   :
  */
 
+@Slf4j
 @Service
 public class EquipmentReverseControlInfoServiceImpl implements IEquipmentReverseControlInfoService {
 
@@ -25,7 +27,12 @@ public class EquipmentReverseControlInfoServiceImpl implements IEquipmentReverse
 
     @Override
     public EquipmentReverseControlInfo selectEquipmentReverseControlInfoBySimId(String simId) {
-        List<EquipmentReverseControlInfo> list = equipmentReverseControlInfoMapper.selectQtechImChkResultList(simId);
+        List<EquipmentReverseControlInfo> list = null;
+        try {
+            list = equipmentReverseControlInfoMapper.selectQtechImChkResultList(simId);
+        } catch (Exception e) {
+            log.error("selectEquipmentReverseControlInfoBySimId error:{} simId: {}", e.getMessage(), simId);
+        }
 
         if (CollectionUtils.isNotEmpty(list)) {
             int size = list.size();

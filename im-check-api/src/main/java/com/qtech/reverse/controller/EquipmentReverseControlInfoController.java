@@ -32,7 +32,7 @@ public class EquipmentReverseControlInfoController {
 
         EquipmentReverseControlInfo equipmentReverseControlInfo = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
         if (equipmentReverseControlInfo == null) {
-            return R.ok(null);
+            return R.ok();
         }
 
         if (equipmentReverseControlInfo.getCode() == 0) {

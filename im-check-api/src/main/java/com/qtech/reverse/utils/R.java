@@ -59,7 +59,11 @@ public class R implements Serializable {
     private static R restResult(EquipmentReverseControlInfo data, int code, String msg) {
         R apiResult = new R();
         apiResult.setCode(code);
-        apiResult.setData(data.getCode() == 0 ? null : data.getFormattedChkDt() + ":" + data.getDescription());
+        if (data != null) {
+            apiResult.setData(data.getCode() == 0 ? null : data.getFormattedChkDt() + ":" + data.getDescription());
+        } else {
+            apiResult.setData(null);
+        }
         apiResult.setMsg(msg);
         return apiResult;
     }
