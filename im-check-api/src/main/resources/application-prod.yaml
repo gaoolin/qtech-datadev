@@ -2,7 +2,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      url: jdbc:postgresql://master-mysql.mysql:3306/qtech_wb?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
+      url: jdbc:mysql://master-mysql.mysql:3306/qtech_im_chk?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: root
       password: root
