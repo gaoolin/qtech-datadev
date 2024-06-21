@@ -25,7 +25,7 @@ public class EquipmentReverseControlInfoController {
     @Autowired
     private IEquipmentReverseControlInfoService equipmentReverseControlInfoService;
     @RequestMapping(value = "/{simId}", produces = "application/json", method = RequestMethod.GET)
-    public R getAaParamsChkResult(
+    public R getEquipmentReverseControlInfo(
             // @ApiParam(name = "项目名称", value = "例如：qtech_comparison", defaultValue = "qtech_comparison", required = true)
             // @ApiParam(name = "盒子编码", value = "例如：86xxxx", required = true)
             @PathVariable("simId") String simId) {
@@ -36,7 +36,6 @@ public class EquipmentReverseControlInfoController {
         }
 
         if (equipmentReverseControlInfo.getCode() == 0) {
-            System.out.println(R.ok(equipmentReverseControlInfo));
             return R.ok(equipmentReverseControlInfo);
         } else {
             return R.fail(equipmentReverseControlInfo, "NG");
