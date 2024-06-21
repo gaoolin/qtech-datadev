@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  */
 
 @Mapper
-public interface WbOlpChkMapper {
+public interface WbOlpChkResultMapper {
 
     WbOlpChkResult getOlpChkResult(@Param("simId") String simId);
 }

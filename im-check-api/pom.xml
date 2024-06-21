@@ -7,11 +7,11 @@
         <version>1.0</version>
     </parent>
 
-    <groupId>com.qtech.olp</groupId>
+    <groupId>com.qtech.reverse</groupId>
     <artifactId>im-check-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>wb-olp-chk-api</name>
+    <name>im-check-api</name>
     <url>http://maven.apache.org</url>
 
     <properties>

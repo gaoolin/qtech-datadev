@@ -2,7 +2,7 @@ package com.qtech.reverse.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
 import com.qtech.reverse.entity.WbOlpChkResult;
-import com.qtech.reverse.mapper.WbOlpChkMapper;
+import com.qtech.reverse.mapper.WbOlpChkResultMapper;
 import com.qtech.reverse.service.IWbOlpChkService;
 import com.qtech.reverse.utils.RedisClusterUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,8 @@ public class WbOlpChkServiceImpl implements IWbOlpChkService {
     private static final String REDIS_KEY_PREFIX = WB_OLP_CHECK_REDIS_KEY_PREFIX; // 避免直接在字符串中拼接
 
     @Autowired
-    @Qualifier("wbOlpChkMapper")
-    private WbOlpChkMapper wbOlpCheckMapper;
+    @Qualifier("wbOlpChkResultMapper")
+    private WbOlpChkResultMapper wbOlpCheckMapper;
 
     @Override
     public String getOlpCheckResult(String simId) {

@@ -61,6 +61,6 @@ spring:
 # MyBatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml    # mapper映射文件位置
-  type-aliases-package: com.qtech.olp.entity    # 实体类所在的位置
+  type-aliases-package: com.qtech.reverse.entity    # 实体类所在的位置
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   #用于控制台打印sql语句
