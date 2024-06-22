@@ -19,7 +19,7 @@
         <include refid="QtechImChkResultSql"/>
         <where>
             <if test="simId != null and simId != ''">
-                sim_id = ${simId}
+                sim_id = #{simId}
             </if>
         </where>
     </select>

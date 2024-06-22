@@ -55,8 +55,7 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             // String key = record.key();
             String value = record.value();
-            AaListParams actualObj = JSON.parseObject(value, new TypeReference<AaListParams>() {
-            }.getType());
+            AaListParams actualObj = JSON.parseObject(value, new TypeReference<AaListParams>() {}.getType());
             modelObj = redisUtil.getMessage(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType());
             if (modelObj == null) {
                 AaListParamsStdModel stdModelParam = new AaListParamsStdModel();

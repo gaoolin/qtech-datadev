@@ -47,8 +47,8 @@ public class AaListParamsComparator {
 
         for (String propertyName : propertiesToCompare) {
             try {
-                Field modelField = standardObj.getClass().getDeclaredField(propertyName);
-                Field actualField = actualObj.getClass().getDeclaredField(propertyName);
+                Field modelField = standardObj.getClass().getSuperclass().getDeclaredField(propertyName);
+                Field actualField = actualObj.getClass().getSuperclass().getDeclaredField(propertyName);
                 modelField.setAccessible(true);
                 actualField.setAccessible(true);
 

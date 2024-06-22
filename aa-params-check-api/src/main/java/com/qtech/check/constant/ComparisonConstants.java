@@ -84,6 +84,27 @@ public class ComparisonConstants {
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:aa:list:params:";
 
     public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            "AA1", "AA2", "AA3", "ChartAlignment", "ChartAlignment1", "ChartAlignment2", "EpoxyInspection_Auto", "LP_OC", "MTF_Check", "MTF_Check2", "MTF_Check3",
-            "MTF_OffAxisCheck1", "MTF_OffAxisCheck2", "MTF_OffAxisCheck3", "Save_MTF", "VCM_Init", "VCMPowerOffCheck", "Z_Offset")));
+            "AA1",
+            "AA2",
+            "AA3",
+            "ChartAlignment",
+            "ChartAlignment1",
+            "ChartAlignment2",
+            "EpoxyInspection_Auto",
+            "EpoxyInspection Auto", // 测试用
+            "LP_OC",
+            "MTF_Check",
+            "MTF_Check2",
+            "MTF_Check3",
+            "MTFCheck", // 测试用
+            "MTFCheck2", // 测试用
+            "MTFCheck3", // 测试用
+            "MTF_OffAxisCheck1",
+            "MTF_OffAxisCheck2",
+            "MTF_OffAxisCheck3",
+            "Save_MTF",
+            "VCM_Init",
+            "VCMPowerOffCheck",
+            "Z_Offset"
+    )));
 }

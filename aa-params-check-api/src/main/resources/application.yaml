@@ -120,3 +120,18 @@ mybatis:
     restart:
       # 热部署开关
       enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        - "*"
+  endpoint:
+    health:
+      show:
+        details: always
+  metrics:
+    tags:
+      instance: ${spring.application.name}-${spring.application.instance_id:${random.value}}
+      version: ${spring.application.version}
+      application: ${spring.application.name}

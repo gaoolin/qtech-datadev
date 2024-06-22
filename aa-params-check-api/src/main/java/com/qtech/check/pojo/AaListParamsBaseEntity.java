@@ -187,7 +187,7 @@ public class AaListParamsBaseEntity {
                 .collect(Collectors.toList());
 
         try {
-            for (Field field : getClass().getDeclaredFields()) {
+            for (Field field : this.getClass().getDeclaredFields()) {
                 String camelCaseKey = field.getName();
                 for (Map<String, String> map : camelCaseData) {
                     if (map.containsKey(camelCaseKey)) {
