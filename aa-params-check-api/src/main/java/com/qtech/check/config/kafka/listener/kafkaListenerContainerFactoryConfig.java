@@ -35,7 +35,7 @@ public class kafkaListenerContainerFactoryConfig {
     private ConsumerFactory<String, String> consumerFactory() {
         // 配置ConsumerFactory，这里可以根据需要添加其他配置
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "10.170.6.25:9092");
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "10.170.6.25:9092,10.170.6.26:9092");
         props.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1024);
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1000);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
@@ -67,7 +67,7 @@ public class kafkaListenerContainerFactoryConfig {
      */
     public static Map<String, Object> buildConsumerProperties() {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("bootstrap.servers", "10.170.6.25:9092");
+        properties.put("bootstrap.servers", "10.170.6.25:9092,10.170.6.26:9092");
         properties.put("group.id", "aaList");
         properties.put("enable.auto.commit", false);
         properties.put("auto.commit.interval.ms", "1000");

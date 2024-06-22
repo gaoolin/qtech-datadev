@@ -84,13 +84,13 @@
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-spi</artifactId>
-                <version>3.0.0</version>
+                <version>${springfox.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-spring-web</artifactId>
-                <version>3.0.0</version>
+                <version>${springfox.version}</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>

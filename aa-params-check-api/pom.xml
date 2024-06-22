@@ -99,17 +99,6 @@
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>
-        <!--swagger2 3.0.0版本 配置类依赖-->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
         <!--kafka依赖-->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -205,12 +194,12 @@
             </plugin>
 
             <!--Protobuf 编译器 (protoc) 生成对应的 Java 类。如果使用的是 Maven 或 Gradle，可以集成插件自动完成这一步-->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <!-- 指定.proto文件的源目录 -->
+                    &lt;!&ndash; 指定.proto文件的源目录 &ndash;&gt;
                     <protoSourceRoot>src/main/proto</protoSourceRoot>
                     <outputDirectory>${project.build.directory}/generated-sources/protobuf</outputDirectory>
                     <protocArtifact>com.google.protobuf:protoc:3.19.1:exe:${os.detected.classifier}</protocArtifact>
@@ -225,7 +214,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
         </plugins>
 

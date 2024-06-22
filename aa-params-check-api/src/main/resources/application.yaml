@@ -12,8 +12,8 @@ server:
 logging:
   level:
     root: info
-#    com.qtech.olp: info
-#    org.springframework.web: info
+  #    com.qtech.olp: info
+  #    org.springframework.web: info
     io.lettuce.core: error
 #    org.springframework.data.redis: warn
 #    com.qtech.olp.config.druid: info
@@ -25,7 +25,7 @@ spring:
 
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ant-path-matcher
 
   #redis配置信息
   redis:
@@ -66,9 +66,9 @@ spring:
 
   kafka:
     bootstrap-servers:
-    - 10.170.6.24:9092
-    - 10.170.6.25:9092
-    - 10.170.6.26:9092
+      - 10.170.6.24:9092
+      - 10.170.6.25:9092
+      - 10.170.6.26:9092
     #生产者
     producer:
       #客户端发送服务端失败的重试次数
@@ -112,8 +112,10 @@ spring:
       #指定value使用的反序列化类
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+
+
 mybatis:
-  type-aliases-package: com.qtech.check.pojo
+  type-aliases-package: com.qtech.`check.pojo
 
   # 服务模块
   devtools:
@@ -125,11 +127,10 @@ management:
   endpoints:
     web:
       exposure:
-        - "*"
+        include: '*'
   endpoint:
     health:
-      show:
-        details: always
+      show-details: always
   metrics:
     tags:
       instance: ${spring.application.name}-${spring.application.instance_id:${random.value}}
