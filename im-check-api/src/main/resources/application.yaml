@@ -11,6 +11,8 @@ server:
     context-path: /
 
 spring:
+  application:
+    name: aa-params-chk-service
   profiles:
     active: dev
 

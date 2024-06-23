@@ -33,7 +33,7 @@
         <module>pulsar-api</module>
         <module>common-api</module>
         <module>rabbitmq-api</module>
-        <module>aa-params-check-api</module>
+        <module>aa-params-check-service</module>
         <module>message-api</module>
         <module>im-check-api</module>
     </modules>
