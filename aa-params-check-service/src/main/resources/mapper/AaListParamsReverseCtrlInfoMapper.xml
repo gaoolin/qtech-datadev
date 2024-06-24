@@ -10,6 +10,7 @@
         <result column="code" property="statusCode" jdbcType="INTEGER"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
+
     <insert id="insert">
         insert into qtech_im_chk.equipment_reverse_control_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -29,4 +30,13 @@
             <if test="description != null and description != ''">#{description},</if>
         </trim>
     </insert>
+
+    <!-- 实现 Upsert 操作 -->
+    <insert id="upsert" parameterType="AaListParamsCheckResult">
+        INSERT INTO equipment_reverse_control_info (sim_id, source, prod_type, chk_dt, code, description)
+        VALUES (#{simId}, "aa-params", #{prodType}, #{checkDt}, #{statusCode}, #{description}) ON DUPLICATE KEY
+        UPDATE
+            prod_type = #{prodType}, source = "aa-params", chk_dt = #{checkDt}, code = #{statusCode}, description = #{description}
+    </insert>
+
 </mapper>

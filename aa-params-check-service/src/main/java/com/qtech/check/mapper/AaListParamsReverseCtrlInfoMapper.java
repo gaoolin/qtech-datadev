@@ -15,4 +15,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface AaListParamsReverseCtrlInfoMapper {
 
     public void insert(AaListParamsCheckResult aaListParamsCheckResult);
+    public void upsert(AaListParamsCheckResult aaListParamsCheckResult);
 }

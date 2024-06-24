@@ -15,7 +15,7 @@ spring:
     version: 1.0.0
 
   profiles:
-    active: dev
+    active: prod
 
   mvc:
     pathmatch:
@@ -129,10 +129,3 @@ management:
 logging:
   # 若不配置，默认使用 ##logback-spring.xml，logback-udf.xml不能命名为 logback-spring.xml，logback.xml的加载早于application.yml配置文件，在logback.xml中使用<springProperty>标签来获取配置文件中的变量值，读取不到而报出错误信息。
   config: classpath:logback-spring.xml
-
-  #    com.qtech.olp: info
-  #    org.springframework.web: info
-#    org.springframework.data.redis: warn
-#    com.qtech.olp.config.druid: info
-#    org.apache.ibatis: info
-#    org.mybatis.spring: info

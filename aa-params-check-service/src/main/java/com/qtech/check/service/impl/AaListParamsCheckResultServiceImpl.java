@@ -1,10 +1,12 @@
 package com.qtech.check.service.impl;
 
+import com.qtech.check.mapper.AaListParamsReverseCtrlInfoMapper;
 import com.qtech.check.pojo.AaListParamsCheckResult;
 import com.qtech.check.mapper.AaListParamsCheckResultMapper;
 import com.qtech.check.service.IAaListParamsCheckResultService;
 import com.qtech.check.config.dynamic.DataSourceNames;
 import com.qtech.check.config.dynamic.DataSourceSwitch;
+import com.qtech.check.service.IAaListParamsReverseCtrlInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckRes
     @Autowired
     private AaListParamsCheckResultMapper aaListParamsCheckResultMapper;
 
+    @Autowired
+    private IAaListParamsReverseCtrlInfoService aaListParamsReverseCtrlInfoService;
+
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
     public int save(AaListParamsCheckResult aaListParamsCheckResult) {
@@ -33,6 +38,8 @@ public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckRes
         try {
             i = aaListParamsCheckResultMapper.insertAaListParamsLatestCheckResult(aaListParamsCheckResult);
             j = aaListParamsCheckResultMapper.insertAaListParamsCheckResult(aaListParamsCheckResult);
+            aaListParamsReverseCtrlInfoService.insert(aaListParamsCheckResult);
+            log.info(">>>>> save aaListParamsCheckResult success:{}", aaListParamsCheckResult);
         } catch (Exception e) {
             log.error(">>>>> save aaListParamsCheckResult error:{}", e.getMessage());
         }

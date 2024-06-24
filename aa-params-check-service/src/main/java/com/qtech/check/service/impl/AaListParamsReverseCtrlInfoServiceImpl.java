@@ -22,11 +22,11 @@ public class AaListParamsReverseCtrlInfoServiceImpl implements IAaListParamsReve
 
     @Autowired
     private AaListParamsReverseCtrlInfoMapper aaListParamsReverseCtrlInfoMapper;
-    @DataSourceSwitch(name = DataSourceNames.SECOND)
+    @DataSourceSwitch(name = DataSourceNames.FIRST)
     @Override
     public void insert(AaListParamsCheckResult aaListParamsCheckResult) {
         try {
-            aaListParamsReverseCtrlInfoMapper.insert(aaListParamsCheckResult);
+            aaListParamsReverseCtrlInfoMapper.upsert(aaListParamsCheckResult);
         } catch (Exception e) {
             log.error(">>>>> insert aaListParamsReverseCtrlInfo error:{}", e.getMessage());
         }
