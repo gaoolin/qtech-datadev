@@ -28,52 +28,17 @@ public class R implements Serializable {
     @JsonProperty("data")
     private String data;
 
-    public static R ok() {
-        return restResult(null, SUCCESS, "OK");
-    }
-
-    public static R ok(EquipmentReverseControlInfo data) {
-        return restResult(data, SUCCESS, "OK");
-    }
-
-    public static R fail() {
-        return restResult(null, FAIL, "操作失败");
-    }
-
-    public static R fail(String msg) {
-        return restResult(null, FAIL, msg);
-    }
-
-    public static R fail(EquipmentReverseControlInfo data) {
-        return restResult(data, FAIL, "操作失败");
-    }
-
-    public static R fail(EquipmentReverseControlInfo data, String msg) {
-        return restResult(data, FAIL, msg);
-    }
-
-    public static R fail(int code, String msg) {
-        return restResult(null, code, msg);
-    }
-
-    private static R restResult(EquipmentReverseControlInfo data, int code, String msg) {
+    public static R restResult(EquipmentReverseControlInfo data) {
         R apiResult = new R();
-        apiResult.setCode(code);
         if (data != null) {
-            apiResult.setData(data.getCode() == 0 ? null : data.getFormattedChkDt() + ":" + data.getDescription());
+            apiResult.setCode(data.getCode() == 0 ? SUCCESS : FAIL);
+            apiResult.setMsg(data.getCode() == 0 ? "OK" : "Parameter Monitoring:" + data.getFormattedChkDt() + "|" + data.getDescription());
         } else {
-            apiResult.setData(null);
+            apiResult.setCode(SUCCESS);
+            apiResult.setMsg("OK");
         }
-        apiResult.setMsg(msg);
+        apiResult.setData(null);
         return apiResult;
-    }
-
-    public static Boolean isError(R ret) {
-        return !isSuccess(ret);
-    }
-
-    public static Boolean isSuccess(R ret) {
-        return R.SUCCESS == ret.getCode();
     }
 
     public int getCode() {

@@ -32,13 +32,9 @@ public class EquipmentReverseControlInfoController {
 
         EquipmentReverseControlInfo equipmentReverseControlInfo = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
         if (equipmentReverseControlInfo == null) {
-            return R.ok();
+            return R.restResult(null);
         }
 
-        if (equipmentReverseControlInfo.getCode() == 0) {
-            return R.ok(equipmentReverseControlInfo);
-        } else {
-            return R.fail(equipmentReverseControlInfo, "NG");
-        }
+        return R.restResult(equipmentReverseControlInfo);
     }
 }

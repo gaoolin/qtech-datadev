@@ -15,7 +15,7 @@ spring:
     version: 1.0.0
 
   profiles:
-    active: prod
+    active: dev
 
   mvc:
     pathmatch:
