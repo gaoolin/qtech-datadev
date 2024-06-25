@@ -66,3 +66,7 @@ mybatis:
   type-aliases-package: com.qtech.reverse.entity    # 实体类所在的位置
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   #用于控制台打印sql语句
+
+logging:
+  # 若不配置，默认使用 ##logback-spring.xml，logback-udf.xml不能命名为 logback.xml，logback.xml的加载早于application.yml配置文件，在logback.xml中使用<springProperty>标签来获取配置文件中的变量值，读取不到而报出错误信息。
+  config: classpath:logback-spring.xml

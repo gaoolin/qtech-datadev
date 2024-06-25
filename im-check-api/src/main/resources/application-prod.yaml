@@ -49,16 +49,3 @@ spring:
         wall:
           config:
             multi-statement-allow: true
-
-
-logging:
-  pattern: #配置日志格式 %d：日期 , %msg：日志信息 ，%n换行
-    console: "%d - %msg%n" #设置控制台打印格式
-  #    file: "%d{yyyy/MM/dd-HH:mm} %-5level %logger- %msg%n"
-  file:
-    path: /var/logs/web
-  level:
-    root: INFO
-    com.qtech.reverse.mapper.*: INFO
-  # 若不配置，默认使用 ##logback-spring.xml，logback-udf.xml不能命名为 logback.xml，logback.xml的加载早于application.yml配置文件，在logback.xml中使用<springProperty>标签来获取配置文件中的变量值，读取不到而报出错误信息。
-  config: classpath:logback-prod.xml
