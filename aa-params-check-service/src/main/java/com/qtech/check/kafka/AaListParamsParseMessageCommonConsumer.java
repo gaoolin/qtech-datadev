@@ -48,20 +48,16 @@ import java.util.concurrent.TimeUnit;
 public class AaListParamsParseMessageCommonConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParseMessageCommonConsumer.class);
+    // 使用ScheduledExecutorService管理线程，便于控制和关闭
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
     private volatile boolean isRunning = true;
-
     @Autowired
     @Qualifier("aaListParamsCommonKafkaConsumer")
     private Consumer<String, Object> consumer;
-
     @Autowired
     private MessageProcessor messageProcessor;
-
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-
-    // 使用ScheduledExecutorService管理线程，便于控制和关闭
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 
     @PostConstruct
     public void startConsumer() {
@@ -95,7 +91,7 @@ public class AaListParamsParseMessageCommonConsumer {
                 // 处理消息并转换为 AaListParams
                 AaListParams aaListParams = messageProcessor.processMessage(AaListParams.class, aaListMessageStr);
 
-                logger.info("Received message: {}", aaListMessageStr);
+                // logger.info("Received message: {}", aaListMessageStr);
                 // 将 AaListParams 对象转换为 JSON 字符串
                 String aaListParamsMessageStr = JSON.toJSONString(aaListParams);
 

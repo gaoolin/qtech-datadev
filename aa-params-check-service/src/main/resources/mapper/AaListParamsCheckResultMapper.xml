@@ -11,14 +11,22 @@
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="EqReverseControlInfoResult" type="AaListParamsCheckResult">
+        <result column="sim_id" property="simId" jdbcType="VARCHAR"/>
+        <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
+        <result column="chk_dt" property="checkDt" jdbcType="VARCHAR"/>
+        <result column="code" property="statusCode" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <sql id="AaListParamsCheckResultSql">
         SELECT prod_type, sim_id, check_dt, status_code, description
         FROM qtech_eq_dwd.aa_list_params_check_result_detail
     </sql>
 
     <sql id="AaListParamsLatestCheckResultSql">
-        SELECT prod_type, sim_id, check_dt, status_code, description
-        FROM qtech_eq_ods.aa_list_params_check_result_latest
+        SELECT prod_type, sim_id, chk_dt, code, description
+        FROM qtech_eq_ods.equipment_reverse_control_info
     </sql>
 
     <insert id="insertAaListParamsCheckResult" parameterType="aaListParamsCheckResult">
@@ -40,31 +48,22 @@
     </insert>
 
     <insert id="insertAaListParamsLatestCheckResult" parameterType="aaListParamsCheckResult">
-        insert into qtech_eq_ods.aa_list_params_check_result_latest
+        insert into qtech_eq_ods.equipment_reverse_control_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>
+            source,
             <if test="prodType != null">prod_type,</if>
-            <if test="checkDt != null">check_dt,</if>
-            <if test="statusCode != null">status_code,</if>
+            <if test="checkDt != null">chk_dt,</if>
+            <if test="statusCode != null">code,</if>
             <if test="description != null">description,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
+            'aa-params-check',
             <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
             <if test="checkDt != null">#{checkDt,jdbcType=TIMESTAMP},</if>
             <if test="statusCode != null">#{statusCode,jdbcType=INTEGER},</if>
             <if test="description != null">#{description,jdbcType=VARCHAR},</if>
         </trim>
     </insert>
-
-    <select id="selectAaListParamsCheckResultList" resultMap="AaListParamsCheckResult" parameterType="aaListParamsCheckResult">
-        <include refid="AaListParamsCheckResultSql"></include>
-        <where>
-            <if test="simId != null">and sim_id = #{simId,jdbcType=VARCHAR}</if>
-            <if test="prodType != null">and prod_type = #{prodType,jdbcType=VARCHAR}</if>
-            <if test="checkDt != null">and check_dt = #{checkDt,jdbcType=TIMESTAMP}</if>
-            <if test="statusCode != null">and status_code = #{statusCode,jdbcType=INTEGER}</if>
-            <if test="description != null">and description = #{description,jdbcType=VARCHAR}</if>
-        </where>
-    </select>
 </mapper>

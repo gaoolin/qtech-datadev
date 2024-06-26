@@ -3,6 +3,7 @@ package com.qtech.check.processor.handler.type.integrated;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qtech.check.constant.ListItemMultiKeyMapConstants;
+import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.processor.CommandProcessor;
@@ -15,9 +16,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
 
@@ -32,14 +31,19 @@ import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
 @Component
 public class AaListParamsHandler extends MessageHandler<AaListCommand> {
 
+    private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
+    private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
+
     @Autowired
     private CommandProcessor commandProcessor;
-
     @Autowired
     private ListItemMultiKeyMapConstants listItemMultiKeyMapConstants;
 
-    private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
-    private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
+    private static HashMap<Integer, String> getThreadListItemMapper() {
+        HashMap<Integer, String> map = listItemMapper.get();
+        map.clear();
+        return map;
+    }
 
     public AaListCommand parseRowStartWithList(String[] parts) {
         try {
@@ -75,12 +79,6 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
             log.warn(">>>>> listItemMapper is empty");
             return null;
         }
-    }
-
-    private static HashMap<Integer, String> getThreadListItemMapper() {
-        HashMap<Integer, String> map = listItemMapper.get();
-        map.clear();
-        return map;
     }
 
     private AaListParams getThreadLocalAaListParams() {
@@ -136,7 +134,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         }
 
         aaListParams.fillWithData(aaListCommandList);
-        log.info(">>>>> 解析后aaListParams: {}", aaListParams);
+        // log.info(">>>>> 解析后aaListParams: {}", aaListParams);
         return aaListParams;
     }
 
@@ -164,5 +162,37 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
     @Override
     public <U> boolean supportsType(Class<U> clazz) {
         return clazz.equals(AaListParams.class);
+    }
+
+
+    private final Map<String, String> listItemMap = new HashMap<>();
+    public void parseListStart(StringTokenizer tokenizer, AaListParams aaListParams, String token, Map<String, String> listItemMap) {
+        String num = tokenizer.nextToken();
+        String listName = tokenizer.nextToken();
+        String tester = tokenizer.nextToken();
+        String ctu = tokenizer.nextToken();
+        String fail = tokenizer.nextToken();
+        String status = tokenizer.nextToken();
+        HashMap<String, String> listParamsMap = new HashMap<>();
+        listParamsMap.put(listName, status);
+    }
+
+    public void parseItemStart(StringTokenizer tokenizer, AaListParams aaListParams, String token) {
+        String num = tokenizer.nextToken();
+        if (listItemMap.isEmpty()) {
+            throw new AaListParseListActionEmptyException("List action is empty");
+        } else {
+            listItemMap.forEach((key, value) -> {
+                if (value.equals(num)) {
+                    String param = tokenizer.nextToken();
+                    String desc = tokenizer.nextToken();
+                    String s = tokenizer.nextToken();
+                    String itemName = key + "_" + tokenizer.nextToken();
+                    String itemValue = tokenizer.nextToken();
+                    HashMap<String, String> aaParamsMap = new HashMap<>();
+                    aaParamsMap.put(itemName, itemValue);
+                }
+            });
+        }
     }
 }

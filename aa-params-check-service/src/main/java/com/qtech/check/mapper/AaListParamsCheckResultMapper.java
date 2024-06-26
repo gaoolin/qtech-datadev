@@ -18,6 +18,4 @@ public interface AaListParamsCheckResultMapper {
     public int insertAaListParamsCheckResult(AaListParamsCheckResult record);
 
     public int insertAaListParamsLatestCheckResult(AaListParamsCheckResult record);
-
-    public List<AaListParamsCheckResult> selectAaListParamsCheckResultList(AaListParamsCheckResult record);
 }

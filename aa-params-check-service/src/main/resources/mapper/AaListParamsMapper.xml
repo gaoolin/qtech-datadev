@@ -253,7 +253,7 @@
         FROM qtech_eq_dwd.aa_list_params_parsed_detail
     </sql>
 
-    <insert id="insertAaListParams" parameterType="aaListKafkaMessage">
+    <insert id="insertAaListParams" parameterType="AaListParams">
         insert into qtech_eq_dwd.aa_list_params_parsed_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="simId != null">sim_id,</if>

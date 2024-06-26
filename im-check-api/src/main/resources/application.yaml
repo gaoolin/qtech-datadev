@@ -14,7 +14,7 @@ spring:
   application:
     name: aa-params-chk-service
   profiles:
-    active: prod
+    active: dev
 
   mvc:
     pathmatch:

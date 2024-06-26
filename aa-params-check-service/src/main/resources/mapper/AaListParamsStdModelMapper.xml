@@ -259,26 +259,4 @@
             </if>
         </where>
     </select>
-
-    <insert id="insertAaListParamsStdModel" parameterType="AaListParamsStdModel">
-        insert into qtech_biz_1.aa_list_params_std_model
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-        </trim>
-    </insert>
-
-    <update id="updateAaListParamsStdModel" parameterType="AaListParamsStdModel">
-        update qtech_biz_1.aa_list_params_std_model
-        <trim prefix="set" suffixOverrides=",">
-        </trim>
-        <where>
-        </where>
-    </update>
-
-    <delete id="deleteAaListParamsStdModel" parameterType="AaListParamsStdModel">
-        delete from qtech_biz_1.aa_list_params_std_model
-        <where>
-        </where>
-    </delete>
 </mapper>

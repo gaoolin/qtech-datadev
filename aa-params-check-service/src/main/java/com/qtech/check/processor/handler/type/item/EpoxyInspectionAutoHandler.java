@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/28 11:21:44
- * desc   :  ClampOnOff
+ * desc   :  EpoxyInspectionAuto
  */
 
 @Component

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/28 11:19:56
- * desc   :  Blemish
+ * desc   :  VcmCheck
  */
 
 @Component

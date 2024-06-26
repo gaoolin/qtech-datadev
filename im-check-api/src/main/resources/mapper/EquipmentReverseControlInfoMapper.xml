@@ -12,7 +12,7 @@
     </resultMap>
 
     <sql id="QtechImChkResultSql">
-        select sim_id, source, prod_type, chk_dt, code, description, label from equipment_reverse_control_info
+        select sim_id, source, prod_type, chk_dt, code, description, label from qtech_eq_ods.equipment_reverse_control_info
     </sql>
 
     <select id="selectQtechImChkResultList" resultMap="BaseResultMap">
@@ -23,6 +23,5 @@
             </if>
         </where>
     </select>
-
 
 </mapper>
