@@ -1,7 +1,5 @@
 package com.qtech.reverse.utils;
 
-import com.qtech.reverse.controller.EquipmentReverseControlInfoController;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -10,6 +8,6 @@ import com.qtech.reverse.controller.EquipmentReverseControlInfoController;
  */
 
 
-public class ModeControl {
+public class ModeFlag {
     public static volatile ControlMode controlMode = ControlMode.DEFAULT; // 默认控制模式
 }

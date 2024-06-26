@@ -3,7 +3,7 @@ package com.qtech.reverse.controller;
 import com.qtech.reverse.entity.EquipmentReverseControlInfo;
 import com.qtech.reverse.service.IEquipmentReverseControlInfoService;
 import com.qtech.reverse.utils.ControlMode;
-import com.qtech.reverse.utils.ModeControl;
+import com.qtech.reverse.utils.ModeFlag;
 import com.qtech.reverse.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,9 @@ import java.time.LocalTime;
  */
 
 
+/**
+ * 控制设备反向控制信息的控制器。
+ */
 @RestController
 @RequestMapping(value = "/im/chk/api")
 public class EquipmentReverseControlInfoController {
@@ -28,38 +31,54 @@ public class EquipmentReverseControlInfoController {
     @Autowired
     private IEquipmentReverseControlInfoService equipmentReverseControlInfoService;
 
-    @RequestMapping(value = "/{simId}", produces = "application/json", method = RequestMethod.GET)
+    /**
+     * 根据SIM ID获取设备反向控制信息。
+     * @param simId 设备的SIM ID
+     * @return 包含设备控制信息的结果对象，或特定控制模式下的默认响应
+     */
+    @GetMapping("/{simId}")
     public R getEquipmentReverseControlInfo(@PathVariable("simId") String simId) {
-        ControlMode currentMode = ModeControl.controlMode;
+        ControlMode currentMode = ModeFlag.controlMode;
 
-        if (currentMode == ControlMode.ALWAYS_RETURN) {
-            // 总是返回逻辑
-            EquipmentReverseControlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
-            return info != null ? R.restResult(info) : R.restResult(null);
-        } else if (currentMode == ControlMode.ALWAYS_NULL) {
-            // 总是返回null
-            return R.restResult(null);
-        } else { // ControlMode.DEFAULT
-            // 按照工作日时间控制
-            LocalDateTime now = LocalDateTime.now();
-            DayOfWeek dayOfWeek = now.toLocalDate().getDayOfWeek();
-            LocalTime timeNow = now.toLocalTime();
-
-            if ((DayOfWeek.MONDAY.getValue() <= dayOfWeek.getValue() && dayOfWeek.getValue() <= DayOfWeek.FRIDAY.getValue()) && timeNow.isAfter(LocalTime.of(8, 30)) && timeNow.isBefore(LocalTime.of(17, 0))) {
+        switch (currentMode) {
+            case ALWAYS_RETURN:
                 EquipmentReverseControlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
                 return info != null ? R.restResult(info) : R.restResult(null);
-            } else {
-                return R.restResult(null); // 非工作时间返回null
-            }
+            case ALWAYS_NULL:
+                return R.restResult(null);
+            default: // 默认，按照工作日时间控制
+                LocalDateTime now = LocalDateTime.now();
+                if (isWithinWorkingHours(now)) {
+                    info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
+                    return info != null ? R.restResult(info) : R.restResult(null);
+                } else {
+                    return R.restResult(null); // 非工作时间返回null
+                }
         }
     }
 
-    // 控制模式变更API
+    /**
+     * 判断当前时间是否在工作时间内。
+     * @param dateTime 当前日期时间
+     * @return 是否在工作时间内
+     */
+    private boolean isWithinWorkingHours(LocalDateTime dateTime) {
+        DayOfWeek dayOfWeek = dateTime.toLocalDate().getDayOfWeek();
+        LocalTime timeNow = dateTime.toLocalTime();
+        return (DayOfWeek.MONDAY.getValue() <= dayOfWeek.getValue() && dayOfWeek.getValue() <= DayOfWeek.FRIDAY.getValue())
+                && timeNow.isAfter(LocalTime.of(8, 30)) && timeNow.isBefore(LocalTime.of(17, 0));
+    }
+
+    /**
+     * 更改控制模式。
+     * @param mode 新的控制模式字符串
+     * @return 成功或错误的消息响应
+     */
     @PostMapping("/control-mode")
     public ResponseEntity<String> changeControlMode(@RequestParam("mode") String mode) {
         try {
             ControlMode newMode = ControlMode.valueOf(mode.toUpperCase());
-            ModeControl.controlMode = newMode;
+            ModeFlag.controlMode = newMode;
             return ResponseEntity.ok("Control mode updated to " + newMode);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid control mode");
