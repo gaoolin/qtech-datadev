@@ -25,7 +25,7 @@ public class EquipmentReverseControlInfo {
     private String label;
 
     public String getFormattedChkDt() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
         sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT+8"));
         return sdf.format(chkDt);
     }

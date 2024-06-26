@@ -2,13 +2,16 @@ package com.qtech.reverse.controller;
 
 import com.qtech.reverse.entity.EquipmentReverseControlInfo;
 import com.qtech.reverse.service.IEquipmentReverseControlInfoService;
-import com.qtech.reverse.utils.HttpStatus;
+import com.qtech.reverse.utils.ControlMode;
+import com.qtech.reverse.utils.ModeControl;
 import com.qtech.reverse.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * author :  gaozhilin
@@ -24,17 +27,42 @@ public class EquipmentReverseControlInfoController {
 
     @Autowired
     private IEquipmentReverseControlInfoService equipmentReverseControlInfoService;
+
     @RequestMapping(value = "/{simId}", produces = "application/json", method = RequestMethod.GET)
-    public R getEquipmentReverseControlInfo(
-            // @ApiParam(name = "项目名称", value = "例如：qtech_comparison", defaultValue = "qtech_comparison", required = true)
-            // @ApiParam(name = "盒子编码", value = "例如：86xxxx", required = true)
-            @PathVariable("simId") String simId) {
+    public R getEquipmentReverseControlInfo(@PathVariable("simId") String simId) {
+        ControlMode currentMode = ModeControl.controlMode;
 
-        EquipmentReverseControlInfo equipmentReverseControlInfo = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
-        if (equipmentReverseControlInfo == null) {
+        if (currentMode == ControlMode.ALWAYS_RETURN) {
+            // 总是返回逻辑
+            EquipmentReverseControlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
+            return info != null ? R.restResult(info) : R.restResult(null);
+        } else if (currentMode == ControlMode.ALWAYS_NULL) {
+            // 总是返回null
             return R.restResult(null);
-        }
+        } else { // ControlMode.DEFAULT
+            // 按照工作日时间控制
+            LocalDateTime now = LocalDateTime.now();
+            DayOfWeek dayOfWeek = now.toLocalDate().getDayOfWeek();
+            LocalTime timeNow = now.toLocalTime();
 
-        return R.restResult(equipmentReverseControlInfo);
+            if ((DayOfWeek.MONDAY.getValue() <= dayOfWeek.getValue() && dayOfWeek.getValue() <= DayOfWeek.FRIDAY.getValue()) && timeNow.isAfter(LocalTime.of(8, 30)) && timeNow.isBefore(LocalTime.of(17, 0))) {
+                EquipmentReverseControlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
+                return info != null ? R.restResult(info) : R.restResult(null);
+            } else {
+                return R.restResult(null); // 非工作时间返回null
+            }
+        }
+    }
+
+    // 控制模式变更API
+    @PostMapping("/control-mode")
+    public ResponseEntity<String> changeControlMode(@RequestParam("mode") String mode) {
+        try {
+            ControlMode newMode = ControlMode.valueOf(mode.toUpperCase());
+            ModeControl.controlMode = newMode;
+            return ResponseEntity.ok("Control mode updated to " + newMode);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid control mode");
+        }
     }
 }

@@ -27,9 +27,6 @@ public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckRes
     @Autowired
     private AaListParamsCheckResultMapper aaListParamsCheckResultMapper;
 
-    @Autowired
-    private IAaListParamsReverseCtrlInfoService aaListParamsReverseCtrlInfoService;
-
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
     public int save(AaListParamsCheckResult aaListParamsCheckResult) {
@@ -38,7 +35,6 @@ public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckRes
         try {
             i = aaListParamsCheckResultMapper.insertAaListParamsLatestCheckResult(aaListParamsCheckResult);
             j = aaListParamsCheckResultMapper.insertAaListParamsCheckResult(aaListParamsCheckResult);
-            aaListParamsReverseCtrlInfoService.insert(aaListParamsCheckResult);
             log.info(">>>>> save aaListParamsCheckResult success:{}", aaListParamsCheckResult);
         } catch (Exception e) {
             log.error(">>>>> save aaListParamsCheckResult error:{}", e.getMessage());
