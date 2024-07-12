@@ -132,6 +132,7 @@
         SELECT sim_id,
                prod_type,
                received_time,
+               clamp_on_off,
                destroy_start,
                init,
                grab,
@@ -259,6 +260,7 @@
             <if test="simId != null">sim_id,</if>
             <if test="prodType != null">prod_type,</if>
             <if test="receivedTime != null">received_time,</if>
+            <if test="clampOnOff != null">clamp_on_off,</if>
             <if test="destroyStart != null">destroy_start,</if>
             <if test="init != null">init,</if>
             <if test="grab != null">grab,</if>
@@ -381,6 +383,7 @@
             <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
             <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
             <if test="receivedTime != null">#{receivedTime,jdbcType=TIMESTAMP},</if>
+            <if test="clampOnOff != null">#{clampOnOff,jdbcType=VARCHAR},</if>
             <if test="destroyStart != null">#{destroyStart,jdbcType=VARCHAR},</if>
             <if test="init != null">#{init,jdbcType=VARCHAR},</if>
             <if test="grab != null">#{grab,jdbcType=VARCHAR},</if>

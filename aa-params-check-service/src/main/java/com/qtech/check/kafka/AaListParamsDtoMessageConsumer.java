@@ -60,8 +60,12 @@ public class AaListParamsDtoMessageConsumer {
             // 设置接收时间
             pojo.setReceivedTime(timestamp);
 
-            aaListParamsService.insertAaListParams(pojo);
-            log.info(">>>> Inserted parsed message with timestamp: {}", timestamp);
+            try {
+                aaListParamsService.insertAaListParams(pojo);
+                log.info(">>>> Inserted parsed message with prodType: {}, simId: {}", pojo.getProdType(), pojo.getSimId());
+            } catch (Exception e) {
+                log.error(">>>> Failed to insert parsed message with prodType: {}, simId: {}", pojo.getProdType(), pojo.getSimId());
+            }
 
             // 如果需要发送响应或回执，可以使用kafkaTemplate
             // kafkaTemplate.send("responseTopic", key, "Processed successfully");

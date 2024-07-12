@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 
 @Data
-@Accessors(chain = true)
+@Accessors(chain = true) // 表示启用链式调用
 @EqualsAndHashCode(callSuper = false)
 public class AaListParamsBaseEntity {
     private String clampOnOff;
@@ -137,14 +137,14 @@ public class AaListParamsBaseEntity {
     private String result50;
     private String result51;
     private String result52;
-    // chartAlignment Item 指标
+        // chartAlignment Item 指标
     private String xResMin;
     private String xResMax;
     private String yResMin;
     private String yResMax;
     // EpoxyInspection Auto Item 指标
     private String epoxyInspectionInterval;
-    // vcmZ Item 指标
+    // vcmCheck 指标
     private String resultCheckMin;
     private String resultCheckMax;
 

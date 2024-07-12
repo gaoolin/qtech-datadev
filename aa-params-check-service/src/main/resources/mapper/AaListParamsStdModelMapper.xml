@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.check.mapper.AaListParamsStdModelMapper">
     <resultMap id="AaListParamsStdModelResult" type="AaListParamsStdModel">
-        <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="prodType" column="prod_type" jdbcType="VARCHAR"/>
         <result property="clampOnOff" column="clamp_on_off" jdbcType="VARCHAR"/>
         <result property="destroyStart" column="destroy_start" jdbcType="VARCHAR"/>
         <result property="init" column="init" jdbcType="VARCHAR"/>
@@ -127,13 +128,14 @@
     </resultMap>
 
     <sql id="AaListParamsStdModelSql">
-        SELECT prod_type,
+        SELECT id,
+               prod_type,
                destroy_start,
                init,
                grab,
-               clamp_on_off,
                re_init,
                senser_reset,
+               clamp_on_off,
                sid,
                vcm_hall,
                vcm_init,
@@ -246,14 +248,22 @@
                y_res_max,
                epoxy_inspection_interval,
                result_check_min,
-               result_check_max
-        FROM qtech_biz_1.aa_list_params_std_model
+               result_check_max,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               remark
+        FROM qtech_im_chk.aa_list_params_std_model
     </sql>
 
     <select id="selectAaListParamsStdModelList" resultMap="AaListParamsStdModelResult"
             parameterType="AaListParamsStdModel">
         <include refid="AaListParamsStdModelSql"/>
         <where>
+            <if test="id != null and id != ''">
+                id = #{id}
+            </if>
             <if test="prodType != null and prodType != ''">
                 prod_type = #{prodType}
             </if>

@@ -67,9 +67,7 @@ public class ComparisonConstants {
             "chartAlignment2",
             "vcmMoveToZPos",
             "zOffset",
-            "openCheck",
-            "epoxyInspectionInterval",
-            "resultCheckMin", "resultCheckMax"
+            "openCheck"
             // ... 其他需要比较是否相等的属性名称
     );
 
@@ -81,7 +79,9 @@ public class ComparisonConstants {
             "result31", "result32", "result33", "result34", "result35", "result36", "result37", "result38", "result39", "result40",
             "result41", "result42", "result43", "result44", "result45", "result46", "result47", "result48", "result49", "result50",
             "result51", "result52",
-            "xResMin", "xResMax", "yResMin", "yResMax"
+            "xResMin", "xResMax", "yResMin", "yResMax",
+            "resultCheckMin", "resultCheckMax",
+            "epoxyInspectionInterval"
             );
 
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:aa:list:params:";
@@ -94,14 +94,10 @@ public class ComparisonConstants {
             "ChartAlignment1",
             "ChartAlignment2",
             "EpoxyInspection_Auto",
-            "EpoxyInspection Auto", // 测试用
             "LP_OC",
             "MTF_Check",
             "MTF_Check2",
             "MTF_Check3",
-            "MTFCheck", // 测试用
-            "MTFCheck2", // 测试用
-            "MTFCheck3", // 测试用
             "MTF_OffAxisCheck1",
             "MTF_OffAxisCheck2",
             "MTF_OffAxisCheck3",

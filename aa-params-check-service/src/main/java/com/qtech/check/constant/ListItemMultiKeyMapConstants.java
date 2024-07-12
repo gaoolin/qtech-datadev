@@ -21,14 +21,9 @@ public class ListItemMultiKeyMapConstants {
     private static Map<String, Set<String>> createKeyMap() {
         Map<String, Set<String>> keyMap = new HashMap<>();
         keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
-        keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check2", "MTF_Check3", "VCMPowerOffCheck", "Save_MTF", "MTF_OffAxisCheck1", "MTF_OffAxisCheck2", "MTF_OffAxisCheck1",
-                // 测试用
-                "MTFCheck", "MTFCheck2", "MTFCheck3")));
+        keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check2", "MTF_Check3", "VCMPowerOffCheck", "Save_MTF", "MTF_OffAxisCheck1", "MTF_OffAxisCheck2", "MTF_OffAxisCheck1")));
         keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment1", "ChartAlignment2", "ChartAlignment3", "LP_OC")));
-        keyMap.put("EpoxyInspectionAuto", new HashSet<>(Arrays.asList("EpoxyInspection_Auto",
-                // 测试用
-                "EpoxyInspection Auto"
-                )));
+        keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
         keyMap.put("VcmCheck", new HashSet<>(Arrays.asList("VCM_ZHall", "VCM_Hall2", "VCM_Hall")));
         keyMap.put("ZOffset", new HashSet<>(Collections.singletonList("Z_Offset")));
         // 可以继续添加其他映射
