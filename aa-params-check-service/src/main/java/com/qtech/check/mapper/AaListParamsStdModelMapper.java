@@ -16,11 +16,4 @@ import java.util.List;
 public interface AaListParamsStdModelMapper {
 
     public List<AaListParamsStdModel> selectAaListParamsStdModelList(AaListParamsStdModel aaListParamsStdModel);
-
-    public int insertAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
-    public int updateAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
-    public int deleteAaListParamsStdModel(AaListParamsStdModel aaListParamsStdModel);
-
 }

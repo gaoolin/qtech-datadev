@@ -36,6 +36,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
 
     @Autowired
     private CommandProcessor commandProcessor;
+
     @Autowired
     private ListItemMultiKeyMapConstants listItemMultiKeyMapConstants;
 

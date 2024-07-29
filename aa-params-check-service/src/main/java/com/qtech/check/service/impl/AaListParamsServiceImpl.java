@@ -1,15 +1,13 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.config.dynamic.DataSourceNames;
 import com.qtech.check.config.dynamic.DataSourceSwitch;
 import com.qtech.check.mapper.AaListParamsMapper;
+import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.service.IAaListParamsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin

@@ -3,6 +3,7 @@ package com.qtech.check.utils;
 import com.alibaba.fastjson.JSON;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.pojo.AaListParamsStdModel;
+import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -63,15 +64,27 @@ public class RedisUtil {
     }
 
     // 假设你有一个AaListParamsMessage对象，其名字为name
-    public void saveMessage(String name, AaListParamsStdModel message) {
+    public void saveAaListParamsStdModel(String name, AaListParamsStdModel message) {
+        stringRedisTemplate.opsForValue().set(name, JSON.toJSONString(message));
+    }
+
+    public void saveAaListParamsStdModelInfo(String name, AaListParamsStdModelInfo message) {
         stringRedisTemplate.opsForValue().set(name, JSON.toJSONString(message));
     }
 
     // 根据名字获取AaListParamsStdModel对象
-    public AaListParamsStdModel getMessage(String name) {
+    public AaListParamsStdModel getAaListParamsStdModel(String name) {
         String jsonString = stringRedisTemplate.opsForValue().get(name);
         if (jsonString != null) {
             return JSON.parseObject(jsonString, AaListParamsStdModel.class);
+        }
+        return null;
+    }
+
+    public AaListParamsStdModelInfo getAaListParamsStdModelInfo(String name) {
+        String jsonString = stringRedisTemplate.opsForValue().get(name);
+        if (jsonString != null) {
+            return JSON.parseObject(jsonString, AaListParamsStdModelInfo.class);
         }
         return null;
     }

@@ -6,6 +6,8 @@ import com.qtech.check.algorithm.AaListParamsComparator;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.pojo.AaListParamsCheckResult;
 import com.qtech.check.pojo.AaListParamsStdModel;
+import com.qtech.check.pojo.AaListParamsStdModelInfo;
+import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import com.qtech.check.service.IAaListParamsStdModelService;
 import com.qtech.check.utils.RedisUtil;
 import com.qtech.common.utils.DateUtils;
@@ -14,7 +16,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,13 +36,13 @@ import static com.qtech.check.constant.ComparisonConstants.*;
 public class AaListParamsCheckMessageConsumer {
 
     @Autowired
-    private ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory;
-
-    @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     @Autowired
     private IAaListParamsStdModelService aaListParamsStdModelService;
+
+    @Autowired
+    private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -56,7 +57,38 @@ public class AaListParamsCheckMessageConsumer {
             String value = record.value();
             AaListParams actualObj = JSON.parseObject(value, new TypeReference<AaListParams>() {
             }.getType());
-            modelObj = redisUtil.getMessage(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType());
+
+            AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType());
+            if (modelInfoObj == null) {
+                AaListParamsStdModelInfo stdModelInfoParam = new AaListParamsStdModelInfo();
+                stdModelInfoParam.setProdType(actualObj.getProdType());
+                modelInfoObj = aaListParamsStdModelInfoService.selectOneAaListParamsStdModelInfo(stdModelInfoParam);
+                if (modelInfoObj == null) {
+                    aaListParamsCheckResult.setSimId(actualObj.getSimId());
+                    aaListParamsCheckResult.setProdType(actualObj.getProdType());
+                    aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());
+                    aaListParamsCheckResult.setStatusCode(0);
+                    aaListParamsCheckResult.setDescription("Has Template, But Missing Information.");
+                    kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+                    log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
+                    continue;
+                }
+                redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
+            }
+
+            if (modelInfoObj.getStatus() == 0) {
+                aaListParamsCheckResult.setSimId(actualObj.getSimId());
+                aaListParamsCheckResult.setProdType(actualObj.getProdType());
+                aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());
+                aaListParamsCheckResult.setStatusCode(0);
+                aaListParamsCheckResult.setDescription("Template Offline.");
+                redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
+                kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+                log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
+                continue;
+            }
+
+            modelObj = redisUtil.getAaListParamsStdModel(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType());
             if (modelObj == null) {
                 AaListParamsStdModel stdModelParam = new AaListParamsStdModel();
                 stdModelParam.setProdType(actualObj.getProdType());
@@ -71,7 +103,7 @@ public class AaListParamsCheckMessageConsumer {
                     log.warn(">>>>> Can not find standard template for prodType: {}. skip action.", actualObj.getProdType());
                     continue;
                 }
-                redisUtil.saveMessage(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType(), modelObj);
+                redisUtil.saveAaListParamsStdModel(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType(), modelObj);
             }
 
             Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result =
@@ -132,6 +164,7 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResult.setStatusCode(1);
                 aaListParamsCheckResult.setDescription(description.toString());
             }
+
             kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
             log.info(">>>>> Check message complete!");
         }

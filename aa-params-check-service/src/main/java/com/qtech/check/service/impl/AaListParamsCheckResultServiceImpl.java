@@ -1,17 +1,13 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.mapper.AaListParamsReverseCtrlInfoMapper;
 import com.qtech.check.pojo.AaListParamsCheckResult;
 import com.qtech.check.mapper.AaListParamsCheckResultMapper;
 import com.qtech.check.service.IAaListParamsCheckResultService;
 import com.qtech.check.config.dynamic.DataSourceNames;
 import com.qtech.check.config.dynamic.DataSourceSwitch;
-import com.qtech.check.service.IAaListParamsReverseCtrlInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin

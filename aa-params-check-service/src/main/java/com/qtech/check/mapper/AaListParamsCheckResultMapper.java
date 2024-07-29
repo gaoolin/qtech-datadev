@@ -3,8 +3,6 @@ package com.qtech.check.mapper;
 import com.qtech.check.pojo.AaListParamsCheckResult;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.List;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com

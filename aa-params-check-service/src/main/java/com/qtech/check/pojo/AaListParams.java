@@ -31,6 +31,13 @@ public class AaListParams extends AaListParamsBaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedTime;
 
+    public void reset() {
+        this.simId = null;
+        this.prodType = null;
+        this.receivedTime = null;
+        super.reset();
+    }
+
     @Override
     public void fillWithData(List<AaListCommand> aaListCommands) {
         if (aaListCommands.isEmpty()) {
