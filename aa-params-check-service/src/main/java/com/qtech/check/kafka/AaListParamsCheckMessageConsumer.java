@@ -68,7 +68,7 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setCheckDt(DateUtils.getNowDate());
                     aaListParamsCheckResult.setStatusCode(0);
-                    aaListParamsCheckResult.setDescription("Has Template, But Missing Information.");
+                    aaListParamsCheckResult.setDescription("Missing Template Information.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
                     log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
                     continue;
