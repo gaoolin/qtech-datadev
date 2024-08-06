@@ -1,4 +1,4 @@
-FROM maven:3.6-jdk-8 AS builder
+FROM registry.cn-shanghai.aliyuncs.com/qtech/maven:3.6-jdk-8 AS builder
 
 WORKDIR /usr/src/app
 COPY ./pom.xml /usr/src/app/pom.xml
