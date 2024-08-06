@@ -14,9 +14,7 @@ import com.amazonaws.services.s3.model.lifecycle.LifecycleTagPredicate;
  * desc   :  生命周期配置类
  */
 
-
 public class LifecycleConfiguration {
-
 
     // Create a rule to archive objects with the "glacierobjects/" prefix to Glacier immediately.
     public static final BucketLifecycleConfiguration.Rule rule1 = new BucketLifecycleConfiguration.Rule()

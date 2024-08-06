@@ -7,6 +7,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.BucketLifecycleConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -19,6 +21,7 @@ import java.util.Arrays;
 
 
 public class SetLifecycleConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(SetLifecycleConfiguration.class);
 
     static Regions clientRegion = Regions.DEFAULT_REGION;
     static String bucketName = "qtech-20230717";
@@ -35,8 +38,6 @@ public class SetLifecycleConfiguration {
                     .withRegion(clientRegion)
                     .build();
 
-            System.out.println(s3Client);
-
             // Save the configuration.
             s3Client.setBucketLifecycleConfiguration(bucketName, configuration);
 
@@ -49,11 +50,11 @@ public class SetLifecycleConfiguration {
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
+            logger.error("Error: " + e.getMessage());
         }
     }
 }

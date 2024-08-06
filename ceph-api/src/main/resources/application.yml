@@ -14,18 +14,6 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
-  redis:
-    sentinel:
-      master: mymaster
-      nodes:
-        - 10.170.6.40
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        enabled: true
-        min-idle: 1
-        max-wait: -1ms
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher

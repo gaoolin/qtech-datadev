@@ -12,6 +12,8 @@ import com.amazonaws.services.s3.model.lifecycle.LifecycleAndOperator;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleFilter;
 import com.amazonaws.services.s3.model.lifecycle.LifecyclePrefixPredicate;
 import com.amazonaws.services.s3.model.lifecycle.LifecycleTagPredicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -22,9 +24,8 @@ import java.util.Arrays;
  * desc   :  文件对象操作模版
  */
 
-
 public class SetLifecycleConfigurationTemplate {
-
+    private static final Logger logger = LoggerFactory.getLogger(SetLifecycleConfigurationTemplate.class);
 
     static Regions clientRegion = Regions.DEFAULT_REGION;
     static String bucketName = "*** Bucket name ***";
@@ -74,11 +75,11 @@ public class SetLifecycleConfigurationTemplate {
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process
             // it, so it returned an error response.
-            e.printStackTrace();
+            logger.error("Error Message:    " + e.getMessage());
         } catch (SdkClientException e) {
             // Amazon S3 couldn't be contacted for a response, or the client
             // couldn't parse the response from Amazon S3.
-            e.printStackTrace();
+            logger.error("SDK Error Message: " + e.getMessage());
         }
     }
 }
