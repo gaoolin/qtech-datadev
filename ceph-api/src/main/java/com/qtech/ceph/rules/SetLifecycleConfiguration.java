@@ -1,16 +1,17 @@
 package com.qtech.ceph.rules;
 
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.BucketLifecycleConfiguration;
+import software.amazon.awssdk.core.exception.SdkException;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.BucketLifecycleConfiguration;
+import software.amazon.awssdk.services.s3.model.LifecycleRule;
+import software.amazon.awssdk.services.s3.model.PutBucketLifecycleConfigurationRequest;
+import software.amazon.awssdk.services.s3.model.GetBucketLifecycleConfigurationRequest;
+import software.amazon.awssdk.services.s3.model.GetBucketLifecycleConfigurationResponse;
+import software.amazon.awssdk.regions.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * author :  gaozhilin
@@ -18,42 +19,49 @@ import java.util.Arrays;
  * date   :  2023/08/01 10:36:20
  * desc   :  设置文件对象过期时间
  */
-
-
 public class SetLifecycleConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(SetLifecycleConfiguration.class);
 
-    static Regions clientRegion = Regions.DEFAULT_REGION;
+    static Region clientRegion = Region.US_EAST_1; // Update to your region
     static String bucketName = "qtech-20230717";
 
     // Add the rules to a new BucketLifecycleConfiguration.
-    static BucketLifecycleConfiguration configuration = new BucketLifecycleConfiguration()
-            .withRules(Arrays.asList(LifecycleConfiguration.rule3));
+    static LifecycleRule rule = LifecycleRule.builder()
+            .id("rule3") // Update rule id
+            .prefix("") // Update prefix if needed
+            .status("Enabled")
+            .transitions(t -> t
+                    .storageClass("GLACIER") // Example transition storage class
+                    .days(30) // Example days for transition
+            )
+            .build();
 
     public static void main(String[] args) {
+        try (S3Client s3Client = S3Client.builder()
+                .region(clientRegion)
+                .build()) {
 
-        try {
-            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-                    .withCredentials(new ProfileCredentialsProvider())
-                    .withRegion(clientRegion)
+            // Create a BucketLifecycleConfiguration with the rules
+            BucketLifecycleConfiguration lifecycleConfiguration = BucketLifecycleConfiguration.builder()
+                    .rules(Collections.singletonList(rule))
                     .build();
 
-            // Save the configuration.
-            s3Client.setBucketLifecycleConfiguration(bucketName, configuration);
+            // Save the configuration
+            s3Client.putBucketLifecycleConfiguration(PutBucketLifecycleConfigurationRequest.builder()
+                    .bucket(bucketName)
+                    .lifecycleConfiguration(lifecycleConfiguration)
+                    .build());
 
-            // Retrieve the configuration.
-            configuration = s3Client.getBucketLifecycleConfiguration(bucketName);
+            // Retrieve the configuration
+            GetBucketLifecycleConfigurationResponse response = s3Client.getBucketLifecycleConfiguration(GetBucketLifecycleConfigurationRequest.builder()
+                    .bucket(bucketName)
+                    .build());
 
-            // Retrieve the configuration.
-            configuration = s3Client.getBucketLifecycleConfiguration(bucketName);
+            // Print the retrieved configuration
+            logger.info("Bucket Lifecycle Configuration: " + response.rules().toString());
 
-        } catch (AmazonServiceException e) {
-            // The call was transmitted successfully, but Amazon S3 couldn't process
-            // it, so it returned an error response.
-            logger.error("Error: " + e.getMessage());
-        } catch (SdkClientException e) {
-            // Amazon S3 couldn't be contacted for a response, or the client
-            // couldn't parse the response from Amazon S3.
+        } catch (SdkException e) {
+            // Catch SDK specific exceptions
             logger.error("Error: " + e.getMessage());
         }
     }

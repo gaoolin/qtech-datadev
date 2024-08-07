@@ -1,7 +1,5 @@
 package com.qtech.ceph.object.controller;
 
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ObjectListing;
 import com.qtech.ceph.common.ApiResponse;
 import com.qtech.ceph.common.ResponseCode;
 import com.qtech.ceph.object.service.CephStorageService;
@@ -13,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -28,9 +28,8 @@ import java.util.Map;
  * date   :  2023/07/17 08:25:47
  * desc   :  对象存储控制器 (原名: CephGrwController)
  */
-
 @RestController
-@RequestMapping(value = "/ceph/object")
+@RequestMapping("/ceph/obj")
 public class ObjectStorageController {
 
     private static final Logger logger = LoggerFactory.getLogger(ObjectStorageController.class);
@@ -38,21 +37,36 @@ public class ObjectStorageController {
     @Autowired
     private CephStorageService cephStorageService;
 
-    @ApiOperation(value = "List All Buckets", notes = "List All Buckets")
+    /**
+     * 获取所有存储桶列表
+     * @return 存储桶列表
+     */
+    @ApiOperation(value = "List All Buckets", notes = "Retrieve a list of all buckets")
     @GetMapping("/buckets")
     public ResponseEntity<ApiResponse<List<Bucket>>> listAllBuckets() {
         List<Bucket> buckets = cephStorageService.listAllBuckets();
         return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, buckets));
     }
 
-    @ApiOperation(value = "List Objects in Bucket", notes = "List Objects in Bucket")
+    /**
+     * 获取指定存储桶中的所有对象
+     *
+     * @param bucketName 存储桶名称
+     * @return 对象列表
+     */
+    @ApiOperation(value = "List Objects in Bucket", notes = "Retrieve a list of all objects in the specified bucket")
     @GetMapping("/buckets/{bucketName}/objects")
-    public ResponseEntity<ApiResponse<ObjectListing>> listObjects(@PathVariable String bucketName) {
-        ObjectListing objectListing = cephStorageService.listObjects(bucketName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, objectListing));
+    public ResponseEntity<ApiResponse<ListObjectsV2Response>> listObjects(@PathVariable String bucketName) {
+        ListObjectsV2Response objectKeys = cephStorageService.listObjects(bucketName);
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, objectKeys));
     }
 
-    @ApiOperation(value = "Create Bucket", notes = "Create Bucket")
+    /**
+     * 创建一个新的存储桶
+     * @param bucketName 存储桶名称
+     * @return 创建结果
+     */
+    @ApiOperation(value = "Create Bucket", notes = "Create a new bucket with the specified name")
     @PostMapping("/buckets")
     public ResponseEntity<ApiResponse<String>> createBucket(@RequestParam String bucketName) {
         if (bucketName == null || bucketName.isEmpty()) {
@@ -62,14 +76,25 @@ public class ObjectStorageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(ResponseCode.CREATED, result));
     }
 
-    @ApiOperation(value = "Delete Bucket", notes = "Delete Bucket")
+    /**
+     * 删除指定存储桶
+     * @param bucketName 存储桶名称
+     * @return 删除结果
+     */
+    @ApiOperation(value = "Delete Bucket", notes = "Delete the specified bucket")
     @DeleteMapping("/buckets/{bucketName}")
     public ResponseEntity<ApiResponse<String>> deleteBucket(@PathVariable String bucketName) {
         cephStorageService.deleteBucket(bucketName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "Bucket deleted successfully"));
     }
 
-    @ApiOperation(value = "Set File Public", notes = "Set File Public")
+    /**
+     * 设置指定文件为公开访问
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @return 操作结果
+     */
+    @ApiOperation(value = "Set File Public", notes = "Set the specified file to be publicly accessible")
     @PostMapping("/buckets/{bucketName}/files/{fileName}/public")
     public ResponseEntity<ApiResponse<String>> setFilePublic(@PathVariable String bucketName, @PathVariable String fileName) {
         cephStorageService.setObjPublic(bucketName, fileName);
@@ -77,27 +102,39 @@ public class ObjectStorageController {
     }
 
     /**
-     * @description
-     * @param bucketName
-     * @param keyName 存储对象的指定存储桶中的键
-     * @param dirName
-     * @return org.springframework.http.ResponseEntity<com.qtech.ceph.common.ApiResponse<java.lang.String>>
+     * 下载指定文件
+     * @param bucketName 存储桶名称
+     * @param keyName 文件键
+     * @param dirName 文件存储路径
+     * @return 操作结果
      */
-    @ApiOperation(value = "Download File", notes = "Download File")
+    @ApiOperation(value = "Download File", notes = "Download the specified file to the given directory")
     @GetMapping("/buckets/{bucketName}/files/{keyName}/download")
     public ResponseEntity<ApiResponse<String>> downloadObj(@PathVariable String bucketName, @PathVariable String keyName, @RequestParam String dirName) {
         cephStorageService.downloadObj(bucketName, keyName, dirName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "File downloaded successfully"));
     }
 
-    @ApiOperation(value = "Delete Object", notes = "Delete Object")
+    /**
+     * 删除指定文件
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @return 删除结果
+     */
+    @ApiOperation(value = "Delete Object", notes = "Delete the specified object from the bucket")
     @DeleteMapping("/buckets/{bucketName}/files/{fileName}")
     public ResponseEntity<ApiResponse<String>> deleteObject(@PathVariable String bucketName, @PathVariable String fileName) {
         cephStorageService.deleteObject(bucketName, fileName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "Object deleted successfully"));
     }
 
-    @ApiOperation(value = "Generate Presigned URL", notes = "Generate Presigned URL")
+    /**
+     * 生成预签名 URL
+     * @param bucketName 存储桶名称
+     * @param keyName 文件键
+     * @return 预签名 URL
+     */
+    @ApiOperation(value = "Generate Presigned URL", notes = "Generate a presigned URL for the specified object")
     @GetMapping("/buckets/{bucketName}/files/{keyName}/url")
     public ResponseEntity<ApiResponse<URL>> generatePresignedUrl(@PathVariable String bucketName, @PathVariable String keyName) {
         URL url = cephStorageService.generatePresignedUrl(bucketName, keyName);
@@ -105,20 +142,27 @@ public class ObjectStorageController {
     }
 
     /**
-     * @description web端上传文件时，需要将 MultipartFile 转换为 File， File file = convertMultipartFileToFile(multipartFile);再将file传参
+     * 上传文件并获取 URL
      * @param bucketName 存储桶名称
-     * @param file file为文件对象
-     * @param keyName keyName为存储对象的指定存储桶中的键
-     * @return org.springframework.http.ResponseEntity<com.qtech.ceph.common.ApiResponse<java.net.URL>>
+     * @param file 文件对象
+     * @param keyName 文件键
+     * @return 文件 URL
      */
-    @ApiOperation(value = "Upload File And Get URL", notes = "Upload File And Get URL")
+    @ApiOperation(value = "Upload File And Get URL", notes = "Upload a file and get its URL")
     @PostMapping("/buckets/{bucketName}/files")
-    public ResponseEntity<ApiResponse<URL>> uploadFileAndGetUrl(@PathVariable String bucketName, @RequestParam File file, @RequestParam String keyName) {
+    public ResponseEntity<ApiResponse<URL>> uploadFileAndGetUrl(@PathVariable String bucketName, @RequestParam("file") File file, @RequestParam String keyName) {
         URL url = cephStorageService.uploadObjAndGetUrl(bucketName, file, keyName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, url));
     }
 
-    @ApiOperation(value = "Upload InputStream As File", notes = "Upload InputStream As File")
+    /**
+     * 上传 InputStream 作为文件
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @param input 文件输入流
+     * @return 操作结果
+     */
+    @ApiOperation(value = "Upload InputStream As File", notes = "Upload a file from an InputStream")
     @PostMapping("/buckets/{bucketName}/files/{fileName}/stream")
     public ResponseEntity<ApiResponse<String>> uploadInputStreamAsObj(@PathVariable String bucketName, @PathVariable String fileName, @RequestParam InputStream input) {
         cephStorageService.uploadInputStreamAsObj(bucketName, fileName, input);
@@ -126,13 +170,13 @@ public class ObjectStorageController {
     }
 
     /**
-     * @description 上传文件
-     * @param bucketName
-     * @param fileName
-     * @param paramMap paramMap的key为contents，value为Base64编码后的文件内容
-     * @return org.springframework.http.ResponseEntity<com.qtech.ceph.common.ApiResponse<java.lang.String>>
+     * 上传 ByteArray 作为文件
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @param paramMap 请求参数，包含 Base64 编码的文件内容
+     * @return 操作结果
      */
-    @ApiOperation(value = "Upload ByteArray As File", notes = "Upload ByteArray As File")
+    @ApiOperation(value = "Upload ByteArray As File", notes = "Upload a file from a Base64-encoded byte array")
     @PostMapping("/buckets/{bucketName}/files/{fileName}/byte")
     public ResponseEntity<ApiResponse<String>> uploadByteArrayAsFile(@PathVariable String bucketName, @PathVariable String fileName, @RequestBody Map<String, Object> paramMap) {
         try {
@@ -147,12 +191,12 @@ public class ObjectStorageController {
     }
 
     /**
-     * 获取输入流：从服务中获取 InputStream。
-     * 设置响应头：配置响应头以提示浏览器进行文件下载。
-     * 写入输出流：将 InputStream 内容流式地写入 HttpServletResponse 的输出流。
-     * 异常处理：捕获并记录异常，确保流的关闭和资源的释放。
+     * 下载对象并以 InputStream 形式返回
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @param response HTTP 响应
      */
-    @ApiOperation(value = "Read Object As InputStream", notes = "Read Object As InputStream")
+    @ApiOperation(value = "Read Object As InputStream", notes = "Read an object from the bucket as an InputStream")
     @GetMapping("/buckets/{bucketName}/files/{fileName}/stream")
     public void downloadObjectAsInputStream(@PathVariable String bucketName, @PathVariable String fileName, HttpServletResponse response) {
         try {
@@ -177,7 +221,13 @@ public class ObjectStorageController {
         }
     }
 
-    @ApiOperation(value = "Download Object As ByteArray", notes = "Download Object As ByteArray")
+    /**
+     * 下载对象并以 ByteArray 形式返回
+     * @param bucketName 存储桶名称
+     * @param fileName 文件名称
+     * @return 文件内容的 ByteArray
+     */
+    @ApiOperation(value = "Download Object As ByteArray", notes = "Download an object from the bucket as a byte array")
     @GetMapping("/buckets/{bucketName}/files/{fileName}/download")
     public ResponseEntity<ApiResponse<byte[]>> downloadObjectAsByteArray(@PathVariable String bucketName, @PathVariable String fileName) {
         byte[] data = cephStorageService.downloadObjectAsByteArray(bucketName, fileName);

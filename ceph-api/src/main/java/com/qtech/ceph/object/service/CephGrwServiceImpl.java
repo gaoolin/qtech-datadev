@@ -1,9 +1,7 @@
 package com.qtech.ceph.object.service;
 
 import com.alibaba.fastjson.JSON;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.StringUtils;
+
 import com.qtech.ceph.common.DateUtils;
 import com.qtech.ceph.object.utils.Utils;
 import org.slf4j.Logger;
@@ -25,6 +23,7 @@ import java.util.List;
  * desc   :  对象存储相关操作
  */
 
+/*
 @Service
 public class CephGrwServiceImpl {
 
@@ -33,26 +32,37 @@ public class CephGrwServiceImpl {
     @Autowired
     private AmazonS3 conn;
 
-    /**
+    */
+/**
      * 【你的 access_key】
-     */
+     *//*
+
     private static final String AWS_ACCESS_KEY = "XH084XXXXA3Y0EZT2CX";
-    /**
+    */
+/**
      * 【你的 aws_secret_key】
-     */
+     *//*
+
     private static final String AWS_SECRET_KEY = "rJ4Xs9wACXXXXXognDwEP31KmUzv1vV9M24BWT88";
 
-    /**
+    */
+/**
      * 【你的 endpoint】
-     */
+     *//*
+
     private static final String ENDPOINT = "http://127.0.0.1:7480";
 
-    /*private static AmazonS3 conn;*/
+    */
+/*private static AmazonS3 conn;*//*
 
-    /**
+
+    */
+/**
      * 静态块：初始化S3的连接对象AmazonS3！ 需要3个参数：AWS_ACCESS_KEY，AWS_SECRET_KEY
-     */
-    /*static {
+     *//*
+
+    */
+/*static {
         InputStream inputStream = getResourceAsStream("properties/ceph.properties");
         Properties p = new Properties();
         try {
@@ -65,13 +75,16 @@ public class CephGrwServiceImpl {
         clientConfig.setProtocol(Protocol.HTTP);
         conn = new AmazonS3Client(awsCredentials, clientConfig);
         conn.setEndpoint(p.getProperty("ceph.domain.ip"));
-    }*/
+    }*//*
 
-    /**
+
+    */
+/**
      * 获取ceph的所有列表
      *
      * @return
-     */
+     *//*
+
     public List<Bucket> getBucketList() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
@@ -81,11 +94,13 @@ public class CephGrwServiceImpl {
         return buckets;
     }
 
-    /**
+    */
+/**
      * 获取ceph的当天桶名称是否已创建
      *
      * @return
-     */
+     *//*
+
     public boolean getBucketIsCreated() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
@@ -96,11 +111,13 @@ public class CephGrwServiceImpl {
         return false;
     }
 
-    /**
+    */
+/**
      * 获取ceph当前日期的桶名称
      *
      * @return bucket.getName()
-     */
+     *//*
+
     public String getCurrentDateBucketName() {
         List<Bucket> buckets = conn.listBuckets();
         for (Bucket bucket : buckets) {
@@ -112,12 +129,14 @@ public class CephGrwServiceImpl {
     }
 
 
-    /**
+    */
+/**
      * 创建对象的bucket
      *
      * @param bucketName
      * @return
-     */
+     *//*
+
     public ObjectListing getObjectListing(String bucketName) {
         Bucket bucket = conn.createBucket(bucketName);
         ObjectListing objects = conn.listObjects(bucket.getName());
@@ -132,11 +151,13 @@ public class CephGrwServiceImpl {
         return objects;
     }
 
-    /**
+    */
+/**
      * 创建对象bucket
      *
      * @param
-     */
+     *//*
+
     public String createBucket() {
         String bucketName = "qtech-" + DateUtils.dateTime();
         Bucket bucket = conn.createBucket(bucketName);
@@ -150,45 +171,53 @@ public class CephGrwServiceImpl {
         return "bucket " + bucketName + "successful created!";
     }
 
-    /**
+    */
+/**
      * 删除对象bucket
      *
      * @param bucketName
-     */
+     *//*
+
     public void deleteBucket(String bucketName) {
         conn.deleteBucket(bucketName);
     }
 
-    /**
+    */
+/**
      * 上传字符串生成文件
      *
      * @param bucketName
      * @param fileName
      * @param text
-     */
+     *//*
+
     public void uploadStream(String bucketName, String fileName, String text) {
         ByteArrayInputStream input = new ByteArrayInputStream(text.getBytes());
         PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
         System.out.println(JSON.toJSONString(putObjectResult));
     }
 
-    /**
+    */
+/**
      * 修改文件权限 public
      *
      * @param bucketName
      * @param fileName
-     */
+     *//*
+
     public void modifyPub(String bucketName, String fileName) {
         conn.setObjectAcl(bucketName, fileName, CannedAccessControlList.PublicRead);
     }
 
-    /**
+    */
+/**
      * 下载
      *
      * @param bucketName
      * @param keyName
      * @param dirName
-     */
+     *//*
+
     public void downloadFile(String bucketName, String keyName, String dirName) {
         conn.getObject(
                 new GetObjectRequest(bucketName, keyName),
@@ -196,33 +225,39 @@ public class CephGrwServiceImpl {
         );
     }
 
-    /**
+    */
+/**
      * 删除文件
-     */
+     *//*
+
     public void deleteObject(String bucketName, String fileName) {
         conn.deleteObject(bucketName, fileName);
     }
 
-    /**
+    */
+/**
      * 获取下载url 生成对象的下载 URLS (带签名和不带签名)
      *
      * @param bucketName
      * @param keyName
      * @return
-     */
+     *//*
+
     public URL geturl(String bucketName, String keyName) {
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, keyName);
         return conn.generatePresignedUrl(request);
     }
 
-    /**
+    */
+/**
      * 上传文件返回url
      *
      * @param bucketName
      * @param file
      * @param keyName
      * @return
-     */
+     *//*
+
     public URL uploadFileToUrl(String bucketName, File file, String keyName) {
         try {
             PutObjectRequest request = new PutObjectRequest(bucketName, keyName, file);
@@ -234,26 +269,30 @@ public class CephGrwServiceImpl {
         return conn.generatePresignedUrl(requests);
     }
 
-    /**
+    */
+/**
      * 上传InputStream文件
      *
      * @param bucketName
      * @param fileName
      * @param input
-     */
+     *//*
+
     public void uploadInputStream(String bucketName, String fileName, InputStream input) {
         PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
         System.out.println(JSON.toJSONString(putObjectResult));
     }
 
 
-    /**
+    */
+/**
      * 上传文件字节流到ceph
      *
      * @param bucketName
      * @param fileName
      * @param contents
-     */
+     *//*
+
     public void uploadByte(String bucketName, String fileName, byte[] contents) {
         try (ByteArrayInputStream input = new ByteArrayInputStream(contents)) {
             PutObjectResult putObjectResult = conn.putObject(bucketName, fileName, input, new ObjectMetadata());
@@ -269,12 +308,14 @@ public class CephGrwServiceImpl {
         conn.deleteBucketLifecycleConfiguration("");
     }
 
-    /**
+    */
+/**
      * 从ceph系统上下载流对象
      *
      * @param bucketName
      * @param
-     */
+     *//*
+
     public InputStream readStreamObject(String bucketName, String fileName) {
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileName);
         S3Object object = conn.getObject(getObjectRequest);
@@ -292,3 +333,4 @@ public class CephGrwServiceImpl {
         return new byte[0];
     }
 }
+*/

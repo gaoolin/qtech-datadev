@@ -110,7 +110,14 @@
                 <scope>compile</scope>
             </dependency>
 
-
+            <!--统一指定 AWS SDK 版本-->
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.26.30</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

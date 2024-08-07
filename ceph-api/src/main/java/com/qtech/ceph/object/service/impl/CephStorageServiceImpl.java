@@ -1,23 +1,22 @@
 package com.qtech.ceph.object.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.StringUtils;
 import com.qtech.ceph.object.service.CephStorageService;
-import com.qtech.ceph.object.utils.FileConvertor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
+import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 /**
  * Service class for Ceph object storage operations.
@@ -25,295 +24,237 @@ import java.util.List;
  * Email: gaoolin@gmail.com
  * Date: 2023/07/14
  */
+
+/**
+ * 实现 Ceph 对象存储服务接口的服务类。
+ * 提供桶的列出、创建、删除、对象的上传、下载等功能。
+ */
 @Service
 public class CephStorageServiceImpl implements CephStorageService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CephStorageServiceImpl.class);
-
-    @Autowired
-    private AmazonS3 s3Client;
+    private final S3AsyncClient s3Client;
+    private final S3Presigner presigner;
 
     /**
-     * Get the list of all buckets.
-     * Original method name: getBucketList
+     * 构造函数注入 S3AsyncClient 和 S3Presigner。
      *
-     * @return List of buckets
+     * @param s3Client  用于异步操作的 S3 客户端
+     * @param presigner 用于生成预签名 URL 的 S3 签名客户端
+     */
+    public CephStorageServiceImpl(S3AsyncClient s3Client, S3Presigner presigner) {
+        this.s3Client = s3Client;
+        this.presigner = presigner;
+    }
+
+    /**
+     * 列出所有桶。
+     *
+     * @return 包含所有桶的列表
      */
     @Override
     public List<Bucket> listAllBuckets() {
-        try {
-            List<Bucket> buckets = s3Client.listBuckets();
-            for (Bucket bucket : buckets) {
-                logger.info("Bucket Name: {}, Creation Date: {}", bucket.getName(), StringUtils.fromDate(bucket.getCreationDate()));
-            }
-            return buckets;
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+        ListBucketsRequest listBucketsRequest = ListBucketsRequest.builder().build();
+        CompletableFuture<ListBucketsResponse> listBucketsResponse = s3Client.listBuckets(listBucketsRequest);
+        return listBucketsResponse.join().buckets();
     }
 
     /**
-     * Create a bucket and get the object listing.
-     * Original method name: getObjectListing
+     * 创建桶并列出其对象。
      *
-     * @param bucketName Name of the bucket
-     * @return Object listing of the bucket
+     * @param bucketName 桶名称
+     * @return 包含桶对象的列表响应
      */
     @Override
-    public ObjectListing createBucketAndListObjects(String bucketName) {
-        try {
-            s3Client.createBucket(bucketName);
-            return listObjects(bucketName);
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public ListObjectsV2Response createBucketAndListObjects(String bucketName) {
+        createBucket(bucketName);
+        return listObjects(bucketName);
     }
 
     /**
-     * List objects in a bucket.
+     * 列出桶中的对象。
      *
-     * @param bucketName Name of the bucket
-     * @return Object listing
+     * @param bucketName 桶名称
+     * @return 包含桶对象的列表响应
      */
     @Override
-    public ObjectListing listObjects(String bucketName) {
-        try {
-            ObjectListing objects = s3Client.listObjects(bucketName);
-            do {
-                objects.getObjectSummaries().forEach(objectSummary ->
-                        logger.info("Object Key: {}, Size: {}, Last Modified: {}", objectSummary.getKey(), objectSummary.getSize(), StringUtils.fromDate(objectSummary.getLastModified())));
-                objects = s3Client.listNextBatchOfObjects(objects);
-            } while (objects.isTruncated());
-            return objects;
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public ListObjectsV2Response listObjects(String bucketName) {
+        ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder().bucket(bucketName).build();
+        CompletableFuture<ListObjectsV2Response> listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
+        return listObjectsResponse.join();
     }
 
     /**
-     * Create a bucket with the specified name.
-     * Original method name: createBucket
+     * 创建桶。
      *
-     * @param bucketName Name of the bucket
-     * @return Success message
+     * @param bucketName 桶名称
+     * @return 创建的桶名称
      */
     @Override
     public String createBucket(String bucketName) {
-        try {
-            Bucket bucket = s3Client.createBucket(bucketName);
-            logger.info("Bucket created: {}", JSON.toJSONString(bucket));
-            return "Bucket " + bucketName + " successfully created!";
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+        CreateBucketRequest createBucketRequest = CreateBucketRequest.builder().bucket(bucketName).build();
+        s3Client.createBucket(createBucketRequest).join();
+        return bucketName;
     }
 
     /**
-     * Delete a bucket by its name.
-     * Original method name: deleteBucket
+     * 删除桶。
      *
-     * @param bucketName Name of the bucket
+     * @param bucketName 桶名称
      */
     @Override
     public void deleteBucket(String bucketName) {
-        try {
-            s3Client.deleteBucket(bucketName);
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+        DeleteBucketRequest deleteBucketRequest = DeleteBucketRequest.builder().bucket(bucketName).build();
+        s3Client.deleteBucket(deleteBucketRequest).join();
     }
 
     /**
-     * Upload a string as a file to a bucket.
-     * Original method name: uploadStream
+     * 上传字符串作为对象。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the file
-     * @param content    Content of the file
+     * @param bucketName 桶名称
+     * @param objName    对象名称
+     * @param content    字符串内容
      */
     @Override
-    public void uploadStringAsObj(String bucketName, String ObjName, String content) {
-        try (ByteArrayInputStream input = new ByteArrayInputStream(content.getBytes())) {
-            PutObjectResult putObjectResult = s3Client.putObject(bucketName, ObjName, input, new ObjectMetadata());
-            logger.info("Obj uploaded: {}", JSON.toJSONString(putObjectResult));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void uploadStringAsObj(String bucketName, String objName, String content) {
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(objName).build();
+        s3Client.putObject(putObjectRequest, AsyncRequestBody.fromString(content)).join();
     }
 
     /**
-     * Set file permissions to public.
-     * Original method name: modifyPub
+     * 设置对象为公共可读。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the file
+     * @param bucketName 桶名称
+     * @param objName    对象名称
      */
     @Override
-    public void setObjPublic(String bucketName, String ObjName) {
-        try {
-            s3Client.setObjectAcl(bucketName, ObjName, CannedAccessControlList.PublicRead);
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public void setObjPublic(String bucketName, String objName) {
+        PutObjectAclRequest aclRequest = PutObjectAclRequest.builder()
+                .bucket(bucketName)
+                .key(objName)
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
+        s3Client.putObjectAcl(aclRequest).join();
     }
 
     /**
-     * Download a file from a bucket to a local directory.
-     * Original method name: downloadFile
+     * 下载对象到指定目录。
      *
-     * @param bucketName Name of the bucket
-     * @param keyName    Key of the file
-     * @param dirName    Local directory
+     * @param bucketName 桶名称
+     * @param keyName    对象键名
+     * @param dirName    目录名
      */
     @Override
     public void downloadObj(String bucketName, String keyName, String dirName) {
-        // 确保目录存在
-        File dir = new File(dirName);
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                throw new RuntimeException("Failed to create directory: " + dirName);
-            }
-        }
-
-        // 文件的目标路径
-        File localFile = new File(dir, keyName);
-
-        try {
-            // 从S3存储桶下载文件
-            s3Client.getObject(new GetObjectRequest(bucketName, keyName), localFile);
-        } catch (SdkClientException e) {
-            throw new RuntimeException("Failed to download file from bucket: " + bucketName, e);
-        } catch (Exception e) {
-            throw new RuntimeException("Unexpected error occurred during file download", e);
-        }
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(keyName).build();
+        File file = new File(dirName + "/" + keyName);
+        s3Client.getObject(getObjectRequest, AsyncResponseTransformer.toFile(file)).join();
     }
 
-
     /**
-     * Delete an object from a bucket.
-     * Original method name: deleteObject
+     * 删除对象。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the file
+     * @param bucketName 桶名称
+     * @param objName    对象名称
      */
     @Override
-    public void deleteObject(String bucketName, String ObjName) {
-        try {
-            s3Client.deleteObject(bucketName, ObjName);
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public void deleteObject(String bucketName, String objName) {
+        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(objName).build();
+        s3Client.deleteObject(deleteObjectRequest).join();
     }
 
     /**
-     * Generate a pre-signed URL for downloading an object.
-     * Original method name: geturl
+     * 生成预签名URL。
      *
-     * @param bucketName Name of the bucket
-     * @param keyName    Key of the file
-     * @return Pre-signed URL
+     * @param bucketName 桶名称
+     * @param keyName    对象键名
+     * @return 预签名URL
      */
     @Override
     public URL generatePresignedUrl(String bucketName, String keyName) {
-        try {
-            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, keyName);
-            return s3Client.generatePresignedUrl(request);
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(keyName).build();
+        GetObjectPresignRequest getObjectPresignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .getObjectRequest(getObjectRequest)
+                .build();
+        return presigner.presignGetObject(getObjectPresignRequest).url();
     }
 
     /**
-     * Upload a file and return its URL.
-     * Original method name: uploadFileToUrl
+     * 上传对象并获取URL。
      *
-     * @param bucketName Name of the bucket
-     * @param Obj        file to upload
-     * @param keyName    Key of the file
-     * @return URL of the uploaded file
+     * @param bucketName 桶名称
+     * @param obj        文件对象
+     * @param keyName    对象键名
+     * @return 预签名URL
      */
     @Override
-    public URL uploadObjAndGetUrl(String bucketName, File Obj, String keyName) {
-        try {
-            PutObjectRequest request = new PutObjectRequest(bucketName, keyName, Obj);
-            s3Client.putObject(request);
-        } catch (Exception e) {
-            logger.error("Error uploading Obj: {}", e.getMessage());
-        }
-        return generatePresignedUrl(bucketName, keyName);
+    public URL uploadObjAndGetUrl(String bucketName, File obj, String keyName) {
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(keyName).build();
+        PutObjectPresignRequest putObjectPresignRequest = PutObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(10))
+                .putObjectRequest(putObjectRequest)
+                .build();
+        URL presignedUrl = presigner.presignPutObject(putObjectPresignRequest).url();
+        s3Client.putObject(putObjectRequest, AsyncRequestBody.fromFile(obj.toPath())).join();
+        return presignedUrl;
     }
 
     /**
-     * Upload an InputStream as a file to a bucket.
-     * Original method name: uploadInputStream
+     * 上传 InputStream 作为对象。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the file
-     * @param input      InputStream of the file
+     * @param bucketName 桶名称
+     * @param objName    对象名称
+     * @param input      InputStream
      */
     @Override
-    public void uploadInputStreamAsObj(String bucketName, String ObjName, InputStream input) {
-        try {
-            PutObjectResult putObjectResult = s3Client.putObject(bucketName, ObjName, input, new ObjectMetadata());
-            logger.info("Obj uploaded: {}", JSON.toJSONString(putObjectResult));
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public void uploadInputStreamAsObj(String bucketName, String objName, InputStream input) {
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objName)
+                .build();
+
+        AsyncRequestBody asyncRequestBody = AsyncRequestBody.fromInputStream(input, -1L, Executors.newSingleThreadExecutor());
+
+        s3Client.putObject(putObjectRequest, asyncRequestBody)
+                .join();
     }
 
     /**
-     * Upload a byte array as a file to a bucket.
-     * Original method name: uploadByte
+     * 上传字节数组作为对象。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the file
-     * @param contents   Byte array content of the Obj
+     * @param bucketName 桶名称
+     * @param objName    对象名称
+     * @param contents   字节数组
      */
     @Override
-    public void uploadByteArrayAsObj(String bucketName, String ObjName, byte[] contents) {
-        try (ByteArrayInputStream input = new ByteArrayInputStream(contents)) {
-            PutObjectResult putObjectResult = s3Client.putObject(bucketName, ObjName, input, new ObjectMetadata());
-            logger.info("Obj uploaded: {}", JSON.toJSONString(putObjectResult));
-            listObjects(bucketName).getObjectSummaries().forEach(objectSummary ->
-                    logger.info("Object Key: {}", objectSummary.getKey()));
-        } catch (IOException e) {
-            throw new IllegalStateException("Error uploading byte array to Ceph", e);
-        }
+    public void uploadByteArrayAsObj(String bucketName, String objName, byte[] contents) {
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(objName).build();
+        s3Client.putObject(putObjectRequest, AsyncRequestBody.fromBytes(contents)).join();
     }
 
     /**
-     * Read an object from a bucket as an InputStream.
-     * Original method name: readStreamObject
+     * 作为 InputStream 下载对象。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the Obj
-     * @return InputStream of the object
+     * @param bucketName 桶名称
+     * @param objName    对象名称
+     * @return InputStream
      */
     @Override
-    public InputStream downloadObjectAsInputStream(String bucketName, String ObjName) {
-        try {
-            S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, ObjName));
-            return object.getObjectContent();
-        } catch (SdkClientException e) {
-            throw new RuntimeException(e);
-        }
+    public InputStream downloadObjectAsInputStream(String bucketName, String objName) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objName).build();
+        return s3Client.getObject(getObjectRequest, AsyncResponseTransformer.toBytes()).join().asInputStream();
     }
 
     /**
-     * Download an object from a bucket as a byte array.
-     * Original method name: downloadObjectAsByteArray
+     * 下载对象作为字节数组。
      *
-     * @param bucketName Name of the bucket
-     * @param ObjName    Name of the Obj
-     * @return Byte array of the object content
+     * @param bucketName 桶名称
+     * @param objName    对象名称
+     * @return 字节数组
      */
     @Override
-    public byte[] downloadObjectAsByteArray(String bucketName, String ObjName) {
-        S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, ObjName));
-        try (S3ObjectInputStream inputStream = object.getObjectContent()) {
-            return FileConvertor.readInputStreamToByte(inputStream);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error downloading object as byte array from Ceph", e);
-        }
+    public byte[] downloadObjectAsByteArray(String bucketName, String objName) {
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objName).build();
+        return s3Client.getObject(getObjectRequest, AsyncResponseTransformer.toBytes()).join().asByteArray();
     }
 }

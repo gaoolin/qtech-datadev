@@ -1,8 +1,5 @@
 package com.qtech.ceph.object.controller;
 
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.qtech.ceph.object.service.CephGrwServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ import java.util.Map;
  * desc   :  对象存储Controller
  */
 
+/*
 @RestController
 @RequestMapping(value = "cephGrw/api")
 public class CephGrwController {
@@ -105,7 +103,7 @@ public class CephGrwController {
 
     @ApiOperation(value = "UploadByte", notes = "UploadByte")
     @RequestMapping(value = "/uploadByte", method = RequestMethod.POST)
-    public int uploadByte(@RequestBody Map<String,Object> paramMap) {
+    public int uploadByte(@RequestBody Map<String, Object> paramMap) {
         try {
             String bucketName = (String) paramMap.get("bucketName");
             String fileName = (String) paramMap.get("fileName");
@@ -131,3 +129,4 @@ public class CephGrwController {
         return cephGrwService.downloadObjectByByte(bucketName, fileName);
     }
 }
+*/

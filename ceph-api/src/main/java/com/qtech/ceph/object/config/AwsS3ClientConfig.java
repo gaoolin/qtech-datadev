@@ -1,15 +1,16 @@
 package com.qtech.ceph.object.config;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
+import java.net.URI;
 
 /**
  * author :  gaozhilin
@@ -17,56 +18,54 @@ import org.springframework.context.annotation.Configuration;
  * date   :  2023/07/17 10:54:23
  * desc   :  Configuration class for AWS S3 client.
  */
-
-/*@Configuration
-public class AwsS3ClientConfig {
-
-    @Value("${ceph.accessKey}")
-    private String access;
-    @Value("${ceph.secretKey}")
-    private String secret;
-    @Value("${ceph.endpoint}")
-    private String endpoint;
-
-    @Bean
-    public AmazonS3 AwsS3Client() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(access, secret);
-        ClientConfiguration clientConfig = new ClientConfiguration();
-        clientConfig.setProtocol(Protocol.HTTP);
-        AmazonS3 conn = new AmazonS3Client(awsCredentials, clientConfig);
-        conn.setEndpoint(endpoint);
-
-        return conn;
-    }
-}*/
-
+/**
+ * 配置 AWS S3 客户端和签名客户端的配置类。
+ */
 @Configuration
 public class AwsS3ClientConfig {
 
-    private final String accessKey;
-    private final String secretKey;
-    private final String endpoint;
+    @Value("${ceph.accessKey}")
+    private String accessKeyId;
 
-    /*将字段注入改为构造函数注入，提升了代码的可测试性。*/
-    @Autowired
-    public AwsS3ClientConfig(@Value("${ceph.accessKey}") String accessKey,
-                             @Value("${ceph.secretKey}") String secretKey,
-                             @Value("${ceph.endpoint}") String endpoint) {
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-        this.endpoint = endpoint;
+    @Value("${ceph.secretKey}")
+    private String secretKey;
+
+    @Value("${ceph.region}")
+    private String region;
+
+    @Value("${ceph.endpoint}")
+    private String endpoint;
+
+    /**
+     * 创建 S3AsyncClient bean。
+     *
+     * @return 配置好的 S3AsyncClient 实例
+     */
+    @Bean
+    public S3AsyncClient s3AsyncClient() {
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKeyId, secretKey);
+
+        return S3AsyncClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .endpointOverride(URI.create(endpoint))
+                .serviceConfiguration(S3Configuration.builder().pathStyleAccessEnabled(true).build())
+                .build();
     }
 
+    /**
+     * 创建 S3Presigner bean。
+     *
+     * @return 配置好的 S3Presigner 实例
+     */
     @Bean
-    public AmazonS3 amazonS3Client() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        ClientConfiguration clientConfig = new ClientConfiguration();
-        clientConfig.setProtocol(com.amazonaws.Protocol.HTTP);
+    public S3Presigner s3Presigner() {
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKeyId, secretKey);
 
-        return AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withClientConfiguration(clientConfig)
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null))
+        return S3Presigner.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .endpointOverride(URI.create(endpoint))
                 .build();
     }
 }
