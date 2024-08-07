@@ -85,7 +85,7 @@ public class ObjectStorageController {
     @DeleteMapping("/buckets/{bucketName}")
     public ResponseEntity<ApiResponse<String>> deleteBucket(@PathVariable String bucketName) {
         cephStorageService.deleteBucket(bucketName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "Bucket deleted successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
     }
 
     /**
@@ -98,7 +98,7 @@ public class ObjectStorageController {
     @PostMapping("/buckets/{bucketName}/files/{fileName}/public")
     public ResponseEntity<ApiResponse<String>> setFilePublic(@PathVariable String bucketName, @PathVariable String fileName) {
         cephStorageService.setObjPublic(bucketName, fileName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File set to public successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
     }
 
     /**
@@ -112,7 +112,7 @@ public class ObjectStorageController {
     @GetMapping("/buckets/{bucketName}/files/{keyName}/download")
     public ResponseEntity<ApiResponse<String>> downloadObj(@PathVariable String bucketName, @PathVariable String keyName, @RequestParam String dirName) {
         cephStorageService.downloadObj(bucketName, keyName, dirName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File downloaded successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
     }
 
     /**
@@ -125,7 +125,7 @@ public class ObjectStorageController {
     @DeleteMapping("/buckets/{bucketName}/files/{fileName}")
     public ResponseEntity<ApiResponse<String>> deleteObject(@PathVariable String bucketName, @PathVariable String fileName) {
         cephStorageService.deleteObj(bucketName, fileName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "Object deleted successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
     }
 
     /**
@@ -166,7 +166,7 @@ public class ObjectStorageController {
     @PostMapping("/buckets/{bucketName}/files/{fileName}/stream")
     public ResponseEntity<ApiResponse<String>> uploadInputStreamAsObj(@PathVariable String bucketName, @PathVariable String fileName, @RequestParam InputStream input) {
         cephStorageService.uploadInputStreamAsObj(bucketName, fileName, input);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File uploaded successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
     }
 
     /**

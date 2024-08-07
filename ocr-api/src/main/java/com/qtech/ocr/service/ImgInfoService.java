@@ -19,12 +19,12 @@ import java.util.Map;
  */
 
 @Service
-public class ImgInfoServiceImpl {
+public class ImgInfoService {
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public HttpEntity<Map<String, String>> cephObj(String bucketName, String fileName, String base64Contents) {
+    public ResponseEntity<String> cephObj(String bucketName, String fileName, String base64Contents) {
         // 拼接请求 URL
         String url = String.format("http://10.170.6.40:31555/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
 
@@ -37,13 +37,12 @@ public class ImgInfoServiceImpl {
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestParams, headers);
 
         // 发送 HTTP POST 请求
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
+
+        return restTemplate.exchange(
                 url,
                 HttpMethod.POST,
                 requestEntity,
                 String.class
         );
-
-        return requestEntity;
     }
 }
