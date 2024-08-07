@@ -109,7 +109,7 @@ public class ObjectStorageController {
      * @return 操作结果
      */
     @ApiOperation(value = "Download File", notes = "Download the specified file to the given directory")
-    @GetMapping("/buckets/{bucketName}/files/{keyName}/download")
+    @GetMapping("/buckets/{bucketName}/files/{keyName}/local")
     public ResponseEntity<ApiResponse<String>> downloadObj(@PathVariable String bucketName, @PathVariable String keyName, @RequestParam String dirName) {
         cephStorageService.downloadObj(bucketName, keyName, dirName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
@@ -228,7 +228,7 @@ public class ObjectStorageController {
      * @return 文件内容的 ByteArray
      */
     @ApiOperation(value = "Download Object As ByteArray", notes = "Download an object from the bucket as a byte array")
-    @GetMapping("/buckets/{bucketName}/files/{fileName}/download")
+    @GetMapping("/buckets/{bucketName}/files/{fileName}/byte")
     public ResponseEntity<ApiResponse<byte[]>> downloadObjectAsByteArray(@PathVariable String bucketName, @PathVariable String fileName) {
         byte[] data = cephStorageService.downloadObjAsByteArray(bucketName, fileName);
         return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, data));

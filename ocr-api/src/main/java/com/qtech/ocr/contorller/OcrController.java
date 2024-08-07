@@ -62,7 +62,7 @@ public class OcrController extends BaseController {
         JSONObject data;
         // 从请求体中提取信息
         String fileName = byteJson.getString("fileName");
-        String base64Contents = byteJson.getString("base64Contents");
+        String base64Contents = byteJson.getString("contents");
         String bucketName = "qtech-20230717";
         ResponseEntity<String> mapHttpEntity = imgInfoService.cephObj(bucketName, fileName, base64Contents);
         String responseBody = mapHttpEntity.getBody();
@@ -81,7 +81,8 @@ public class OcrController extends BaseController {
         if (code == 200) {
             Map<String, String> map = new HashMap<>();
             map.put("file_name", fileName);
-            return HttpConnectUtils.post("http://10.170.6.40:30113/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
+            // return HttpConnectUtils.post("http://10.170.6.40:30113/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
+            return HttpConnectUtils.post("http://localhost:5000/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
         }
         return null;
     }

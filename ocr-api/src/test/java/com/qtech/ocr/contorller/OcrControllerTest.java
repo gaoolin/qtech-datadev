@@ -26,7 +26,7 @@ import java.util.HashMap;
 @RunWith(SpringRunner.class)
 class OcrControllerTest {
 
-    File file = new File("C:\\Users\\zhilin.gao\\Desktop\\D30CB914-C790-460d-B90F-2E3BD90F4D05.png");
+    File file = new File("C:\\Users\\zhilin.gao\\Desktop\\BFE1905D-EC64-43f9-B8B7-025A1D966665.png");
     byte[] bytes = ImageUtils.fileToByte(file);
 
     @Autowired
@@ -43,7 +43,7 @@ class OcrControllerTest {
 
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("bucketName", "qtech-20230717");
-        paramMap.put("fileName", "test.png");
+        paramMap.put("fileName", "test1.png");
         paramMap.put("contents", s);
 
         JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(paramMap));

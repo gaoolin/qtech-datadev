@@ -26,7 +26,8 @@ public class ImgInfoService {
 
     public ResponseEntity<String> cephObj(String bucketName, String fileName, String base64Contents) {
         // 拼接请求 URL
-        String url = String.format("http://10.170.6.40:31555/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
+        // String url = String.format("http://10.170.6.40:31555/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
+        String url = String.format("http://localhost:8080/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
 
         // 构造请求体
         Map<String, String> requestParams = new HashMap<>();
@@ -37,7 +38,6 @@ public class ImgInfoService {
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestParams, headers);
 
         // 发送 HTTP POST 请求
-
         return restTemplate.exchange(
                 url,
                 HttpMethod.POST,
