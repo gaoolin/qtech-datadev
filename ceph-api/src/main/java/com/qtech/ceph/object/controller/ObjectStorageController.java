@@ -1,7 +1,7 @@
 package com.qtech.ceph.object.controller;
 
 import com.qtech.ceph.common.ApiResponse;
-import com.qtech.ceph.common.ResponseCode;
+import com.qtech.ceph.common.ResponseCM;
 import com.qtech.ceph.object.service.CephStorageService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.codec.binary.Base64;
@@ -45,7 +45,7 @@ public class ObjectStorageController {
     @GetMapping("/buckets")
     public ResponseEntity<ApiResponse<List<Bucket>>> listAllBuckets() {
         List<Bucket> buckets = cephStorageService.listAllBuckets();
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, buckets));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, buckets));
     }
 
     /**
@@ -58,7 +58,7 @@ public class ObjectStorageController {
     @GetMapping("/buckets/{bucketName}/objects")
     public ResponseEntity<ApiResponse<ListObjectsV2Response>> listObjects(@PathVariable String bucketName) {
         ListObjectsV2Response objectKeys = cephStorageService.listObjects(bucketName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, objectKeys));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, objectKeys));
     }
 
     /**
@@ -73,7 +73,7 @@ public class ObjectStorageController {
             throw new IllegalArgumentException("Bucket name cannot be null or empty");
         }
         String result = cephStorageService.createBucket(bucketName);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(ResponseCode.CREATED, result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(ResponseCM.CREATED, result));
     }
 
     /**
@@ -85,7 +85,7 @@ public class ObjectStorageController {
     @DeleteMapping("/buckets/{bucketName}")
     public ResponseEntity<ApiResponse<String>> deleteBucket(@PathVariable String bucketName) {
         cephStorageService.deleteBucket(bucketName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "Bucket deleted successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "Bucket deleted successfully"));
     }
 
     /**
@@ -98,7 +98,7 @@ public class ObjectStorageController {
     @PostMapping("/buckets/{bucketName}/files/{fileName}/public")
     public ResponseEntity<ApiResponse<String>> setFilePublic(@PathVariable String bucketName, @PathVariable String fileName) {
         cephStorageService.setObjPublic(bucketName, fileName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "File set to public successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File set to public successfully"));
     }
 
     /**
@@ -112,7 +112,7 @@ public class ObjectStorageController {
     @GetMapping("/buckets/{bucketName}/files/{keyName}/download")
     public ResponseEntity<ApiResponse<String>> downloadObj(@PathVariable String bucketName, @PathVariable String keyName, @RequestParam String dirName) {
         cephStorageService.downloadObj(bucketName, keyName, dirName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "File downloaded successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File downloaded successfully"));
     }
 
     /**
@@ -124,8 +124,8 @@ public class ObjectStorageController {
     @ApiOperation(value = "Delete Object", notes = "Delete the specified object from the bucket")
     @DeleteMapping("/buckets/{bucketName}/files/{fileName}")
     public ResponseEntity<ApiResponse<String>> deleteObject(@PathVariable String bucketName, @PathVariable String fileName) {
-        cephStorageService.deleteObject(bucketName, fileName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "Object deleted successfully"));
+        cephStorageService.deleteObj(bucketName, fileName);
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "Object deleted successfully"));
     }
 
     /**
@@ -138,7 +138,7 @@ public class ObjectStorageController {
     @GetMapping("/buckets/{bucketName}/files/{keyName}/url")
     public ResponseEntity<ApiResponse<URL>> generatePresignedUrl(@PathVariable String bucketName, @PathVariable String keyName) {
         URL url = cephStorageService.generatePresignedUrl(bucketName, keyName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, url));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, url));
     }
 
     /**
@@ -152,7 +152,7 @@ public class ObjectStorageController {
     @PostMapping("/buckets/{bucketName}/files")
     public ResponseEntity<ApiResponse<URL>> uploadFileAndGetUrl(@PathVariable String bucketName, @RequestParam("file") File file, @RequestParam String keyName) {
         URL url = cephStorageService.uploadObjAndGetUrl(bucketName, file, keyName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, url));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, url));
     }
 
     /**
@@ -166,7 +166,7 @@ public class ObjectStorageController {
     @PostMapping("/buckets/{bucketName}/files/{fileName}/stream")
     public ResponseEntity<ApiResponse<String>> uploadInputStreamAsObj(@PathVariable String bucketName, @PathVariable String fileName, @RequestParam InputStream input) {
         cephStorageService.uploadInputStreamAsObj(bucketName, fileName, input);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "File uploaded successfully"));
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, "File uploaded successfully"));
     }
 
     /**
@@ -183,7 +183,7 @@ public class ObjectStorageController {
             String contents = (String) paramMap.get("contents");
             byte[] bytes = Base64.decodeBase64(contents);
             cephStorageService.uploadByteArrayAsObj(bucketName, fileName, bytes);
-            return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, "File uploaded successfully"));
+            return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, null));
         } catch (Exception e) {
             logger.error("uploadByteArrayAsFile error: " + e.getMessage(), e);
             throw new RuntimeException("Failed to upload byte array as file");
@@ -201,7 +201,7 @@ public class ObjectStorageController {
     public void downloadObjAsInputStream(@PathVariable String bucketName, @PathVariable String fileName, HttpServletResponse response) {
         try {
             // 获取文件输入流
-            InputStream inputStream = cephStorageService.downloadObjectAsInputStream(bucketName, fileName);
+            InputStream inputStream = cephStorageService.downloadObjAsInputStream(bucketName, fileName);
 
             // 设置响应头
             response.setContentType("application/octet-stream");
@@ -230,7 +230,7 @@ public class ObjectStorageController {
     @ApiOperation(value = "Download Object As ByteArray", notes = "Download an object from the bucket as a byte array")
     @GetMapping("/buckets/{bucketName}/files/{fileName}/download")
     public ResponseEntity<ApiResponse<byte[]>> downloadObjectAsByteArray(@PathVariable String bucketName, @PathVariable String fileName) {
-        byte[] data = cephStorageService.downloadObjectAsByteArray(bucketName, fileName);
-        return ResponseEntity.ok(new ApiResponse<>(ResponseCode.SUCCESS, data));
+        byte[] data = cephStorageService.downloadObjAsByteArray(bucketName, fileName);
+        return ResponseEntity.ok(new ApiResponse<>(ResponseCM.SUCCESS, data));
     }
 }

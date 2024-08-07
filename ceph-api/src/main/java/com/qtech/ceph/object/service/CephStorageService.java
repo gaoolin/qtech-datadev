@@ -33,7 +33,7 @@ public interface CephStorageService {
 
     void downloadObj(String bucketName, String keyName, String dirName);
 
-    void deleteObject(String bucketName, String objName);
+    void deleteObj(String bucketName, String objName);
 
     URL generatePresignedUrl(String bucketName, String keyName);
 
@@ -43,7 +43,7 @@ public interface CephStorageService {
 
     void uploadByteArrayAsObj(String bucketName, String objName, byte[] contents);
 
-    InputStream downloadObjectAsInputStream(String bucketName, String objName);
+    InputStream downloadObjAsInputStream(String bucketName, String objName);
 
-    byte[] downloadObjectAsByteArray(String bucketName, String objName);
+    byte[] downloadObjAsByteArray(String bucketName, String objName);
 }

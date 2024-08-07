@@ -157,7 +157,7 @@ public class CephStorageServiceImpl implements CephStorageService {
      * @param objName    对象名称
      */
     @Override
-    public void deleteObject(String bucketName, String objName) {
+    public void deleteObj(String bucketName, String objName) {
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(objName).build();
         s3Client.deleteObject(deleteObjectRequest).join();
     }
@@ -240,7 +240,7 @@ public class CephStorageServiceImpl implements CephStorageService {
      * @return InputStream
      */
     @Override
-    public InputStream downloadObjectAsInputStream(String bucketName, String objName) {
+    public InputStream downloadObjAsInputStream(String bucketName, String objName) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objName).build();
         return s3Client.getObject(getObjectRequest, AsyncResponseTransformer.toBytes()).join().asInputStream();
     }
@@ -253,7 +253,7 @@ public class CephStorageServiceImpl implements CephStorageService {
      * @return 字节数组
      */
     @Override
-    public byte[] downloadObjectAsByteArray(String bucketName, String objName) {
+    public byte[] downloadObjAsByteArray(String bucketName, String objName) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(objName).build();
         return s3Client.getObject(getObjectRequest, AsyncResponseTransformer.toBytes()).join().asByteArray();
     }
