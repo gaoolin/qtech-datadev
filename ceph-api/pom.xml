@@ -129,6 +129,14 @@
 
     <build>
         <plugins>
+            <!--打包jar包
+            打包为可执行的jar或war文件，然后以通常的方式运行Spring Boot应用。默认 goal 是 repackage。
+            如果没有这个插件，镜像运行后会报，no main manifest attribute, in /home/app.jar
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!--将依赖移到libs目录下-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

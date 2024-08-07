@@ -90,7 +90,7 @@
         <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
         <plugins>
 
-            <!--复制打包jar包-->
+            <!--打包jar包-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
