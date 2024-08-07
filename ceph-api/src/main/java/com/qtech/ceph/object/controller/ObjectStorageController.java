@@ -178,7 +178,7 @@ public class ObjectStorageController {
      */
     @ApiOperation(value = "Upload ByteArray As File", notes = "Upload a file from a Base64-encoded byte array")
     @PostMapping("/buckets/{bucketName}/files/{fileName}/byte")
-    public ResponseEntity<ApiResponse<String>> uploadByteArrayAsFile(@PathVariable String bucketName, @PathVariable String fileName, @RequestBody Map<String, Object> paramMap) {
+    public ResponseEntity<ApiResponse<String>> uploadByteArrayAsObj(@PathVariable String bucketName, @PathVariable String fileName, @RequestBody Map<String, Object> paramMap) {
         try {
             String contents = (String) paramMap.get("contents");
             byte[] bytes = Base64.decodeBase64(contents);
@@ -198,7 +198,7 @@ public class ObjectStorageController {
      */
     @ApiOperation(value = "Read Object As InputStream", notes = "Read an object from the bucket as an InputStream")
     @GetMapping("/buckets/{bucketName}/files/{fileName}/stream")
-    public void downloadObjectAsInputStream(@PathVariable String bucketName, @PathVariable String fileName, HttpServletResponse response) {
+    public void downloadObjAsInputStream(@PathVariable String bucketName, @PathVariable String fileName, HttpServletResponse response) {
         try {
             // 获取文件输入流
             InputStream inputStream = cephStorageService.downloadObjectAsInputStream(bucketName, fileName);

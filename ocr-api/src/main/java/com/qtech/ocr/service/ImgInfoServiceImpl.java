@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ImgInfoServiceImpl {
 
-    public String cephGrwSvc(String url, JSONObject byteJson) {
+    public String cephObj(String url, JSONObject byteJson) {
 
         return HttpConnectUtils.post(url, byteJson);
     }
