@@ -54,8 +54,8 @@ public class OcrController extends BaseController {
      * @param byteJson 请求体，包含文件信息
      * @return OCR API 返回的响应
      */
-    @ApiOperation(value = "GetInfo", notes = "Get OCR info and upload file")
-    @RequestMapping(value = "/getInfo", method = RequestMethod.POST)
+    @ApiOperation(value = "getOcrInfo", notes = "Get OCR info and upload file")
+    @RequestMapping(value = "/label", method = RequestMethod.POST)
     public String getOcrInfo(@RequestBody JSONObject byteJson) {
         int code = 0;
         String msg;
@@ -82,7 +82,7 @@ public class OcrController extends BaseController {
             Map<String, String> map = new HashMap<>();
             map.put("file_name", fileName);
             // return HttpConnectUtils.post("http://10.170.6.40:30113/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
-            return HttpConnectUtils.post("http://localhost:5000/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
+            return HttpConnectUtils.post("http://ocr-label.qtech-ocr-app:5000/ocrAPI", JSONObject.parseObject(JSON.toJSONString(map)));
         }
         return null;
     }
