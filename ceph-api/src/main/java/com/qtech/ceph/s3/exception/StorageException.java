@@ -1,4 +1,4 @@
-package com.qtech.ceph.object.exception;
+package com.qtech.ceph.s3.exception;
 
 /**
  * author :  gaozhilin

@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-public class CephApp {
+public class S3ForCephApp {
     public static void main(String[] args) {
-        SpringApplication.run(CephApp.class, args);
+        SpringApplication.run(S3ForCephApp.class, args);
     }
 }

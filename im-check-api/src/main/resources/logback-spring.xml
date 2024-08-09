@@ -177,7 +177,7 @@
 
     <!-- 生产环境:输出到文件 -->
     <springProfile name="prod">
-        <logger name="org.apache.kafka" level="WARN"/>
+        <logger name="com.qtech" level="WARN"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="DEBUG_FILE"/>

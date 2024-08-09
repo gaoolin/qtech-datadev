@@ -12,8 +12,8 @@ server:
 spring:
   servlet:
     multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -22,8 +22,11 @@ logging:
   level:
     root: info
 
-ceph:
-  accessKey: 3N9CP0C0D0VNY5UFLACJ
-  secretKey: jAkyxAwskyg0rQ5U27BZ3PcphtmVbiLiAjkXylUn
-  region: us-east-1
-  endpoint: http://10.170.6.40:31033
+#AWS S3配置
+aws:
+  s3:
+    accessKey: 3N9CP0C0D0VNY5UFLACJ
+    secretKey: jAkyxAwskyg0rQ5U27BZ3PcphtmVbiLiAjkXylUn
+    region: us-east-1
+    endpoint: http://10.170.6.40:31033
+    bucket:  default

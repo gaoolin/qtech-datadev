@@ -11,7 +11,7 @@ package com.qtech.ocr.common;
  * 5xx 系列表示服务器错误（如 500 Internal Server Error）
  */
 
-public enum ResponseCM {
+public enum ResponseCode {
     SUCCESS(200, "Success"),
     CREATED(201, "Created"),
     BAD_REQUEST(400, "Bad Request"),
@@ -24,7 +24,7 @@ public enum ResponseCM {
     private final int code;
     private final String msg;
 
-    ResponseCM(int code, String msg) {
+    ResponseCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

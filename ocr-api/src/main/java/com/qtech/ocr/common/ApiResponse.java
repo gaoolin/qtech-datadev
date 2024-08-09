@@ -12,9 +12,9 @@ public class ApiResponse<T> {
     private String msg;
     private T data;
 
-    public ApiResponse(ResponseCM responseCM, T data) {
-        this.code = responseCM.getCode();
-        this.msg = responseCM.getMsg();
+    public ApiResponse(ResponseCode ResponseCode, T data) {
+        this.code = ResponseCode.getCode();
+        this.msg = ResponseCode.getMsg();
         this.data = data;
     }
 
