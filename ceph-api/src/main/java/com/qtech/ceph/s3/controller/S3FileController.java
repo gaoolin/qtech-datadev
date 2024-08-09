@@ -39,15 +39,16 @@ public class S3FileController {
     @PostMapping("/upload")
     public ApiResponse<String> uploadFile(@RequestParam String bucketName,
                                           @RequestParam MultipartFile file) {
-        try {
-            fileService.uploadFile(bucketName, file.getOriginalFilename(), file.getInputStream());
-            return ApiResponse.success("File uploaded successfully");
+        try (InputStream inputStream = file.getInputStream()) {
+            fileService.uploadFile(bucketName, file.getOriginalFilename(), inputStream);
+            return ApiResponse.success("文件上传成功");
         } catch (IOException e) {
-            return ApiResponse.internalServerError("File upload failed: " + e.getMessage());
+            return ApiResponse.internalServerError("文件上传失败: " + e.getMessage());
         } catch (Exception e) {
-            return ApiResponse.internalServerError("An unexpected error occurred: " + e.getMessage());
+            return ApiResponse.internalServerError("发生未知错误: " + e.getMessage());
         }
     }
+
 
     /**
      * 下载指定的文件。
