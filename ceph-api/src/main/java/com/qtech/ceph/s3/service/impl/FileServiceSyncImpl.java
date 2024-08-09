@@ -288,7 +288,7 @@ public class FileServiceSyncImpl implements FileService {
     @Override
     public InputStream downloadFileInChunks(String bucketName, String fileName, int chunkIndex, int chunkSize) throws
             StorageException {
-         // 实现分块下载文件的逻辑
+        // 实现分块下载文件的逻辑
         return null;
     }
 
@@ -319,6 +319,28 @@ public class FileServiceSyncImpl implements FileService {
     @Override
     public Map<String, String> getFileMetadata(String bucketName, String fileName) throws StorageException {
         return null;
+    }
+
+    @Override
+    public boolean doesFileExist(String bucketName, String fileName) {
+        // 构建 HeadObjectRequest 请求
+        HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build();
+        CompletableFuture<HeadObjectResponse> headObjectResponseCompletableFuture = s3AsyncClient.headObject(headObjectRequest);
+        if (headObjectResponseCompletableFuture.isDone()) {
+            try {
+                HeadObjectResponse headObjectResponse = headObjectResponseCompletableFuture.get();
+                return headObjectResponse.sdkHttpResponse().isSuccessful();
+            } catch (NoSuchKeyException e) {
+                // 如果捕获 NoSuchKeyException 异常，则文件不存在
+                return false;
+            } catch (InterruptedException | ExecutionException | S3Exception e) {
+                throw new RuntimeException("Failed to check if file exists", e);
+            }
+        }
+        return false;
     }
 
     /**

@@ -33,7 +33,7 @@ public class S3BucketController {
     public ApiResponse<String> createBucket(@RequestParam String bucketName) {
         try {
             bucketService.createBucket(bucketName);
-            return ApiResponse.success("Bucket created successfully");
+            return ApiResponse.success("Bucket created successfully", null);
         } catch (Exception e) {
             return ApiResponse.internalServerError("Bucket creation failed: " + e.getMessage());
         }
@@ -49,7 +49,7 @@ public class S3BucketController {
     public ApiResponse<String> deleteBucket(@RequestParam String bucketName) {
         try {
             bucketService.deleteBucket(bucketName);
-            return ApiResponse.success("Bucket deleted successfully");
+            return ApiResponse.success("Bucket deleted successfully", null);
         } catch (Exception e) {
             return ApiResponse.internalServerError("Bucket deletion failed: " + e.getMessage());
         }

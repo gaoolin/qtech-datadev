@@ -346,4 +346,33 @@ public class FileServiceImpl implements FileService {
             throw new StorageException("Failed to get file metadata: " + fileName + " from bucket: " + bucketName, e);
         }
     }
+
+    /**
+     * 检查指定桶中是否存在同名文件
+     *
+     * @param bucketName 桶的名称
+     * @param fileName   文件的名称
+     * @return true 如果文件存在；false 如果文件不存在
+     */
+    @Override
+    public boolean doesFileExist(String bucketName, String fileName) {
+        try {
+            // 构建 HeadObjectRequest 请求
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .build();
+
+            // 调用 headObject 方法
+            HeadObjectResponse headObjectResponse = s3Client.headObject(headObjectRequest);
+            // 如果没有抛出异常，则文件存在
+            return headObjectResponse.sdkHttpResponse().isSuccessful();
+        } catch (NoSuchKeyException e) {
+            // 如果捕获 NoSuchKeyException 异常，则文件不存在
+            return false;
+        } catch (S3Exception e) {
+            // 处理其他可能的 S3 异常
+            throw new StorageException("Failed to check if file exists: " + fileName + " in bucket: " + bucketName, e);
+        }
+    }
 }

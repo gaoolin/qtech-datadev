@@ -118,4 +118,6 @@ public interface FileService {
      * @throws StorageException 存储异常
      */
     Map<String, String> getFileMetadata(String bucketName, String fileName) throws StorageException;
+
+    boolean doesFileExist(String bucketName, String fileName);
 }

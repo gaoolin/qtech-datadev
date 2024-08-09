@@ -40,6 +40,10 @@ public class S3FileController {
     public ApiResponse<String> uploadFile(@RequestParam String bucketName,
                                           @RequestParam MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
+            boolean flag = fileService.doesFileExist(bucketName, file.getOriginalFilename());
+            if (flag) {
+                return ApiResponse.conflict("文件已存在");
+            }
             fileService.uploadFile(bucketName, file.getOriginalFilename(), inputStream);
             return ApiResponse.success("文件上传成功");
         } catch (IOException e) {
@@ -61,10 +65,29 @@ public class S3FileController {
     public ApiResponse<byte[]> downloadFile(@RequestParam String bucketName,
                                             @RequestParam String fileName) {
         try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (!flag) {
+                return ApiResponse.notFound("文件不存在");
+            }
             byte[] fileData = fileService.downloadFileAsBytes(bucketName, fileName);
             return ApiResponse.success(fileData);
         } catch (Exception e) {
             return ApiResponse.internalServerError("文件下载失败: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/chk-exist")
+    public ApiResponse<Boolean> checkFileExist(@RequestParam String bucketName,
+                                               @RequestParam String fileName) {
+        try {
+            boolean fileExists = fileService.doesFileExist(bucketName, fileName);
+            if (fileExists) {
+                return ApiResponse.conflict("文件已存在");
+            } else {
+                return ApiResponse.notFound("文件不存在");
+            }
+        } catch (Exception e) {
+            return ApiResponse.internalServerError("文件检查失败: " + e.getMessage());
         }
     }
 
@@ -79,6 +102,9 @@ public class S3FileController {
     public ApiResponse<Map<String, String>> getFileMetadata(@RequestParam("bucketName") String bucketName,
                                                             @RequestParam("fileName") String fileName) {
         try {
+            if (!fileService.doesFileExist(bucketName, fileName)) {
+                return ApiResponse.notFound("文件不存在");
+            }
             Map<String, String> metadata = fileService.getFileMetadata(bucketName, fileName);
             return ApiResponse.success(metadata);
         } catch (Exception e) {
@@ -113,6 +139,10 @@ public class S3FileController {
     public ApiResponse<URL> generatePresignedUrl(@RequestParam("bucketName") String bucketName,
                                                  @RequestParam("fileName") String fileName) {
         try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (flag) {
+                return ApiResponse.conflict("文件已存在");
+            }
             URL presignedUrl = fileService.generatePresignedUrl(bucketName, fileName);
             return ApiResponse.success(presignedUrl);
         } catch (Exception e) {
@@ -131,8 +161,12 @@ public class S3FileController {
     public ApiResponse<String> deleteFile(@RequestParam String bucketName,
                                           @RequestParam String fileName) {
         try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (!flag) {
+                return ApiResponse.notFound("文件不存在");
+            }
             fileService.deleteFile(bucketName, fileName);
-            return ApiResponse.success("文件删除成功");
+            return ApiResponse.success("文件删除成功", null);
         } catch (Exception e) {
             return ApiResponse.internalServerError("文件删除失败: " + e.getMessage());
         }
