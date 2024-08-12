@@ -35,7 +35,7 @@
         <module>rabbitmq-api</module>
         <module>aa-params-check-service</module>
         <module>message-api</module>
-        <module>im-check-api</module>
+        <module>im-service-api</module>
     </modules>
 
     <properties>

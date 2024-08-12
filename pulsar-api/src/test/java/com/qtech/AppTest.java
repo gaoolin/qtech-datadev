@@ -29,16 +29,16 @@ public class AppTest {
                 .serviceHttpUrl(url)
                 .build();
 
-//        admin.topics().createPartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", 4);
+//        admin.topics().createPartitionedTopic("persistent://qtech-datadev/qtech-eq-chk/test-topic-1", 4);
 
-//        admin.topics().updatePartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", 5);
+//        admin.topics().updatePartitionedTopic("persistent://qtech-datadev/qtech-eq-chk/test-topic-1", 5);
 
         PulsarClient client = PulsarClient.builder()
                 .serviceUrl("pulsar://qtech-pulsar-broker.pulsar:6650")
                 .build();
 
         Consumer<byte[]> subscribe = client.newConsumer()
-                .topic("persistent://qtech-datadev/qtech-eq-aa/aaList").subscriptionName("aaList-flink")
+                .topic("persistent://qtech-datadev/qtech-eq-chk/aaList").subscriptionName("aaList-flink")
                 .subscriptionType(SubscriptionType.Shared).subscribe();
 
 
@@ -51,7 +51,7 @@ public class AppTest {
 //        subscribe.unsubscribe();
 
         /*Producer<String> producer = client.newProducer(Schema.STRING)
-                .topic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1")
+                .topic("persistent://qtech-datadev/qtech-eq-chk/test-topic-1")
                 .blockIfQueueFull(true)
                 .create();
 
@@ -61,14 +61,14 @@ public class AppTest {
         producer.close();
         client.close();
 
-        PartitionedTopicStats stats = admin.topics().getPartitionedStats("persistent://qtech-datadev/qtech-eq-aa/test-topic-1", false);
+        PartitionedTopicStats stats = admin.topics().getPartitionedStats("persistent://qtech-datadev/qtech-eq-chk/test-topic-1", false);
         System.out.println(stats.getMsgInCounter());*/
 
-//        admin.topics().deletePartitionedTopic("persistent://qtech-datadev/qtech-eq-aa/test-topic-1");
+//        admin.topics().deletePartitionedTopic("persistent://qtech-datadev/qtech-eq-chk/test-topic-1");
 
-//        admin.topics().deleteSubscription("persistent://qtech-datadev/qtech-eq-aa/aaList","byteTest", true);
+//        admin.topics().deleteSubscription("persistent://qtech-datadev/qtech-eq-chk/aaList","byteTest", true);
 
-//        admin.topics().delete("persistent://qtech-datadev/qtech-eq-aa/pojpTest", true);
+//        admin.topics().delete("persistent://qtech-datadev/qtech-eq-chk/pojpTest", true);
 
 
     }

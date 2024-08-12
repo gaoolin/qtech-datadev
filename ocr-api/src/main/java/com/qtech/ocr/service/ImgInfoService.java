@@ -1,5 +1,8 @@
 package com.qtech.ocr.service;
 
+import com.qtech.ocr.common.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -8,8 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
+
+import static com.qtech.ocr.Constants.CEPH_HTTP_URL;
 
 /**
  * author :  gaozhilin
@@ -21,28 +25,41 @@ import java.util.Map;
 @Service
 public class ImgInfoService {
 
+    private static final Logger logger = LoggerFactory.getLogger(ImgInfoService.class);
+
     @Autowired
     private RestTemplate restTemplate;
 
-    public ResponseEntity<String> cephObj(String bucketName, String fileName, String base64Contents) {
-        // 拼接请求 URL
-        // String url = String.format("http://10.170.6.40:31555/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
-        String url = String.format("http://ceph-api-svc.ceph-api:8080/ceph/obj/buckets/%s/files/%s/byte", bucketName, fileName);
-
-        // 构造请求体
-        Map<String, String> requestParams = new HashMap<>();
-        requestParams.put("contents", base64Contents);
-
+    public String S3Obj(String bucketName, String fileName, String contents) {
+        // 拼接请求 URL，包括请求参数
+        String url = String.format(CEPH_HTTP_URL,
+                bucketName, fileName);
+        logger.info("Request URL: {}", url);
+        // 创建 HTTP headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestParams, headers);
 
-        // 发送 HTTP POST 请求
-        return restTemplate.exchange(
-                url,
-                HttpMethod.POST,
-                requestEntity,
-                String.class
-        );
+        HttpEntity<String> requestEntity = new HttpEntity<>(contents, headers);
+
+        try {
+            // 发送 HTTP POST 请求
+            ResponseEntity<String> responseEntity = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    requestEntity,
+                    String.class
+            );
+
+            // 获取响应体并返回
+            String body = responseEntity.getBody();
+            if (Objects.nonNull(body)) {
+                return body;
+            }
+        } catch (Exception e) {
+            // 如果出现异常，返回服务器内部错误响应
+            logger.error("Error occurred while sending HTTP request: ", e);
+        }
+        return ApiResponse.badRequest("Error occurred while sending HTTP request").toString();
     }
 }
+

@@ -10,12 +10,12 @@
         <module name="ceph-api" />
         <module name="common-api" />
         <module name="wb-comparison-api" />
+        <module name="im-service-api" />
         <module name="comparison" />
         <module name="ocr-api" />
         <module name="rabbitmq-api" />
         <module name="message-api" />
         <module name="aa-params-check-service" />
-        <module name="im-check-api" />
         <module name="pulsar-api" />
       </profile>
     </annotationProcessing>
@@ -28,7 +28,7 @@
       <module name="aa-params-check-service" options="-parameters" />
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
-      <module name="im-check-api" options="-parameters" />
+      <module name="im-service-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />

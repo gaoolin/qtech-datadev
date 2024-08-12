@@ -354,7 +354,6 @@ public class FileServiceImpl implements FileService {
      * @param fileName   文件的名称
      * @return true 如果文件存在；false 如果文件不存在
      */
-    @Override
     public boolean doesFileExist(String bucketName, String fileName) {
         try {
             // 构建 HeadObjectRequest 请求

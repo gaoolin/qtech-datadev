@@ -84,8 +84,8 @@ public class ComparisonConstants {
             "epoxyInspectionInterval"
             );
 
-    public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:aa:list:params:";
-    public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:aa:list:params:info:";
+    public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:chk:list:params:";
+    public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:chk:list:params:info:";
 
     public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             "AA1",

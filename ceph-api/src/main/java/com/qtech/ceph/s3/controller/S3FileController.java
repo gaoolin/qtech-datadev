@@ -1,16 +1,22 @@
 package com.qtech.ceph.s3.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.ceph.common.ApiResponse;
 import com.qtech.ceph.s3.service.FileService;
+import com.qtech.ceph.s3.utils.FileNameUtils;
 import com.qtech.ceph.s3.utils.S3Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +31,13 @@ import java.util.Map;
 @RequestMapping("/s3/files")
 public class S3FileController {
 
-    @Qualifier("fileServiceSyncImpl")
-    @Autowired
-    private FileService fileService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final FileService fileService;
+
+    public S3FileController(@Qualifier("fileServiceSyncImpl") FileService fileService) {
+        this.fileService = fileService;
+    }
 
     /**
      * 上传文件到 S3。
@@ -53,28 +63,110 @@ public class S3FileController {
         }
     }
 
+    @PostMapping("/upload/bytes")
+    public ApiResponse<String> uploadFileFromBytes(@RequestParam String bucketName,
+                                                   @RequestParam String fileName,
+                                                   @RequestBody byte[] contents) {
+        try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (flag) {
+                return ApiResponse.conflict("文件已存在");
+            }
+            fileService.uploadByteArrayAsObj(bucketName, fileName, contents);
+            return ApiResponse.success("文件上传成功", null);
+        } catch (Exception e) {
+            return ApiResponse.internalServerError("文件上传失败: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/upload/json")
+    public ApiResponse<String> uploadFileFromJson(@RequestParam String bucketName,
+                                                  @RequestParam String fileName,
+                                                  @RequestBody String contents) {
+        try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            Map<String, String> responseData = FileNameUtils.getFileNameWithPossibleRename(fileName, flag);
+            String actualFileName = responseData != null ? responseData.get("newFileName") : fileName;
+
+            byte[] decode = Base64.getDecoder().decode(contents);
+            fileService.uploadByteArrayAsObj(bucketName, actualFileName, decode);
+
+            // 返回响应
+            if (responseData == null) {
+                return ApiResponse.success("文件上传成功", null);
+            } else {
+                return ApiResponse.success("文件上传成功", objectMapper.writeValueAsString(responseData));
+            }
+        } catch (Exception e) {
+            return ApiResponse.internalServerError("文件上传失败: " + e.getMessage());
+        }
+    }
+
 
     /**
      * 下载指定的文件。
+     * 注意：当Spring Boot序列化字节数组为JSON时，默认会将字节数组编码为Base64字符串。这是因为JSON格式不支持直接传递二进制数据，通常需要对二进制数据进行编码处理（如Base64）。
+     * 如果希望Java端直接返回字节数组，可以考虑不将数据封装在 ApiResponse 中，直接返回字节流（如 ResponseEntity<byte[]>）。不过，这样做会影响到你已有的API响应格式。
      *
      * @param bucketName 存储桶名称
      * @param fileName   文件名称
      * @return 文件内容作为字节数组的 ApiResponse
+     * @GetMapping("/download") public ResponseEntity<byte[]> downloadFile(@RequestParam String bucketName,
+     * @RequestParam String fileName) {
+     * try {
+     * boolean flag = fileService.doesFileExist(bucketName, fileName);
+     * if (!flag) {
+     * return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+     * }
+     * byte[] fileData = fileService.downloadFileAsBytes(bucketName, fileName);
+     * return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(fileData);
+     * } catch (Exception e) {
+     * return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+     * }
+     * }
+     * Spring Boot 确实有能力在序列化为 JSON 时将 byte[] 数据编码为 Base64，但它是 在特定情况下 自动进行的。如果你将 byte[] 数据直接作为响应主体返回，它通常会根据 MIME 类型决定如何处理。如果响应类型是 application/json 并且 byte[] 是 JSON 对象的一部分，那么 byte[] 会被自动编码为 Base64 字符串。
+     * 但是，为什么你仍然可能需要手动编码？
+     * 自定义响应格式：在你的情况下，你使用了 ApiResponse 包装器。因为 byte[] 被包裹在 ApiResponse 中，Spring 会将整个对象序列化为 JSON。由于 byte[] 在 JSON 中表现为一个字节数组（而不是字符串），JSON 本身并不会理解该数组应如何被转换为 Base64。
+     * 确保一致性：如果你手动将 byte[] 转换为 Base64 编码字符串，可以确保客户端收到的数据格式是你预期的，无论是通过 ApiResponse 还是其他方式传输。
+     * 总结
+     * 虽然 Spring Boot 可以在某些情况下自动处理 Base64 编码，但为了确保兼容性和一致性，尤其是在使用自定义响应包装类时，手动将 byte[] 转换为 Base64 编码的字符串是最佳实践。这样可以确保你的客户端能够正确解码和处理返回的数据。
+     * 因此，在你提供的代码中，手动编码为 Base64 是合理的做法，不需要依赖 Spring Boot 的自动编码功能。
      */
-    @GetMapping("/download")
-    public ApiResponse<byte[]> downloadFile(@RequestParam String bucketName,
+    @GetMapping("/download/json")
+    public ApiResponse<String> downloadFile(@RequestParam String bucketName,
                                             @RequestParam String fileName) {
         try {
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (!flag) {
                 return ApiResponse.notFound("文件不存在");
             }
-            byte[] fileData = fileService.downloadFileAsBytes(bucketName, fileName);
-            return ApiResponse.success(fileData);
+            // 图片数据编码问题 确保图片数据在传输前进行了适当的编码。对于图片等二进制数据，通常需要将其编码为Base64字符串，以便通过JSON安全地传输。
+            // 使用Base64编码有助于避免因字符集或编码问题导致的数据损坏。
+            // 读取图片数据为字节数组
+            byte[] fileData = fileService.downloadFileAsBytes(bucketName, fileName); // 从文件或输入流中获取图片字节数组
+            // 将字节数组编码为Base64字符串
+            String encodedImage = Base64.getEncoder().encodeToString(fileData);
+            return ApiResponse.success(encodedImage);
         } catch (Exception e) {
             return ApiResponse.internalServerError("文件下载失败: " + e.getMessage());
         }
     }
+
+    @GetMapping("/download/bytes")
+    public ResponseEntity<byte[]> downloadFileAsBytes(@RequestParam String bucketName,
+                                                      @RequestParam String fileName) {
+        try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (!flag) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            byte[] fileData = fileService.downloadFileAsBytes(bucketName, fileName);
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(fileData);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
     @GetMapping("/chk-exist")
     public ApiResponse<Boolean> checkFileExist(@RequestParam String bucketName,

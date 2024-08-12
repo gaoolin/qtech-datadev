@@ -123,7 +123,7 @@ public class PulsarProducerController<T> {
                     .build();
 
             Producer<String> producer = client.newProducer(Schema.STRING)
-                    .topic("persistent://qtech-datadev/qtech-eq-aa/aaList")
+                    .topic("persistent://qtech-datadev/qtech-eq-chk/aaList")
                     .enableBatching(true)
                     // 消息压缩（四种压缩方式：LZ4，ZLIB，ZSTD，SNAPPY），consumer端不用做改动就能消费，开启后大约可以降低3/4带宽消耗和存储（官方测试）
                     .compressionType(CompressionType.LZ4)

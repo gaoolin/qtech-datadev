@@ -4,7 +4,7 @@
     <file url="file://$PROJECT_DIR$/aa-params-check-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ceph-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common-api/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/im-check-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/im-service-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/message-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ocr-api/src/main/java" charset="UTF-8" />

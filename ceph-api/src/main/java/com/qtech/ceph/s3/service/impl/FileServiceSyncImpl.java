@@ -71,11 +71,10 @@ public class FileServiceSyncImpl implements FileService {
      * @param bucketName 存储桶名称。文件将被上传到该存储桶。
      * @param fileName   文件名称。上传的文件将使用该名称存储。
      * @param file       文件输入流。文件内容。
-     * @throws StorageException 如果上传文件过程中出现任何错误。
      */
-    @Async("taskExecutor")
+    @Async("taskExecutorService")
     @Override
-    public void uploadFile(String bucketName, String fileName, InputStream file) throws IOException {
+    public void uploadFile(String bucketName, String fileName, InputStream file) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -328,19 +327,34 @@ public class FileServiceSyncImpl implements FileService {
                 .bucket(bucketName)
                 .key(fileName)
                 .build();
+
+        // 发起异步请求
         CompletableFuture<HeadObjectResponse> headObjectResponseCompletableFuture = s3AsyncClient.headObject(headObjectRequest);
-        if (headObjectResponseCompletableFuture.isDone()) {
-            try {
-                HeadObjectResponse headObjectResponse = headObjectResponseCompletableFuture.get();
-                return headObjectResponse.sdkHttpResponse().isSuccessful();
-            } catch (NoSuchKeyException e) {
-                // 如果捕获 NoSuchKeyException 异常，则文件不存在
-                return false;
-            } catch (InterruptedException | ExecutionException | S3Exception e) {
+
+        try {
+            // 等待异步调用的结果
+            HeadObjectResponse headObjectResponse = headObjectResponseCompletableFuture.get();
+
+            // 检查响应是否成功
+            return headObjectResponse.sdkHttpResponse().isSuccessful();
+        } catch (NoSuchKeyException e) {
+            // 如果捕获 NoSuchKeyException 异常，则文件不存在
+            return false;
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof NoSuchKeyException) {
+                return false; // 文件不存在
+            } else if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            } else if (cause instanceof Error) {
+                throw (Error) cause;
+            } else {
                 throw new RuntimeException("Failed to check if file exists", e);
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // 恢复中断状态
+            throw new RuntimeException("Failed to check if file exists", e);
         }
-        return false;
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.qtech.common.utils;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
@@ -59,7 +58,7 @@ public class HttpConnectUtils {
      * @param json 入参
      * @return java.lang.String
      */
-    public static String post(String url, JSONObject json) {
+    public static String post(String url, String json) {
         // 创建HttpClient对象
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
@@ -67,7 +66,7 @@ public class HttpConnectUtils {
         httpPost.addHeader("token", "");
         httpPost.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
         try {
-            StringEntity se = new StringEntity(json.toString());
+            StringEntity se = new StringEntity(json);
             se.setContentEncoding("UTF-8");
             // 发送json数据需要设置contentType
             se.setContentType("application/json");
