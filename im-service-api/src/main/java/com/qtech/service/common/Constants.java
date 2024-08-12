@@ -10,10 +10,10 @@ package com.qtech.service.common;
 
 public class Constants {
 
-    public static final String CEPH_HTTP_URL = "http://localhost:8080/s3/files/upload/json?bucketName=%s&fileName=%s";
+    public static final String CEPH_HTTP_URL = "http://im-s3-ceph-svc.qtech-im-api:8080/s3/files/upload/json?bucketName=%s&fileName=%s";
     public static final String CEPH_HTTP_URL_TEST = "http://localhost:8080/s3/files/upload/bytes?bucketName=%s&fileName=%s";
     public static final String CEPH_HTTP_URL_DEV = "http://10.170.6.40:31555/s3/files/upload/bytes?bucketName=%s&fileName=%s";
-    public static final String CEPH_HTTP_URL_PROD = "http://ceph-api-svc.ceph-api:8080/s3/files/upload/bytes?bucketName=%s&fileName=%s";
+    public static final String CEPH_HTTP_URL_PROD = "http://im-s3-ceph-svc.qtech-im-api:8080/s3/files/upload/json?bucketName=%s&fileName=%s";
     public static final String OCR_HTTP_URL = "http://im-ocr-app.qtech-im-service:5000/ocr/label";
     public static final String OCR_HTTP_URL_TEST = "http://127.0.0.1:5000/ocr/label";
     public static final String OCR_HTTP_URL_DEV = "http://10.170.6.40:30113/ocr/label";
