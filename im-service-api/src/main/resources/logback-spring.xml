@@ -54,6 +54,7 @@
             <fileNamePattern>${log.path}/debug/log-debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
+                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -86,6 +87,7 @@
             <fileNamePattern>${log.path}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
+                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -117,6 +119,7 @@
             <fileNamePattern>${log.path}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
+                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -148,6 +151,7 @@
             <fileNamePattern>${log.path}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
+                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -167,20 +171,26 @@
 
     <!-- 开发环境:打印控制台 -->
     <springProfile name="dev">
+        <!--打印io.lettuce.core、org.apache.ibatis和com.qtech.service名称相关的DEBUG级别日志-->
         <logger name="io.lettuce.core" level="DEBUG"/>
         <logger name="org.apache.ibatis" level="DEBUG"/>
         <logger name="com.qtech.service" level="DEBUG"/>
         <root level="INFO">
+            <!--打印根目录下的INFO级别日志，并输出到控制台（CONSOLE）-->
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
 
-    <!-- 生产环境:输出到文件 -->
+    <!-- 生产环境:输出到文件
+     打印com.qtech名称相关的INFO级别日志。
+     打印根目录下的INFO级别日志，并输出到控制台（CONSOLE）和一系列文件（INFO_FILE、WARN_FILE、ERROR_FILE）。
+     注释掉了DEBUG_FILE引用，表示不输出DEBUG级别日志到文件
+     -->
     <springProfile name="prod">
-        <logger name="com.qtech" level="WARN"/>
+        <logger name="com.qtech.service" level="INFO"/>
         <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="CONSOLE"/>  <!--容器控制台会输出日志-->
+            <!--<appender-ref ref="DEBUG_FILE"/>-->
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="WARN_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
@@ -189,25 +199,24 @@
 
 </configuration>
 
+        <!--
+        配置说明
+        基础配置：
 
-<!--
-配置说明
-基础配置：
+        设置了日志文件的基础路径 ${log.path} 和日志格式 ${log.pattern}。
+        使用 ColorConverter 类和定义的彩色日志格式 ${CONSOLE_LOG_PATTERN} 来配置彩色日志（需要 IDE 支持）。
+        控制台输出：
 
-设置了日志文件的基础路径 ${log.path} 和日志格式 ${log.pattern}。
-使用 ColorConverter 类和定义的彩色日志格式 ${CONSOLE_LOG_PATTERN} 来配置彩色日志（需要 IDE 支持）。
-控制台输出：
+        CONSOLE：控制台日志输出器，设置日志级别为 INFO 及以上。
+        文件输出：
 
-CONSOLE：控制台日志输出器，设置日志级别为 INFO 及以上。
-文件输出：
+        DEBUG_FILE、INFO_FILE、WARN_FILE、ERROR_FILE：四种文件输出器，分别处理 DEBUG、INFO、WARN、ERROR 级别的日志。
+        每种文件输出器都使用了基于时间和大小的滚动策略，每个文件最大 100MB，保留 15 天的历史日志，且总大小上限为 2GB。
+        滚动策略 SizeAndTimeBasedFNATP 结合了时间和大小滚动。
+        每个文件输出器都使用了 LevelFilter 过滤日志级别，确保只记录指定级别的日志。
+        环境配置：
 
-DEBUG_FILE、INFO_FILE、WARN_FILE、ERROR_FILE：四种文件输出器，分别处理 DEBUG、INFO、WARN、ERROR 级别的日志。
-每种文件输出器都使用了基于时间和大小的滚动策略，每个文件最大 100MB，保留 15 天的历史日志，且总大小上限为 2GB。
-滚动策略 SizeAndTimeBasedFNATP 结合了时间和大小滚动。
-每个文件输出器都使用了 LevelFilter 过滤日志级别，确保只记录指定级别的日志。
-环境配置：
-
-springProfile name="dev"：开发环境配置，日志输出到控制台，并设置特定包的日志级别为 DEBUG。
-springProfile name="prod"：生产环境配置，日志输出到控制台和文件，按日志级别分别存储日志。
-这样配置的日志系统可以确保在开发环境下方便调试，在生产环境下能高效地管理和存储日志文件，并在日志文件达到相应的大小和时间后自动归档处理。
--->
+        springProfile name="dev"：开发环境配置，日志输出到控制台，并设置特定包的日志级别为 DEBUG。
+        springProfile name="prod"：生产环境配置，日志输出到控制台和文件，按日志级别分别存储日志。
+        这样配置的日志系统可以确保在开发环境下方便调试，在生产环境下能高效地管理和存储日志文件，并在日志文件达到相应的大小和时间后自动归档处理。
+        -->
