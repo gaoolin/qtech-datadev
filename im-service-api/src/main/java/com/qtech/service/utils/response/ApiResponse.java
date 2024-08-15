@@ -1,5 +1,9 @@
 package com.qtech.service.utils.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -7,13 +11,14 @@ package com.qtech.service.utils.response;
  * desc   :  响应数据
  */
 
-public class ApiResponse<T> {
-
+public class ApiResponse<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int code;
     private String msg;
     private T data;
 
-    public ApiResponse() {}
+    public ApiResponse() {
+    }
 
     public ApiResponse(int code, String msg) {
         this.code = code;
@@ -34,30 +39,6 @@ public class ApiResponse<T> {
     public ApiResponse(ResponseCode responseCode, T data) {
         this.code = responseCode.getCode();
         this.msg = responseCode.getMessage();
-        this.data = data;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
         this.data = data;
     }
 
@@ -132,6 +113,33 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> gatewayTimeout(String msg) {
         return new ApiResponse<>(ResponseCode.GATEWAY_TIMEOUT.getCode(), msg);
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public ApiResponse<T> setCode(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public ApiResponse<T> setMsg(String msg) {
+        this.msg = msg;
+        return this;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public ApiResponse<T> setData(T data) {
+        this.data = data;
+        return this;
     }
 
     @Override

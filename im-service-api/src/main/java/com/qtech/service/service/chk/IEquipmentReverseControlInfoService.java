@@ -1,6 +1,6 @@
 package com.qtech.service.service.chk;
 
-import com.qtech.service.entity.EquipmentReverseControlInfo;
+import com.qtech.service.entity.EqReverseCtrlInfo;
 
 /**
  * author :  gaozhilin
@@ -12,5 +12,5 @@ import com.qtech.service.entity.EquipmentReverseControlInfo;
 
 public interface IEquipmentReverseControlInfoService {
 
-    public EquipmentReverseControlInfo selectEquipmentReverseControlInfoBySimId(String simId);
+    public EqReverseCtrlInfo selectEquipmentReverseControlInfoBySimId(String simId);
 }

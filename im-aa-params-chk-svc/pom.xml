@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.qtech.olp</groupId>
-    <artifactId>aa-params-check-service</artifactId>
+    <artifactId>im-aa-params-chk-svc</artifactId>
     <description>AA参数点检服务</description>
     <packaging>jar</packaging>
     <version>1.0</version>

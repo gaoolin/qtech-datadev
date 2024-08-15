@@ -20,6 +20,9 @@ public class Constants {
     public static final String WB_COMPARISON_REDIS_JOB_STAT_KEY_PREFIX = "chk:comparison:job:";
     public static final String REDIS_JOB_RUN_DT_KEY_PREFIX = "qtech:datadev:job:run:dt:";
     public static final String REDIS_JOB_RUN_STAT_KEY_PREFIX = "qtech:datadev:job:run:stat:";
+    public static final String EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX = "qtech:im:chk:reverse:";
+    public static final String EQ_REVERSE_IGNORE_SIM_PREFIX = "qtech:im:chk:ignored:";
+    public static final int EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH = 100;
     private Constants() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }

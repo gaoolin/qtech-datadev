@@ -1,6 +1,6 @@
-package com.qtech.check.config.mybatis;
+package com.qtech.service.config.mybatis;
 
-import com.qtech.check.config.dynamic.DynamicDataSource;
+import com.qtech.service.config.dynamic.DynamicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -26,7 +26,7 @@ import javax.sql.DataSource;
  */
 
 @Configuration
-@MapperScan(basePackages = "com.qtech.check.mapper") // 指定Mapper接口的包路径
+@MapperScan(basePackages = "com.qtech.service.mapper.*") // 指定Mapper接口的包路径
 public class MyBatisConfig {
 
     // 如果需要使用动态数据源，可以参考之前提供的动态数据源配置(动态数据源配置)
@@ -44,7 +44,7 @@ public class MyBatisConfig {
          factory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
 
         // 硬编码类型别名的包
-        factory.setTypeAliasesPackage("com.qtech.check.pojo"); // 替换为你的实际包路径
+        factory.setTypeAliasesPackage("com.qtech.service.entity"); // 替换为你的实际包路径
 
         return factory.getObject();
     }

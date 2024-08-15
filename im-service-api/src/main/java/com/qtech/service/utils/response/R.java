@@ -1,23 +1,16 @@
 package com.qtech.service.utils.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.qtech.service.entity.EquipmentReverseControlInfo;
-
-import java.io.Serializable;
+import lombok.experimental.Accessors;
 
 /**
  * 响应信息主体
+ *
+ * @param
+ * @description 此响应信息主体，专门用于返回数据给MES
+ * @return
  */
-public class R implements Serializable {
-    /**
-     * 成功
-     */
-    public static final int SUCCESS = HttpStatus.SUCCESS;
-    /**
-     * 失败
-     */
-    public static final int FAIL = HttpStatus.QTECH_IM_CHK_NG;
-    private static final long serialVersionUID = 1L;
+public class R<T> extends ApiResponse<T> {
 
     @JsonProperty("Code")
     private int code;
@@ -25,43 +18,39 @@ public class R implements Serializable {
     @JsonProperty("Msg")
     private String msg;
 
-    @JsonProperty("data")
-    private String data;
+    private T data;
 
-    public static R restResult(EquipmentReverseControlInfo data) {
-        R apiResult = new R();
-        if (data != null) {
-            apiResult.setCode(data.getCode() == 0 ? SUCCESS : FAIL);
-            apiResult.setMsg(data.getCode() == 0 ? "OK" : "Parameter Monitoring:" + data.getFormattedChkDt() + "|" + data.getDescription());
-        } else {
-            apiResult.setCode(SUCCESS);
-            apiResult.setMsg("OK");
-        }
-        apiResult.setData(null);
-        return apiResult;
-    }
-
+    @Override
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    // 实现链式调用
+    @Override
+    public R<T> setCode(int code) {
         this.code = code;
+        return this;
     }
 
+    @Override
     public String getMsg() {
         return msg;
     }
 
-    public void setMsg(String msg) {
+    @Override
+    public R<T> setMsg(String msg) {
         this.msg = msg;
+        return this;
     }
 
-    public String getData() {
+    @Override
+    public T getData() {
         return data;
     }
 
-    public void setData(String data) {
+    @Override
+    public R<T> setData(T data) {
         this.data = data;
+        return this;
     }
 }

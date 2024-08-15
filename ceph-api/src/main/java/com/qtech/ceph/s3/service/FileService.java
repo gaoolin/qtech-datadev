@@ -120,4 +120,6 @@ public interface FileService {
     Map<String, String> getFileMetadata(String bucketName, String fileName) throws StorageException;
 
     boolean doesFileExist(String bucketName, String fileName);
+
+    void renameFile(String bucketName, String currentFileName, String newFileName) throws StorageException;
 }

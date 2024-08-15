@@ -1,6 +1,6 @@
 package com.qtech.service.service.chk.impl;
 
-import com.qtech.service.entity.EquipmentReverseControlInfo;
+import com.qtech.service.entity.EqReverseCtrlInfo;
 import com.qtech.service.mapper.chk.EquipmentReverseControlInfoMapper;
 import com.qtech.service.service.chk.IEquipmentReverseControlInfoService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +26,8 @@ public class EquipmentReverseControlInfoServiceImpl implements IEquipmentReverse
     private EquipmentReverseControlInfoMapper equipmentReverseControlInfoMapper;
 
     @Override
-    public EquipmentReverseControlInfo selectEquipmentReverseControlInfoBySimId(String simId) {
-        List<EquipmentReverseControlInfo> list = null;
+    public EqReverseCtrlInfo selectEquipmentReverseControlInfoBySimId(String simId) {
+        List<EqReverseCtrlInfo> list = null;
         try {
             list = equipmentReverseControlInfoMapper.selectQtechImChkResultList(simId);
         } catch (Exception e) {

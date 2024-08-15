@@ -54,7 +54,6 @@
             <fileNamePattern>${log.path}/debug/log-debug-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
-                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -87,7 +86,6 @@
             <fileNamePattern>${log.path}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
-                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -119,7 +117,6 @@
             <fileNamePattern>${log.path}/warn/log-warn-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
-                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -151,7 +148,6 @@
             <fileNamePattern>${log.path}/error/log-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
-                <compressionLevel>6</compressionLevel> <!-- 添加压缩 -->
             </timeBasedFileNamingAndTriggeringPolicy>
             <!--日志文件保留天数-->
             <maxHistory>15</maxHistory>
@@ -172,10 +168,9 @@
     <!-- 开发环境:打印控制台 -->
     <springProfile name="dev">
         <!--打印io.lettuce.core、org.apache.ibatis和com.qtech.service名称相关的DEBUG级别日志-->
-        <logger name="io.lettuce.core" level="DEBUG"/>
         <logger name="org.apache.ibatis" level="DEBUG"/>
         <logger name="com.qtech.service" level="DEBUG"/>
-        <root level="INFO">
+        <root level="DEBUG">
             <!--打印根目录下的INFO级别日志，并输出到控制台（CONSOLE）-->
             <appender-ref ref="CONSOLE"/>
         </root>

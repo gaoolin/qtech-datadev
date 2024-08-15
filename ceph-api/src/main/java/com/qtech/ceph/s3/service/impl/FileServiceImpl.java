@@ -374,4 +374,41 @@ public class FileServiceImpl implements FileService {
             throw new StorageException("Failed to check if file exists: " + fileName + " in bucket: " + bucketName, e);
         }
     }
+
+    /**
+     * 重命名 S3 存储桶中的文件。
+     * <p>
+     * 这个方法使用 S3 客户端先复制文件到新名称，再删除原文件，从而达到重命名的效果。
+     *
+     * @param bucketName  原始存储桶名称。文件所在的存储桶。
+     * @param oldFileName 原始文件名称。要重命名的文件名称。
+     * @param newFileName 新文件名称。重命名后的文件名称。
+     * @throws StorageException 如果在重命名文件过程中出现任何错误。
+     */
+    @Override
+    public void renameFile(String bucketName, String oldFileName, String newFileName) throws StorageException {
+        try {
+            if (!doesFileExist(bucketName, newFileName)) {
+                throw new StorageException("File exists: " + newFileName);
+            }
+            // 复制文件到新名称
+            CopyObjectRequest copyRequest = CopyObjectRequest.builder()
+                    .copySource(bucketName + "/" + oldFileName)
+                    .destinationBucket(bucketName)
+                    .destinationKey(newFileName)
+                    .build();
+
+            s3Client.copyObject(copyRequest);
+
+            // 删除原文件
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(oldFileName)
+                    .build();
+
+            s3Client.deleteObject(deleteRequest);
+        } catch (Exception e) {
+            throw new StorageException("Failed to rename file: " + oldFileName + " to: " + newFileName + " in bucket: " + bucketName, e);
+        }
+    }
 }

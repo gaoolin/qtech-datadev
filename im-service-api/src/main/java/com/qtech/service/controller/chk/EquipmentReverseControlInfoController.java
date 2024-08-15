@@ -1,12 +1,11 @@
 package com.qtech.service.controller.chk;
 
 import com.qtech.service.controller.BaseController;
-import com.qtech.service.entity.EquipmentReverseControlInfo;
+import com.qtech.service.entity.EqReverseCtrlInfo;
 import com.qtech.service.service.chk.IEquipmentReverseControlInfoService;
 import com.qtech.service.utils.chk.ControlMode;
 import com.qtech.service.utils.chk.ModeFlag;
 import com.qtech.service.utils.response.R;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ import java.time.LocalTime;
  * 控制设备反向控制信息的控制器。
  */
 @RestController
-@RequestMapping(value = "/im/chk/api")
+@RequestMapping(value = "/im/aa/ctrl")
 public class EquipmentReverseControlInfoController extends BaseController {
 
     private final IEquipmentReverseControlInfoService equipmentReverseControlInfoService;
@@ -46,19 +45,20 @@ public class EquipmentReverseControlInfoController extends BaseController {
 
         switch (currentMode) {
             case ALWAYS_RETURN:
-                EquipmentReverseControlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
-                return info != null ? R.restResult(info) : R.restResult(null);
+                EqReverseCtrlInfo info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
+                // return info != null ? R.restResult(info) : R.restResult(null);
             case ALWAYS_NULL:
-                return R.restResult(null);
+                // return R.restResult(null);
             default: // 默认，按照工作日时间控制
                 LocalDateTime now = LocalDateTime.now();
                 if (isWithinWorkingHours(now)) {
                     info = equipmentReverseControlInfoService.selectEquipmentReverseControlInfoBySimId(simId);
-                    return info != null ? R.restResult(info) : R.restResult(null);
+                    // return info != null ? R.restResult(info) : R.restResult(null);
                 } else {
-                    return R.restResult(null); // 非工作时间返回null
+                    // return R.restResult(null); // 非工作时间返回null
                 }
         }
+        return null;
     }
 
     /**

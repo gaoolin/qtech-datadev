@@ -382,4 +382,47 @@ public class FileServiceSyncImpl implements FileService {
             throw new StorageException("Failed to list files in bucket: " + bucketName, e);
         }
     }
+
+    /**
+     * 重命名文件
+     * <p>
+     * 在同一存储桶内将文件从一个名称更改为另一个名称。
+     * 如果操作失败，将抛出 StorageException。
+     *
+     * @param bucketName      存储桶名称。文件所在或要从中移动的存储桶。
+     * @param oldFileName 当前文件名称。要重命名的文件名称。
+     * @param newFileName     新文件名称。重命名后的文件名称。
+     * @throws StorageException 如果重命名文件过程中出现任何错误。
+     */
+    @Override
+    public void renameFile(String bucketName, String oldFileName, String newFileName) throws StorageException {
+        try {
+            // 检查文件是否存在
+            if (!doesFileExist(bucketName, newFileName)) {
+                throw new StorageException("File exists: " + newFileName);
+            }
+            // 复制文件
+            CopyObjectRequest copyObjectRequest = CopyObjectRequest.builder()
+                    .copySource(bucketName + "/" + oldFileName)
+                    .destinationBucket(bucketName)
+                    .destinationKey(newFileName)
+                    .build();
+
+            CompletableFuture<CopyObjectResponse> copyFuture = s3AsyncClient.copyObject(copyObjectRequest);
+
+            // 等待复制完成
+            copyFuture.join();
+
+            // 删除原文件
+            CompletableFuture<Void> deleteFuture = s3AsyncClient.deleteObject(
+                    DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(oldFileName)
+                            .build()
+            ).thenApply(response -> null);
+            deleteFuture.join(); // 等待删除完成
+        } catch (Exception e) {
+            throw new StorageException("Failed to rename file: " + oldFileName + " to " + newFileName, e);
+        }
+    }
 }

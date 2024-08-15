@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 
-@MapperScan(basePackages = "com.qtech.service.mapper.*")
 @SpringBootApplication
 public class QtechImApi
 {

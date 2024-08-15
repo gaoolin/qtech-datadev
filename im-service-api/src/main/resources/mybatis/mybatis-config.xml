@@ -18,9 +18,4 @@
         <!--<setting name="callSettersOnNulls" value="true"/>-->
     </settings>
 
-    <!--映射器-->
-    <mappers>
-        <mapper resource="mappers/**/*.xml"/>
-    </mappers>
-
 </configuration>

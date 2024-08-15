@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.service.mapper.chk.EqReverseCtrlInfoMapper">
+    <resultMap id="eqReverseCtrlInfoResult" type="com.qtech.service.entity.EqReverseCtrlInfo">
+        <result property="simId" column="sim_id" />
+        <result property="source" column="source" />
+        <result property="prodType" column="prod_type" />
+        <result property="chkDt" column="chk_dt" />
+        <result property="code" column="code" />
+        <result property="description" column="description" />
+        <result property="version" column="version" />
+    </resultMap>
+
+    <sql id="select_eq_reverse_ctrl_info">
+        SELECT SIM_ID, "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+        FROM IMBIZ.EQUIPMENT_REVERSE_CONTROL_INFO
+    </sql>
+
+    <select id="selectEqReverseCtrlInfo" resultMap="eqReverseCtrlInfoResult">
+        <include refid="select_eq_reverse_ctrl_info" />
+        <where>
+            <if test="simId != null">
+                and sim_id = #{simId}
+            </if>
+            <if test="source != null">
+                and source = #{source}
+            </if>
+            <if test="prodType != null">
+                and prod_type = #{prodType}
+            </if>
+        </where>
+    </select>
+    <select id="selectEqReverseCtrlInfoBySimId" resultMap="eqReverseCtrlInfoResult">
+        <include refid="select_eq_reverse_ctrl_info" />
+        <where>
+            <if test="simId != null">
+                and sim_id = #{simId}
+            </if>
+        </where>
+    </select>
+</mapper>

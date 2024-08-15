@@ -15,8 +15,8 @@
         <module name="ocr-api" />
         <module name="rabbitmq-api" />
         <module name="message-api" />
-        <module name="aa-params-check-service" />
         <module name="pulsar-api" />
+        <module name="im-aa-params-chk-svc" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -25,9 +25,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="aa-params-check-service" options="-parameters" />
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
+      <module name="im-aa-params-chk-svc" options="-parameters" />
       <module name="im-service-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
