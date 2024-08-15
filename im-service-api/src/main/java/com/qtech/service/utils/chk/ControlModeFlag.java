@@ -8,6 +8,6 @@ package com.qtech.service.utils.chk;
  */
 
 
-public class ModeFlag {
+public class ControlModeFlag {
     public static volatile ControlMode controlMode = ControlMode.DEFAULT; // 默认控制模式
 }

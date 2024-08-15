@@ -44,18 +44,29 @@ public class GlobalExceptionHandler {
         return new ApiResponse<>(ResponseCode.METHOD_NOT_ALLOWED, ex.getMessage());
     }
 
-    @ExceptionHandler(Exception.class)
-    public ApiResponse<String> handleAllExceptions(Exception ex, WebRequest request) {
-        logger.error("Exception: ", ex);
-        return new ApiResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
-    }
-
     @ExceptionHandler(SimIdIgnoredException.class)
     @ResponseBody
     public R<String> handleSimIdIgnoredException(SimIdIgnoredException ex) {
+        logger.error("SimIdIgnoredException: ", ex);
         return new R<String>()
             .setCode(ResponseCode.SUCCESS.getCode())
             .setMsg("Equipment reverse ignored")
             .setData(null);
+    }
+
+    @ExceptionHandler(ImChkException.class)
+    @ResponseBody
+    public R<String> handleImChkException(ImChkException ex) {
+        logger.error("ImChkException: ", ex);
+        return new R<String>()
+            .setCode(ResponseCode.SUCCESS.getCode())
+            .setMsg(ex.getMessage())
+            .setData(null);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ApiResponse<String> handleAllExceptions(Exception ex, WebRequest request) {
+        logger.error("Exception: ", ex);
+        return new ApiResponse<>(ResponseCode.INTERNAL_SERVER_ERROR, "An unexpected error occurred.");
     }
 }

@@ -3,6 +3,7 @@ package com.qtech.service.service.chk.impl;
 import com.qtech.service.config.dynamic.DataSourceNames;
 import com.qtech.service.config.dynamic.DataSourceSwitch;
 import com.qtech.service.entity.EqReverseCtrlInfo;
+import com.qtech.service.exception.ImChkException;
 import com.qtech.service.exception.TooManyResultsException;
 import com.qtech.service.mapper.chk.EqReverseCtrlInfoMapper;
 import com.qtech.service.service.chk.IEqReverseCtrlService;
@@ -36,7 +37,12 @@ public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
 
     @Override
     public List<EqReverseCtrlInfo> selectEqReverseCtrlInfo(EqReverseCtrlInfo eqReverseCtrlInfo) {
-        return eqReverseCtrlInfoMapper.selectEqReverseCtrlInfo(eqReverseCtrlInfo);
+        try {
+            return eqReverseCtrlInfoMapper.selectEqReverseCtrlInfo(eqReverseCtrlInfo);
+        } catch (Exception e) {
+            log.error("selectEqReverseCtrlInfo error: ", e);
+            throw new ImChkException();
+        }
     }
 
     @Override
@@ -53,9 +59,9 @@ public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
                 }
             }
             return null;
-        } catch (Exception e) {
+        } catch (ImChkException e) {
             log.error("selectEqReverseCtrlInfoBySimId error: ", e);
-            throw new RuntimeException(e);
+            throw new ImChkException();
         }
     }
 
@@ -69,12 +75,7 @@ public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
                 eqReverseCtrlInfo = eqReverseCtrlInfoRedisTemplate.opsForValue().get(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId);
                 return eqReverseCtrlInfo;
             } else {
-                try {
-                    eqReverseCtrlInfo = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfoBySimId(simId);
-                } catch (Exception ex) {
-                    log.error("selectEqReverseCtrlInfoBySimId error: ", ex);
-                    throw new RuntimeException(ex);
-                }
+                eqReverseCtrlInfo = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfoBySimId(simId);
                 if (eqReverseCtrlInfo != null) {
                     // 将EqReverseCtrlInfo存入Redis
                     eqReverseCtrlInfoRedisTemplate.opsForValue().set(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId, eqReverseCtrlInfo, Duration.ofMinutes(30));
@@ -84,9 +85,9 @@ public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
                     return null;
                 }
             }
-        } catch (Exception e) {
+        } catch (ImChkException e) {
             log.error("selectEqReverseCtrlInfoBySimId error: ", e);
-            throw new RuntimeException(e);
+            throw new ImChkException();
         }
     }
 }

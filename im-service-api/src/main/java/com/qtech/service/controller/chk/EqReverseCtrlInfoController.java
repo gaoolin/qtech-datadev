@@ -1,6 +1,7 @@
 package com.qtech.service.controller.chk;
 
 import com.qtech.service.controller.BaseController;
+import com.qtech.service.entity.EqReverseCtrlInfo;
 import com.qtech.service.service.chk.IEqReverseCtrlService;
 import com.qtech.service.utils.chk.SimIdValidator;
 import com.qtech.service.utils.response.R;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.qtech.service.utils.chk.MesResponseConvertor.doConvert;
+import static com.qtech.service.utils.chk.ControlModeResponseHandler.handleResponse;
 
 /**
  * author :  gaozhilin
@@ -39,8 +40,12 @@ public class EqReverseCtrlInfoController extends BaseController {
     @GetMapping("/{simId}")
     public R<String> getEqReverseCtrlInfo(@ApiParam(name = "盒子号", value = "例如：86xxxx", required = true) @PathVariable String simId) {
         if (!SimIdValidator.validateSimId(simId)) {
-            return new R<String>().setCode(ResponseCode.BAD_REQUEST.getCode()).setMsg("Invalid simId format").setData(null);
+            return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("Invalid simId format").setData(null);
         }
-        return doConvert(eqReverseCtrlService.selectEqReverseCtrlInfoBySimId(simId));
+        EqReverseCtrlInfo eqReverseCtrlInfo = eqReverseCtrlService.selectEqReverseCtrlInfoBySimId(simId);
+        if (eqReverseCtrlInfo == null) {
+            return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("No data found").setData(null);
+        }
+        return handleResponse(eqReverseCtrlInfo);
     }
 }
