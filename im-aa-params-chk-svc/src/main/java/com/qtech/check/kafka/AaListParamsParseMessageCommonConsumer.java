@@ -12,6 +12,7 @@ import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -58,10 +61,12 @@ public class AaListParamsParseMessageCommonConsumer {
     private MessageProcessor messageProcessor;
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @PostConstruct
     public void startConsumer() {
-        consumer.subscribe(Arrays.asList("qtech_im_aa_list_topic"));
+        consumer.subscribe(Collections.singletonList("qtech_im_aa_list_topic"));
         executorService.scheduleWithFixedDelay(this::pollAndProcessRecords, 0, 1, TimeUnit.SECONDS);
     }
 
@@ -90,6 +95,7 @@ public class AaListParamsParseMessageCommonConsumer {
 
                 // 处理消息并转换为 AaListParams
                 AaListParams aaListParams = messageProcessor.processMessage(AaListParams.class, aaListMessageStr);
+                aaListParams.setReceivedTime(new Date());
 
                 // logger.info("Received message: {}", aaListMessageStr);
                 // 将 AaListParams 对象转换为 JSON 字符串
@@ -104,8 +110,11 @@ public class AaListParamsParseMessageCommonConsumer {
 
                 // 将解析后的消息发送到另一个 Kafka 主题
                 kafkaTemplate.send(producerRecord);
-
                 logger.info("Parsed message successfully: {}", aaListParamsMessageStr);
+
+                // 发送结果到 RabbitMQ持久化
+                rabbitTemplate.convertAndSend("qtechImExchange", "aaListParamsParsedQueue", aaListParamsMessageStr);
+                logger.info(">>>>> Parsed AA list sent to RabbitMQ!");
             } catch (Exception e) {
                 // 记录处理消息时出现的异常
                 logger.error("Error processing message: {}", aaListMessageStr, e);

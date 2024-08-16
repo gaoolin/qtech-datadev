@@ -24,7 +24,7 @@ import java.util.List;
  * desc   :
  */
 
-@Slf4j
+/*@Slf4j
 @Component
 public class AaListParamsDtoMessageConsumer {
 
@@ -71,5 +71,5 @@ public class AaListParamsDtoMessageConsumer {
             // kafkaTemplate.send("responseTopic", key, "Processed successfully");
         }
     }
-}
+}*/
 

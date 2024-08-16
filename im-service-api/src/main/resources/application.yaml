@@ -14,7 +14,7 @@ spring:
   application:
     name: qtech-im-service
   profiles:
-    active: dev
+    active: prod
 
   mvc:
     pathmatch:

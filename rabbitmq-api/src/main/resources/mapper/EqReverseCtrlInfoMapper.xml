@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.rabbitmq.mapper.EqReverseCtrlInfoMapper">
+    <resultMap id="eqReverseCtrlInfoResult" type="EqReverseCtrlInfo">
+        <id property="id" column="id"/>
+        <result property="simId" column="sim_id"/>
+        <result property="source" column="source"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="chkDt" column="chk_dt"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <sql id="select_eq_reverse_ctrl_info">
+        SELECT SIM_ID, "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+        FROM IMBIZ.EQUIPMENT_REVERSE_CONTROL_INFO
+    </sql>
+
+    <!-- 定义列名列表，用于在批量插入中复用 -->
+    <sql id="columnList">
+        SIM_ID
+        , "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+    </sql>
+
+    <insert id="addBatchDoris">
+        <foreach collection="list" item="item" separator=";" open="" close="">
+            INSERT INTO qtech_eq_dwd.aa_list_params_check_result_detail
+            <trim prefix="(" suffix=")" prefixOverrides=",">
+                <if test="item.simId != null">SIM_ID,</if>
+                <if test="item.prodType != null">PROD_TYPE,</if>
+                <if test="item.chkDt != null">CHECK_DT,</if>
+                <if test="item.code != null">STATUS_CODE,</if>
+                <if test="item.description != null">DESCRIPTION</if>
+            </trim>
+            <trim prefix="VALUES (" suffix=")" prefixOverrides=",">
+                <if test="item.simId != null">#{item.simId},</if>
+                <if test="item.prodType != null">#{item.prodType},</if>
+                <if test="item.chkDt != null">#{item.chkDt},</if>
+                <if test="item.code != null">#{item.code},</if>
+                <if test="item.description != null">#{item.description}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="upsertDoris">
+        <foreach collection="eqReverseCtrlInfoList" item="item" separator=";" open="" close="">
+            INSERT INTO qtech_eq_ads.equipment_reverse_control_info
+            <trim prefix="(" suffix=")" prefixOverrides=",">
+                <if test="item.simId != null">SIM_ID,</if>
+                <if test="item.source != null">SOURCE,</if>
+                <if test="item.prodType != null">PROD_TYPE,</if>
+                <if test="item.chkDt != null">CHK_DT,</if>
+                <if test="item.code != null">CODE,</if>
+                <if test="item.description != null">DESCRIPTION,</if>
+                <if test="item.version != null">VERSION</if>
+            </trim>
+            <trim prefix="VALUES (" suffix=")" prefixOverrides=",">
+                <if test="item.simId != null">#{item.simId},</if>
+                <if test="item.source != null">#{item.source},</if>
+                <if test="item.prodType != null">#{item.prodType},</if>
+                <if test="item.chkDt != null">#{item.chkDt},</if>
+                <if test="item.code != null">#{item.code},</if>
+                <if test="item.description != null">#{item.description},</if>
+                <if test="item.version != null">#{item.version}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+    <update id="upsertOracle" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            MERGE INTO IMBIZ.EQUIPMENT_REVERSE_CONTROL_INFO T
+            USING (SELECT #{item.simId} AS SIM_ID, #{item.source} AS SOURCE FROM DUAL) S
+            ON (T.SIM_ID = S.SIM_ID AND T.SOURCE = S.SOURCE)
+            WHEN NOT MATCHED THEN
+            INSERT (SIM_ID, SOURCE, PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION)
+            VALUES (#{item.simId}, #{item.source}, #{item.prodType}, #{item.chkDt}, #{item.code}, #{item.description},
+            #{item.version})
+            WHEN MATCHED THEN
+            UPDATE SET
+            PROD_TYPE = #{item.prodType},
+            CHK_DT = #{item.chkDt},
+            CODE = #{item.code},
+            DESCRIPTION = #{item.description},
+            VERSION = #{item.version}
+        </foreach>
+    </update>
+
+</mapper>

@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-public class AaParamsChkService {
+public class AaParamsChkSvc {
     public static void main(String[] args) {
-        SpringApplication.run(AaParamsChkService.class, args);
+        SpringApplication.run(AaParamsChkSvc.class, args);
     }
 }

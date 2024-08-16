@@ -1,7 +1,5 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.config.dynamic.DataSourceNames;
-import com.qtech.check.config.dynamic.DataSourceSwitch;
 import com.qtech.check.mapper.AaListParamsStdModelInfoMapper;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;

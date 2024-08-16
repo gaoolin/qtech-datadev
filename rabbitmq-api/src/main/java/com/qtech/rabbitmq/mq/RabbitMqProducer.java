@@ -14,8 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitMqProducer {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
+
+    public RabbitMqProducer(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     public void send(String exchange, String routingKey, String msg) {
         rabbitTemplate.convertAndSend(exchange, routingKey, msg);

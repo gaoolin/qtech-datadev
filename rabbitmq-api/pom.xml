@@ -38,10 +38,10 @@
             <version>8.0.29</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>2.0.23</version>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
+
         <!--ruoyi框架mybatis集成在 pagehelper-spring-boot-starter启动器中，所以不需要再添加-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -62,7 +62,6 @@
     </dependencies>
 
     <build>
-        <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
         <plugins>
             <!--复制打包jar包-->
             <plugin>

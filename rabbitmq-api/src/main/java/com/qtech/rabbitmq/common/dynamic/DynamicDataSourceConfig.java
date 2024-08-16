@@ -24,12 +24,20 @@ import java.util.HashMap;
 @Configuration
 public class DynamicDataSourceConfig {
 
-    @Value("${spring.datasource.druid.doris-k8s.url}")
-    private String url;
-    @Value("${spring.datasource.druid.doris-k8s.username}")
-    private String username;
-    @Value("${spring.datasource.druid.doris-k8s.password}")
-    private String password;
+    @Value("${spring.datasource.druid.first.url}")
+    private String firstUrl;
+    @Value("${spring.datasource.druid.first.username}")
+    private String firstUsername;
+    @Value("${spring.datasource.druid.first.password}")
+    private String firstPassword;
+
+    @Value("${spring.datasource.druid.second.url}")
+    private String secondUrl;
+    @Value("${spring.datasource.druid.second.username}")
+    private String secondUsername;
+    @Value("${spring.datasource.druid.second.password}")
+    private String secondPassword;
+
 
     /**
      * 实例化数据源master
@@ -37,8 +45,8 @@ public class DynamicDataSourceConfig {
      * @return DataSource
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.doris-k8s")
-    public DataSource dorisK8sDataSource() {
+    @ConfigurationProperties("spring.datasource.druid.first")
+    public DataSource firstDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
@@ -48,25 +56,25 @@ public class DynamicDataSourceConfig {
      * @return DataSource
      */
     @Bean
-    @ConfigurationProperties("spring.datasource.druid.postgresql")
-    public DataSource postgresqlDataSource() {
+    @ConfigurationProperties("spring.datasource.druid.second")
+    public DataSource secondDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
     /**
      * 实例化DynamicDataSource
      *
-     * @param dorisK8sDataSource  masterDataSource
-     * @param postgresqlDataSource slaveDataSource
+     * @param firstDataSource   masterDataSource
+     * @param secondDataSource slaveDataSource
      * @return DynamicDataSource
      */
     @Bean
     @Primary
-    public DynamicDataSource dynamicDataSource(DataSource dorisK8sDataSource, DataSource postgresqlDataSource) {
+    public DynamicDataSource dynamicDataSource(DataSource firstDataSource, DataSource secondDataSource) {
         HashMap<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DataSourceNames.DORIS_K8S, dorisK8sDataSource);
-        targetDataSources.put(DataSourceNames.POSTGRESQL, postgresqlDataSource);
+        targetDataSources.put(DataSourceNames.FIRST, firstDataSource);
+        targetDataSources.put(DataSourceNames.SECOND, secondDataSource);
 
-        return new DynamicDataSource(targetDataSources, dorisK8sDataSource);
+        return new DynamicDataSource(targetDataSources, firstDataSource);
     }
 }

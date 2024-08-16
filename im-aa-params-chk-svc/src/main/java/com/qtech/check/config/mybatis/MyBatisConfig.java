@@ -37,8 +37,8 @@ public class MyBatisConfig {
         factory.setDataSource(dynamicDataSource);
 
         // 设置Mapper XML文件的位置
-        // factory.setMapperLocations(new PathMatchingResourcePatternResolver()
-        //         .getResources("classpath*:mapper/**/*.xml")); // 根据实际情况调整路径
+        factory.setMapperLocations(new PathMatchingResourcePatternResolver()
+                .getResources("classpath:mapper/**/*.xml")); // 根据实际情况调整路径
 
         // 如果有配置文件，也可以在这里设置
          factory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));

@@ -20,5 +20,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataSourceSwitch {
-    DataSourceNames name() default DataSourceNames.DORIS_K8S;
+    DataSourceNames name() default DataSourceNames.FIRST;
 }

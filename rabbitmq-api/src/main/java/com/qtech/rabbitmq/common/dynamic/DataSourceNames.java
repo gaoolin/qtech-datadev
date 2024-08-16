@@ -13,7 +13,7 @@ package com.qtech.rabbitmq.common.dynamic;
  * 数据源名称枚举
  */
 public enum DataSourceNames {
-    DORIS_K8S("doris-k8s"), POSTGRESQL("postgresql");
+    FIRST("first"), SECOND("second");
 
     private final String name;
 

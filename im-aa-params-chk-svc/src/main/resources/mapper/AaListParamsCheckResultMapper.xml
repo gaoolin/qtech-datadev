@@ -6,16 +6,16 @@
     <resultMap id="AaListParamsCheckResult" type="AaListParamsCheckResult">
         <result column="sim_id" property="simId" jdbcType="VARCHAR"/>
         <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
-        <result column="check_dt" property="checkDt" jdbcType="TIMESTAMP"/>
-        <result column="status_code" property="statusCode" jdbcType="INTEGER"/>
+        <result column="check_dt" property="chkDt" jdbcType="TIMESTAMP"/>
+        <result column="status_code" property="code" jdbcType="INTEGER"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="EqReverseControlInfoResult" type="AaListParamsCheckResult">
         <result column="sim_id" property="simId" jdbcType="VARCHAR"/>
         <result column="prod_type" property="prodType" jdbcType="VARCHAR"/>
-        <result column="chk_dt" property="checkDt" jdbcType="VARCHAR"/>
-        <result column="code" property="statusCode" jdbcType="INTEGER"/>
+        <result column="chk_dt" property="chkDt" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="INTEGER"/>
         <result column="description" property="description" jdbcType="VARCHAR"/>
     </resultMap>
 

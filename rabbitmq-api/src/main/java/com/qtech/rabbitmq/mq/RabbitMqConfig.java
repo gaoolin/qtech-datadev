@@ -18,17 +18,27 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMqConfig {
 
     @Bean
-    public Queue wbOlpCheckResultQueue() {
-        return new Queue("wbOlpCheckResultQueue", true);
+    public DirectExchange qtechImExchange() {
+        return new DirectExchange("qtechImExchange", true, false);
     }
 
     @Bean
-    public DirectExchange wbOlpCheckResultExchange() {
-        return new DirectExchange("wbOlpCheckResultExchange", true, false);
+    public Queue eqRevserCtrlInfoQueue() {
+        return new Queue("eqReverseCtrlInfoQueue", true);
+    }
+
+    @Bean
+    public Queue aaListParamsParsedQueue() {
+        return new Queue("aaListParamsParsedQueue", true);
     }
 
     @Bean
     public Binding wbOlpCheckResultBinding() {
-        return new Binding("wbOlpCheckResultQueue", Binding.DestinationType.QUEUE, "wbOlpCheckResultExchange", "wbOlpCheckResultQueue", null);
+        return new Binding("eqReverseCtrlInfoQueue", Binding.DestinationType.QUEUE, "qtechImExchange", "eqReverseCtrlInfoQueue", null);
+    }
+
+    @Bean
+    public Binding aaListParamsParsedBinding() {
+        return new Binding("aaListParamsParsedQueue", Binding.DestinationType.QUEUE, "qtechImExchange", "aaListParamsParsedQueue", null);
     }
 }

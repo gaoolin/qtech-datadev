@@ -106,6 +106,13 @@ spring:
       #指定value使用的反序列化类
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 
+  rabbitmq:
+    host: 10.170.6.40
+    port: 31131
+    username: qtech
+    password: Ee786549
+
+
 mybatis:
   type-aliases-package: com.qtech.check.pojo
 

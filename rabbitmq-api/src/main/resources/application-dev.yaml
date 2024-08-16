@@ -5,13 +5,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     druid:
       # 主库数据源
-      doris-k8s:
-        url: jdbc:mysql://10.170.6.40:32333/qtech_eq_dwd?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
-        username: root
-        password:
-        driver-class-name: com.mysql.cj.jdbc.Driver
+      first:
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        url: jdbc:oracle:thin:@//10.170.6.144:1521/qtechIm
+        username: imBiz
+        password: M5F5JkfnQ
       # 从库数据源
-      postgresql:
+      second:
         url: jdbc:mysql://10.170.6.40:32333/qtech_eq_dwd?rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
         username: root
         password:
