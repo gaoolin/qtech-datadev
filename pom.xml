@@ -32,7 +32,7 @@
         <module>ocr-api</module>
         <module>pulsar-api</module>
         <module>common-api</module>
-        <module>rabbitmq-api</module>
+        <module>mq-svc</module>
         <module>im-aa-params-chk-svc</module>
         <module>message-api</module>
         <module>im-service-api</module>
