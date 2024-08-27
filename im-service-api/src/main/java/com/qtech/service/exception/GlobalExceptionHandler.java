@@ -5,12 +5,10 @@ import com.qtech.service.utils.response.R;
 import com.qtech.service.utils.response.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 
@@ -49,9 +47,9 @@ public class GlobalExceptionHandler {
     public R<String> handleSimIdIgnoredException(SimIdIgnoredException ex) {
         logger.error("SimIdIgnoredException: ", ex);
         return new R<String>()
-            .setCode(ResponseCode.SUCCESS.getCode())
-            .setMsg("Equipment reverse ignored")
-            .setData(null);
+                .setCode(ResponseCode.SUCCESS.getCode())
+                .setMsg("Equipment reverse ignored")
+                .setData(null);
     }
 
     @ExceptionHandler(ImChkException.class)
@@ -59,9 +57,9 @@ public class GlobalExceptionHandler {
     public R<String> handleImChkException(ImChkException ex) {
         logger.error("ImChkException: ", ex);
         return new R<String>()
-            .setCode(ResponseCode.SUCCESS.getCode())
-            .setMsg(ex.getMessage())
-            .setData(null);
+                .setCode(ResponseCode.SUCCESS.getCode())
+                .setMsg(ex.getMessage())
+                .setData(null);
     }
 
     @ExceptionHandler(Exception.class)

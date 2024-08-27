@@ -1,6 +1,6 @@
 # 端口，项目上下文
 server:
-  port: 8081
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
     accept-count: 1300
