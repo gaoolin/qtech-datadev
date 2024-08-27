@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.mq.mapper.AaListParamsParsedMapper">
+    <resultMap id="AaListParamsMessageResult" type="AaListParams">
+        <result property="simId" column="sim_id" jdbcType="VARCHAR"/>
+        <result property="prodType" column="prod_type" jdbcType="VARCHAR"/>
+        <result property="receivedTime" column="received_time" jdbcType="DATE"/>
+        <result property="clampOnOff" column="clamp_on_off" jdbcType="VARCHAR"/>
+        <result property="destroyStart" column="destroy_start" jdbcType="VARCHAR"/>
+        <result property="init" column="init" jdbcType="VARCHAR"/>
+        <result property="grab" column="grab" jdbcType="VARCHAR"/>
+        <result property="reInit" column="re_init" jdbcType="VARCHAR"/>
+        <result property="senserReset" column="senser_reset" jdbcType="VARCHAR"/>
+        <result property="sid" column="sid" jdbcType="VARCHAR"/>
+        <result property="vcmHall" column="vcm_hall" jdbcType="VARCHAR"/>
+        <result property="vcmInit" column="vcm_init" jdbcType="VARCHAR"/>
+        <result property="vcmHall2" column="vcm_hall2" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOff" column="vcm_power_off" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOn" column="vcm_power_on" jdbcType="VARCHAR"/>
+        <result property="vcmTop" column="vcm_top" jdbcType="VARCHAR"/>
+        <result property="vcmTopHall" column="vcm_top_hall" jdbcType="VARCHAR"/>
+        <result property="vcmZ" column="vcm_z" jdbcType="VARCHAR"/>
+        <result property="vcmZHall" column="vcm_z_hall" jdbcType="VARCHAR"/>
+        <result property="vcmOisInit" column="vcm_ois_init" jdbcType="VARCHAR"/>
+        <result property="chartAlignment1" column="chart_alignment1" jdbcType="VARCHAR"/>
+        <result property="AA1" column="aa1" jdbcType="VARCHAR"/>
+        <result property="AA2" column="aa2" jdbcType="VARCHAR"/>
+        <result property="mtfCheck" column="mtf_check" jdbcType="VARCHAR"/>
+        <result property="AA3" column="aa3" jdbcType="VARCHAR"/>
+        <result property="mtfCheck2" column="mtf_check2" jdbcType="VARCHAR"/>
+        <result property="lpOn" column="lp_on" jdbcType="VARCHAR"/>
+        <result property="lpOcCheck" column="lp_oc_check" jdbcType="VARCHAR"/>
+        <result property="lpOc" column="lp_oc" jdbcType="VARCHAR"/>
+        <result property="lpOnBlemish" column="lp_on_blemish" jdbcType="VARCHAR"/>
+        <result property="blemish" column="blemish" jdbcType="VARCHAR"/>
+        <result property="lpOff" column="lp_off" jdbcType="VARCHAR"/>
+        <result property="chartAlignment" column="chart_alignment" jdbcType="VARCHAR"/>
+        <result property="vcmMoveToZ" column="vcm_move_to_z" jdbcType="VARCHAR"/>
+        <result property="delay" column="delay" jdbcType="VARCHAR"/>
+        <result property="vcmPowerOffCheck" column="vcm_power_off_check" jdbcType="VARCHAR"/>
+        <result property="recordPosition" column="record_position" jdbcType="VARCHAR"/>
+        <result property="dispense" column="dispense" jdbcType="VARCHAR"/>
+        <result property="epoxyInspectionAuto" column="epoxy_inspection_auto" jdbcType="VARCHAR"/>
+        <result property="epoxyInspection" column="epoxy_inspection" jdbcType="VARCHAR"/>
+        <result property="backToPosition" column="back_to_position" jdbcType="VARCHAR"/>
+        <result property="uvon" column="uvon" jdbcType="VARCHAR"/>
+        <result property="yLevel" column="y_level" jdbcType="VARCHAR"/>
+        <result property="uvoff" column="uvoff" jdbcType="VARCHAR"/>
+        <result property="gripperOpen" column="gripper_open" jdbcType="VARCHAR"/>
+        <result property="saveOc" column="save_oc" jdbcType="VARCHAR"/>
+        <result property="saveMtf" column="save_mtf" jdbcType="VARCHAR"/>
+        <result property="destroy" column="destroy" jdbcType="VARCHAR"/>
+        <result property="moveToBlemishPos" column="move_to_blemish_pos" jdbcType="VARCHAR"/>
+        <result property="mtfCheck3" column="mtf_check3" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck1" column="mtf_off_axis_check1" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck2" column="mtf_off_axis_check2" jdbcType="VARCHAR"/>
+        <result property="mtfOffAxisCheck3" column="mtf_off_axis_check3" jdbcType="VARCHAR"/>
+        <result property="lpBlemish" column="lp_blemish" jdbcType="VARCHAR"/>
+        <result property="chartAlignment2" column="chart_alignment2" jdbcType="VARCHAR"/>
+        <result property="vcmMoveToZPos" column="vcm_move_to_z_pos" jdbcType="VARCHAR"/>
+        <result property="zOffset" column="z_offset" jdbcType="VARCHAR"/>
+        <result property="openCheck" column="open_check" jdbcType="VARCHAR"/>
+        <result property="roiCc" column="roi_cc" jdbcType="VARCHAR"/>
+        <result property="roiUl" column="roi_ul" jdbcType="VARCHAR"/>
+        <result property="roiUr" column="roi_ur" jdbcType="VARCHAR"/>
+        <result property="roiLl" column="roi_ll" jdbcType="VARCHAR"/>
+        <result property="roiLr" column="roi_lr" jdbcType="VARCHAR"/>
+        <result property="result1" column="result1" jdbcType="VARCHAR"/>
+        <result property="result2" column="result2" jdbcType="VARCHAR"/>
+        <result property="result3" column="result3" jdbcType="VARCHAR"/>
+        <result property="result4" column="result4" jdbcType="VARCHAR"/>
+        <result property="result5" column="result5" jdbcType="VARCHAR"/>
+        <result property="result6" column="result6" jdbcType="VARCHAR"/>
+        <result property="result7" column="result7" jdbcType="VARCHAR"/>
+        <result property="result8" column="result8" jdbcType="VARCHAR"/>
+        <result property="result9" column="result9" jdbcType="VARCHAR"/>
+        <result property="result10" column="result10" jdbcType="VARCHAR"/>
+        <result property="result11" column="result11" jdbcType="VARCHAR"/>
+        <result property="result12" column="result12" jdbcType="VARCHAR"/>
+        <result property="result13" column="result13" jdbcType="VARCHAR"/>
+        <result property="result14" column="result14" jdbcType="VARCHAR"/>
+        <result property="result15" column="result15" jdbcType="VARCHAR"/>
+        <result property="result16" column="result16" jdbcType="VARCHAR"/>
+        <result property="result17" column="result17" jdbcType="VARCHAR"/>
+        <result property="result18" column="result18" jdbcType="VARCHAR"/>
+        <result property="result19" column="result19" jdbcType="VARCHAR"/>
+        <result property="result20" column="result20" jdbcType="VARCHAR"/>
+        <result property="result21" column="result21" jdbcType="VARCHAR"/>
+        <result property="result22" column="result22" jdbcType="VARCHAR"/>
+        <result property="result23" column="result23" jdbcType="VARCHAR"/>
+        <result property="result24" column="result24" jdbcType="VARCHAR"/>
+        <result property="result25" column="result25" jdbcType="VARCHAR"/>
+        <result property="result26" column="result26" jdbcType="VARCHAR"/>
+        <result property="result27" column="result27" jdbcType="VARCHAR"/>
+        <result property="result28" column="result28" jdbcType="VARCHAR"/>
+        <result property="result29" column="result29" jdbcType="VARCHAR"/>
+        <result property="result30" column="result30" jdbcType="VARCHAR"/>
+        <result property="result31" column="result31" jdbcType="VARCHAR"/>
+        <result property="result32" column="result32" jdbcType="VARCHAR"/>
+        <result property="result33" column="result33" jdbcType="VARCHAR"/>
+        <result property="result34" column="result34" jdbcType="VARCHAR"/>
+        <result property="result35" column="result35" jdbcType="VARCHAR"/>
+        <result property="result36" column="result36" jdbcType="VARCHAR"/>
+        <result property="result37" column="result37" jdbcType="VARCHAR"/>
+        <result property="result38" column="result38" jdbcType="VARCHAR"/>
+        <result property="result39" column="result39" javaType="VARCHAR"/>
+        <result property="result40" column="result40" jdbcType="VARCHAR"/>
+        <result property="result41" column="result41" jdbcType="VARCHAR"/>
+        <result property="result42" column="result42" jdbcType="VARCHAR"/>
+        <result property="result43" column="result43" jdbcType="VARCHAR"/>
+        <result property="result44" column="result44" jdbcType="VARCHAR"/>
+        <result property="result45" column="result45" jdbcType="VARCHAR"/>
+        <result property="result46" column="result46" jdbcType="VARCHAR"/>
+        <result property="result47" column="result47" jdbcType="VARCHAR"/>
+        <result property="result48" column="result48" jdbcType="VARCHAR"/>
+        <result property="result49" column="result49" jdbcType="VARCHAR"/>
+        <result property="result50" column="result50" jdbcType="VARCHAR"/>
+        <result property="result51" column="result51" jdbcType="VARCHAR"/>
+        <result property="result52" column="result52" jdbcType="VARCHAR"/>
+        <result property="xResMin" column="x_res_min" jdbcType="VARCHAR"/>
+        <result property="xResMax" column="x_res_max" jdbcType="VARCHAR"/>
+        <result property="yResMin" column="y_res_min" jdbcType="VARCHAR"/>
+        <result property="yResMax" column="y_res_max" jdbcType="VARCHAR"/>
+        <result property="epoxyInspectionInterval" column="epoxy_inspection_interval" jdbcType="VARCHAR"/>
+        <result property="resultCheckMin" column="result_check_min" jdbcType="VARCHAR"/>
+        <result property="resultCheckMax" column="result_check_max" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="AaListParamsMessageSql">
+        SELECT sim_id,
+               prod_type,
+               received_time,
+               clamp_on_off,
+               destroy_start,
+               init,
+               grab,
+               re_init,
+               senser_reset,
+               sid,
+               vcm_hall,
+               vcm_init,
+               vcm_hall2,
+               vcm_power_off,
+               vcm_power_on,
+               vcm_top,
+               vcm_top_hall,
+               vcm_z,
+               vcm_z_hall,
+               vcm_ois_init,
+               chart_alignment1,
+               aa1,
+               aa2,
+               mtf_check,
+               aa3,
+               mtf_check2,
+               lp_on,
+               lp_oc_check,
+               lp_oc,
+               lp_on_blemish,
+               blemish,
+               lp_off,
+               chart_alignment,
+               vcm_move_to_z,
+               delay,
+               vcm_power_off_check,
+               record_position,
+               dispense,
+               epoxy_inspection_auto,
+               epoxy_inspection,
+               back_to_position,
+               uvon,
+               y_level,
+               uvoff,
+               gripper_open,
+               save_oc,
+               save_mtf,
+               destroy,
+               move_to_blemish_pos,
+               mtf_check3,
+               mtf_off_axis_check1,
+               mtf_off_axis_check2,
+               mtf_off_axis_check3,
+               lp_blemish,
+               chart_alignment2,
+               vcm_move_to_z_pos,
+               z_offset,
+               open_check,
+               roi_cc,
+               roi_ul,
+               roi_ur,
+               roi_ll,
+               roi_lr,
+               result1,
+               result2,
+               result3,
+               result4,
+               result5,
+               result6,
+               result7,
+               result8,
+               result9,
+               result10,
+               result11,
+               result12,
+               result13,
+               result14,
+               result15,
+               result16,
+               result17,
+               result18,
+               result19,
+               result20,
+               result21,
+               result22,
+               result23,
+               result24,
+               result25,
+               result26,
+               result27,
+               result28,
+               result29,
+               result30,
+               result31,
+               result32,
+               result33,
+               result34,
+               result35,
+               result36,
+               result37,
+               result38,
+               result39,
+               result40,
+               result41,
+               result42,
+               result43,
+               result44,
+               result45,
+               result46,
+               result47,
+               result48,
+               result49,
+               result50,
+               result51,
+               result52,
+               x_res_min,
+               x_res_max,
+               y_res_min,
+               y_res_max,
+               epoxy_inspection_interval,
+               result_check_min,
+               result_check_max
+        FROM qtech_eq_dwd.aa_list_params_parsed_detail
+    </sql>
+
+    <insert id="save" parameterType="AaListParams">
+        insert into qtech_eq_dwd.aa_list_params_parsed_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="simId != null">sim_id,</if>
+            <if test="prodType != null">prod_type,</if>
+            <if test="receivedTime != null">received_time,</if>
+            <if test="clampOnOff != null">clamp_on_off,</if>
+            <if test="destroyStart != null">destroy_start,</if>
+            <if test="init != null">init,</if>
+            <if test="grab != null">grab,</if>
+            <if test="reInit != null">re_init,</if>
+            <if test="senserReset != null">senser_reset,</if>
+            <if test="sid != null">sid,</if>
+            <if test="vcmHall != null">vcm_hall,</if>
+            <if test="vcmInit != null">vcm_init,</if>
+            <if test="vcmHall2 != null">vcm_hall2,</if>
+            <if test="vcmPowerOff != null">vcm_power_off,</if>
+            <if test="vcmPowerOn != null">vcm_power_on,</if>
+            <if test="vcmTop != null">vcm_top,</if>
+            <if test="vcmTopHall != null">vcm_top_hall,</if>
+            <if test="vcmZ != null">vcm_z,</if>
+            <if test="vcmZHall != null">vcm_z_hall,</if>
+            <if test="vcmOisInit != null">vcm_ois_init,</if>
+            <if test="chartAlignment1 != null">chart_alignment1,</if>
+            <if test="AA1 != null">aa1,</if>
+            <if test="AA2 != null">aa2,</if>
+            <if test="mtfCheck != null">mtf_check,</if>
+            <if test="AA3 != null">aa3,</if>
+            <if test="mtfCheck2 != null">mtf_check2,</if>
+            <if test="lpOn != null">lp_on,</if>
+            <if test="lpOcCheck != null">lp_oc_check,</if>
+            <if test="lpOc != null">lp_oc,</if>
+            <if test="lpOnBlemish != null">lp_on_blemish,</if>
+            <if test="blemish != null">blemish,</if>
+            <if test="lpOff != null">lp_off,</if>
+            <if test="chartAlignment != null">chart_alignment,</if>
+            <if test="vcmMoveToZ != null">vcm_move_to_z,</if>
+            <if test="delay != null">delay,</if>
+            <if test="vcmPowerOffCheck != null">vcm_power_off_check,</if>
+            <if test="recordPosition != null">record_position,</if>
+            <if test="dispense != null">dispense,</if>
+            <if test="epoxyInspectionAuto != null">epoxy_inspection_auto,</if>
+            <if test="epoxyInspection != null">epoxy_inspection,</if>
+            <if test="backToPosition != null">back_to_position,</if>
+            <if test="uvon != null">uvon,</if>
+            <if test="yLevel != null">y_level,</if>
+            <if test="uvoff != null">uvoff,</if>
+            <if test="gripperOpen != null">gripper_open,</if>
+            <if test="saveOc != null">save_oc,</if>
+            <if test="saveMtf != null">save_mtf,</if>
+            <if test="destroy != null">destroy,</if>
+            <if test="moveToBlemishPos != null">move_to_blemish_pos,</if>
+            <if test="mtfCheck3 != null">mtf_check3,</if>
+            <if test="mtfOffAxisCheck1 != null">mtf_off_axis_check1,</if>
+            <if test="mtfOffAxisCheck2 != null">mtf_off_axis_check2,</if>
+            <if test="mtfOffAxisCheck3 != null">mtf_off_axis_check3,</if>
+            <if test="lpBlemish != null">lp_blemish,</if>
+            <if test="chartAlignment2 != null">chart_alignment2,</if>
+            <if test="vcmMoveToZPos != null">vcm_move_to_z_pos,</if>
+            <if test="zOffset != null">z_offset,</if>
+            <if test="openCheck != null">open_check,</if>
+            <if test="roiCc != null">roi_cc,</if>
+            <if test="roiUl != null">roi_ul,</if>
+            <if test="roiUr != null">roi_ur,</if>
+            <if test="roiLl != null">roi_ll,</if>
+            <if test="roiLr != null">roi_lr,</if>
+            <if test="result1 != null">result1,</if>
+            <if test="result2 != null">result2,</if>
+            <if test="result3 != null">result3,</if>
+            <if test="result4 != null">result4,</if>
+            <if test="result5 != null">result5,</if>
+            <if test="result6 != null">result6,</if>
+            <if test="result7 != null">result7,</if>
+            <if test="result8 != null">result8,</if>
+            <if test="result9 != null">result9,</if>
+            <if test="result10 != null">result10,</if>
+            <if test="result11 != null">result11,</if>
+            <if test="result12 != null">result12,</if>
+            <if test="result13 != null">result13,</if>
+            <if test="result14 != null">result14,</if>
+            <if test="result15 != null">result15,</if>
+            <if test="result16 != null">result16,</if>
+            <if test="result17 != null">result17,</if>
+            <if test="result18 != null">result18,</if>
+            <if test="result19 != null">result19,</if>
+            <if test="result20 != null">result20,</if>
+            <if test="result21 != null">result21,</if>
+            <if test="result22 != null">result22,</if>
+            <if test="result23 != null">result23,</if>
+            <if test="result24 != null">result24,</if>
+            <if test="result25 != null">result25,</if>
+            <if test="result26 != null">result26,</if>
+            <if test="result27 != null">result27,</if>
+            <if test="result28 != null">result28,</if>
+            <if test="result29 != null">result29,</if>
+            <if test="result30 != null">result30,</if>
+            <if test="result31 != null">result31,</if>
+            <if test="result32 != null">result32,</if>
+            <if test="result33 != null">result33,</if>
+            <if test="result34 != null">result34,</if>
+            <if test="result35 != null">result35,</if>
+            <if test="result36 != null">result36,</if>
+            <if test="result37 != null">result37,</if>
+            <if test="result38 != null">result38,</if>
+            <if test="result39 != null">result39,</if>
+            <if test="result40 != null">result40,</if>
+            <if test="result41 != null">result41,</if>
+            <if test="result42 != null">result42,</if>
+            <if test="result43 != null">result43,</if>
+            <if test="result44 != null">result44,</if>
+            <if test="result45 != null">result45,</if>
+            <if test="result46 != null">result46,</if>
+            <if test="result47 != null">result47,</if>
+            <if test="result48 != null">result48,</if>
+            <if test="result49 != null">result49,</if>
+            <if test="result50 != null">result50,</if>
+            <if test="result51 != null">result51,</if>
+            <if test="result52 != null">result52,</if>
+            <if test="xResMin != null">x_res_min,</if>
+            <if test="xResMax != null">x_res_max,</if>
+            <if test="yResMin != null">y_res_min,</if>
+            <if test="yResMax != null">y_res_max,</if>
+            <if test="resultCheckMin != null">result_check_max,</if>
+            <if test="resultCheckMax != null">result_check_max,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="simId != null">#{simId,jdbcType=VARCHAR},</if>
+            <if test="prodType != null">#{prodType,jdbcType=VARCHAR},</if>
+            <if test="receivedTime != null">#{receivedTime,jdbcType=TIMESTAMP},</if>
+            <if test="clampOnOff != null">#{clampOnOff,jdbcType=VARCHAR},</if>
+            <if test="destroyStart != null">#{destroyStart,jdbcType=VARCHAR},</if>
+            <if test="init != null">#{init,jdbcType=VARCHAR},</if>
+            <if test="grab != null">#{grab,jdbcType=VARCHAR},</if>
+            <if test="reInit != null">#{reInit,jdbcType=VARCHAR},</if>
+            <if test="senserReset != null">#{senserReset,jdbcType=VARCHAR},</if>
+            <if test="sid != null">#{sid,jdbcType=VARCHAR},</if>
+            <if test="vcmHall != null">#{vcmHall,jdbcType=VARCHAR},</if>
+            <if test="vcmInit != null">#{vcmInit,jdbcType=VARCHAR},</if>
+            <if test="vcmHall2 != null">#{vcmHall2,jdbcType=VARCHAR},</if>
+            <if test="vcmPowerOff != null">#{vcmPowerOff,jdbcType=VARCHAR},</if>
+            <if test="vcmPowerOn != null">#{vcmPowerOn,jdbcType=VARCHAR},</if>
+            <if test="vcmTop != null">#{vcmTop,jdbcType=VARCHAR},</if>
+            <if test="vcmTopHall != null">#{vcmTopHall,jdbcType=VARCHAR},</if>
+            <if test="vcmZ != null">#{vcmZ,jdbcType=VARCHAR},</if>
+            <if test="vcmZHall != null">#{vcmZHall,jdbcType=VARCHAR},</if>
+            <if test="vcmOisInit != null">#{vcmOisInit,jdbcType=VARCHAR},</if>
+            <if test="chartAlignment1 != null">#{chartAlignment1,jdbcType=VARCHAR},</if>
+            <if test="AA1 != null">#{AA1,jdbcType=VARCHAR},</if>
+            <if test="AA2 != null">#{AA2,jdbcType=VARCHAR},</if>
+            <if test="mtfCheck != null">#{mtfCheck,jdbcType=VARCHAR},</if>
+            <if test="AA3 != null">#{AA3,jdbcType=VARCHAR},</if>
+            <if test="mtfCheck2 != null">#{mtfCheck2,jdbcType=VARCHAR},</if>
+            <if test="lpOn != null">#{lpOn,jdbcType=VARCHAR},</if>
+            <if test="lpOcCheck != null">#{lpOcCheck,jdbcType=VARCHAR},</if>
+            <if test="lpOc != null">#{lpOc,jdbcType=VARCHAR},</if>
+            <if test="lpOnBlemish != null">#{lpOnBlemish,jdbcType=VARCHAR},</if>
+            <if test="blemish != null">#{blemish,jdbcType=VARCHAR},</if>
+            <if test="lpOff != null">#{lpOff,jdbcType=VARCHAR},</if>
+            <if test="chartAlignment != null">#{chartAlignment,jdbcType=VARCHAR},</if>
+            <if test="vcmMoveToZ != null">#{vcmMoveToZ,jdbcType=VARCHAR},</if>
+            <if test="delay != null">#{delay,jdbcType=VARCHAR},</if>
+            <if test="vcmPowerOffCheck != null">#{vcmPowerOffCheck,jdbcType=VARCHAR},</if>
+            <if test="recordPosition != null">#{recordPosition,jdbcType=VARCHAR},</if>
+            <if test="dispense != null">#{dispense,jdbcType=VARCHAR},</if>
+            <if test="epoxyInspectionAuto != null">#{epoxyInspectionAuto,jdbcType=VARCHAR},</if>
+            <if test="epoxyInspection != null">#{epoxyInspection,jdbcType=VARCHAR},</if>
+            <if test="backToPosition != null">#{backToPosition,jdbcType=VARCHAR},</if>
+            <if test="uvon != null">#{uvon,jdbcType=VARCHAR},</if>
+            <if test="yLevel != null">#{yLevel,jdbcType=VARCHAR},</if>
+            <if test="uvoff != null">#{uvoff,jdbcType=VARCHAR},</if>
+            <if test="gripperOpen != null">#{gripperOpen,jdbcType=VARCHAR},</if>
+            <if test="saveOc != null">#{saveOc,jdbcType=VARCHAR},</if>
+            <if test="saveMtf != null">#{saveMtf,jdbcType=VARCHAR},</if>
+            <if test="destroy != null">#{destroy,jdbcType=VARCHAR},</if>
+            <if test="moveToBlemishPos != null">#{moveToBlemishPos,jdbcType=VARCHAR},</if>
+            <if test="mtfCheck3 != null">#{mtfCheck3,jdbcType=VARCHAR},</if>
+            <if test="mtfOffAxisCheck1 != null">#{mtfOffAxisCheck1,jdbcType=VARCHAR},</if>
+            <if test="mtfOffAxisCheck2 != null">#{mtfOffAxisCheck2,jdbcType=VARCHAR},</if>
+            <if test="mtfOffAxisCheck3 != null">#{mtfOffAxisCheck3,jdbcType=VARCHAR},</if>
+            <if test="lpBlemish != null">#{lpBlemish,jdbcType=VARCHAR},</if>
+            <if test="chartAlignment2 != null">#{chartAlignment2,jdbcType=VARCHAR},</if>
+            <if test="vcmMoveToZPos != null">#{vcmMoveToZPos,jdbcType=VARCHAR},</if>
+            <if test="zOffset != null">#{zOffset,jdbcType=VARCHAR},</if>
+            <if test="openCheck != null">#{openCheck,jdbcType=VARCHAR},</if>
+            <if test="roiCc != null">#{roiCc,jdbcType=VARCHAR},</if>
+            <if test="roiUl != null">#{roiUl,jdbcType=VARCHAR},</if>
+            <if test="roiUr != null">#{roiUr,jdbcType=VARCHAR},</if>
+            <if test="roiLl != null">#{roiLl,jdbcType=VARCHAR},</if>
+            <if test="roiLr != null">#{roiLr,jdbcType=VARCHAR},</if>
+            <if test="result1 != null">#{result1,jdbcType=VARCHAR},</if>
+            <if test="result2 != null">#{result2,jdbcType=VARCHAR},</if>
+            <if test="result3 != null">#{result3,jdbcType=VARCHAR},</if>
+            <if test="result4 != null">#{result4,jdbcType=VARCHAR},</if>
+            <if test="result5 != null">#{result5,jdbcType=VARCHAR},</if>
+            <if test="result6 != null">#{result6,jdbcType=VARCHAR},</if>
+            <if test="result7 != null">#{result7,jdbcType=VARCHAR},</if>
+            <if test="result8 != null">#{result8,jdbcType=VARCHAR},</if>
+            <if test="result9 != null">#{result9,jdbcType=VARCHAR},</if>
+            <if test="result10 != null">#{result10,jdbcType=VARCHAR},</if>
+            <if test="result11 != null">#{result11,jdbcType=VARCHAR},</if>
+            <if test="result12 != null">#{result12,jdbcType=VARCHAR},</if>
+            <if test="result13 != null">#{result13,jdbcType=VARCHAR},</if>
+            <if test="result14 != null">#{result14,jdbcType=VARCHAR},</if>
+            <if test="result15 != null">#{result15,jdbcType=VARCHAR},</if>
+            <if test="result16 != null">#{result16,jdbcType=VARCHAR},</if>
+            <if test="result17 != null">#{result17,jdbcType=VARCHAR},</if>
+            <if test="result18 != null">#{result18,jdbcType=VARCHAR},</if>
+            <if test="result19 != null">#{result19,jdbcType=VARCHAR},</if>
+            <if test="result20 != null">#{result20,jdbcType=VARCHAR},</if>
+            <if test="result21 != null">#{result21,jdbcType=VARCHAR},</if>
+            <if test="result22 != null">#{result22,jdbcType=VARCHAR},</if>
+            <if test="result23 != null">#{result23,jdbcType=VARCHAR},</if>
+            <if test="result24 != null">#{result24,jdbcType=VARCHAR},</if>
+            <if test="result25 != null">#{result25,jdbcType=VARCHAR},</if>
+            <if test="result26 != null">#{result26,jdbcType=VARCHAR},</if>
+            <if test="result27 != null">#{result27,jdbcType=VARCHAR},</if>
+            <if test="result28 != null">#{result28,jdbcType=VARCHAR},</if>
+            <if test="result29 != null">#{result29,jdbcType=VARCHAR},</if>
+            <if test="result30 != null">#{result30,jdbcType=VARCHAR},</if>
+            <if test="result31 != null">#{result31,jdbcType=VARCHAR},</if>
+            <if test="result32 != null">#{result32,jdbcType=VARCHAR},</if>
+            <if test="result33 != null">#{result33,jdbcType=VARCHAR},</if>
+            <if test="result34 != null">#{result34,jdbcType=VARCHAR},</if>
+            <if test="result35 != null">#{result35,jdbcType=VARCHAR},</if>
+            <if test="result36 != null">#{result36,jdbcType=VARCHAR},</if>
+            <if test="result37 != null">#{result37,jdbcType=VARCHAR},</if>
+            <if test="result38 != null">#{result38,jdbcType=VARCHAR},</if>
+            <if test="result39 != null">#{result39,jdbcType=VARCHAR},</if>
+            <if test="result40 != null">#{result40,jdbcType=VARCHAR},</if>
+            <if test="result41 != null">#{result41,jdbcType=VARCHAR},</if>
+            <if test="result42 != null">#{result42,jdbcType=VARCHAR},</if>
+            <if test="result43 != null">#{result43,jdbcType=VARCHAR},</if>
+            <if test="result44 != null">#{result44,jdbcType=VARCHAR},</if>
+            <if test="result45 != null">#{result45,jdbcType=VARCHAR},</if>
+            <if test="result46 != null">#{result46,jdbcType=VARCHAR},</if>
+            <if test="result47 != null">#{result47,jdbcType=VARCHAR},</if>
+            <if test="result48 != null">#{result48,jdbcType=VARCHAR},</if>
+            <if test="result49 != null">#{result49,jdbcType=VARCHAR},</if>
+            <if test="result50 != null">#{result50,jdbcType=VARCHAR},</if>
+            <if test="result51 != null">#{result51,jdbcType=VARCHAR},</if>
+            <if test="result52 != null">#{result52,jdbcType=VARCHAR},</if>
+            <if test="xResMin != null">#{xResMin,jdbcType=VARCHAR},</if>
+            <if test="xResMax != null">#{xResMax,jdbcType=VARCHAR},</if>
+            <if test="yResMin != null">#{yResMin,jdbcType=VARCHAR},</if>
+            <if test="yResMax != null">#{yResMax,jdbcType=VARCHAR},</if>
+            <if test="resultCheckMin != null">#{resultCheckMin,jdbcType=VARCHAR},</if>
+            <if test="resultCheckMax != null">#{resultCheckMax,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.mq.mapper.EqReverseCtrlInfoMapper">
+    <resultMap id="eqReverseCtrlInfoResult" type="EqReverseCtrlInfo">
+        <id property="id" column="id"/>
+        <result property="simId" column="sim_id"/>
+        <result property="source" column="source"/>
+        <result property="prodType" column="prod_type"/>
+        <result property="chkDt" column="chk_dt"/>
+        <result property="code" column="code"/>
+        <result property="description" column="description"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <sql id="select_eq_reverse_ctrl_info">
+        SELECT SIM_ID, "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+        FROM IMBIZ.EQUIPMENT_REVERSE_CONTROL_INFO
+    </sql>
+
+    <!-- 定义列名列表，用于在批量插入中复用 -->
+    <sql id="columnList">
+        SIM_ID
+        , "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+    </sql>
+
+    <insert id="upsertDoris">
+        INSERT INTO qtech_eq_ads.equipment_reverse_control_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="list[0].simId != null">SIM_ID,</if>
+            <if test="list[0].source != null">SOURCE,</if>
+            <if test="list[0].prodType != null">PROD_TYPE,</if>
+            <if test="list[0].chkDt != null">CHK_DT,</if>
+            <if test="list[0].code != null">CODE,</if>
+            <if test="list[0].description != null">DESCRIPTION,</if>
+            <if test="list[0].version != null">VERSION</if>
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.simId != null">#{item.simId},</if>
+                <if test="item.source != null">#{item.source},</if>
+                <if test="item.prodType != null">#{item.prodType},</if>
+                <if test="item.chkDt != null">#{item.chkDt},</if>
+                <if test="item.code != null">#{item.code},</if>
+                <if test="item.description != null">#{item.description},</if>
+                <if test="item.version != null">#{item.version}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="upsertOracle" parameterType="java.util.List">
+        MERGE INTO IMBIZ.EQUIPMENT_REVERSE_CONTROL_INFO tgt
+        USING (
+            <foreach collection="list" item="item" separator="UNION ALL">
+                SELECT
+                    #{item.simId, jdbcType=VARCHAR} AS SIM_ID,
+                    #{item.source, jdbcType=VARCHAR} AS SOURCE,
+                    #{item.prodType, jdbcType=VARCHAR} AS PROD_TYPE,
+                    TO_DATE(#{item.chkDt, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss') AS CHK_DT,
+                    #{item.code, jdbcType=INTEGER} AS CODE,
+                    #{item.description, jdbcType=VARCHAR} AS DESCRIPTION,
+                    #{item.version, jdbcType=INTEGER} AS VERSION
+                FROM DUAL
+            </foreach>
+        ) src
+        ON (
+            tgt.SIM_ID = src.SIM_ID AND
+            tgt.SOURCE = src.SOURCE
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                tgt.PROD_TYPE = src.PROD_TYPE,
+                tgt.CHK_DT = src.CHK_DT,
+                tgt.CODE = src.CODE,
+                tgt.DESCRIPTION = src.DESCRIPTION,
+                tgt.VERSION = tgt.VERSION + 1
+        WHEN NOT MATCHED THEN
+            INSERT (
+                SIM_ID,
+                SOURCE,
+                PROD_TYPE,
+                CHK_DT,
+                CODE,
+                DESCRIPTION,
+                VERSION
+            )
+            VALUES (
+                src.SIM_ID,
+                src.SOURCE,
+                src.PROD_TYPE,
+                src.CHK_DT,
+                src.CODE,
+                src.DESCRIPTION,
+                src.VERSION
+            )
+    </insert>
+
+    <insert id="addAaListBatchDoris">
+        INSERT INTO qtech_eq_dwd.aa_list_params_check_result_detail
+        <trim prefix="(" suffix=")" prefixOverrides=",">
+            <if test="list[0].simId != null">SIM_ID,</if>
+            <if test="list[0].prodType != null">PROD_TYPE,</if>
+            <if test="list[0].chkDt != null">CHECK_DT,</if>
+            <if test="list[0].code != null">STATUS_CODE,</if>
+            <if test="list[0].description != null">DESCRIPTION</if>
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=";" open="" close="">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.simId != null">#{item.simId},</if>
+                <if test="item.prodType != null">#{item.prodType},</if>
+                <if test="item.chkDt != null">#{item.chkDt},</if>
+                <if test="item.code != null">#{item.code},</if>
+                <if test="item.description != null">#{item.description}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+    <insert id="addWbOlpChkBatchDoris">
+        INSERT INTO qtech_eq_dwd.qtech_eq_control_info_detail
+        <trim prefix="(" suffix=")" prefixOverrides=",">
+            <if test="list[0].simId != null">SIM_ID,</if>
+            <if test="list[0].prodType != null">MC_ID,</if>
+            <if test="list[0].chkDt != null">DT,</if>
+            <if test="list[0].code != null">CODE,</if>
+            <if test="list[0].description != null">DESCRIPTION</if>
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" separator=";" open="" close="">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.simId != null">#{item.simId},</if>
+                <if test="item.prodType != null">#{item.prodType},</if>
+                <if test="item.chkDt != null">#{item.chkDt},</if>
+                <if test="item.code != null">#{item.code},</if>
+                <if test="item.description != null">#{item.description}</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+</mapper>
