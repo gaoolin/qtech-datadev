@@ -114,7 +114,7 @@
     </insert>
 
     <insert id="addWbOlpChkBatchDoris">
-        INSERT INTO qtech_eq_dwd.qtech_eq_control_info_detail
+        INSERT INTO qtech_eq_dwd.qtech_eq_control_info_detail_test
         <trim prefix="(" suffix=")" prefixOverrides=",">
             <if test="list[0].simId != null">SIM_ID,</if>
             <if test="list[0].prodType != null">MC_ID,</if>
