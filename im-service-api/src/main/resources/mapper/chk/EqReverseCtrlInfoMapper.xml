@@ -19,13 +19,13 @@
     <select id="selectEqReverseCtrlInfo" resultMap="eqReverseCtrlInfoResult">
         <include refid="select_eq_reverse_ctrl_info" />
         <where>
-            <if test="simId != null">
+            <if test="simId != null and simId != ''">
                 and sim_id = #{simId}
             </if>
-            <if test="source != null">
+            <if test="source != null and source != ''">
                 and source = #{source}
             </if>
-            <if test="prodType != null">
+            <if test="prodType != null and prodType != ''">
                 and prod_type = #{prodType}
             </if>
         </where>
@@ -33,7 +33,7 @@
     <select id="selectEqReverseCtrlInfoBySimId" resultMap="eqReverseCtrlInfoResult">
         <include refid="select_eq_reverse_ctrl_info" />
         <where>
-            <if test="simId != null">
+            <if test="simId != null and simId != ''">
                 and sim_id = #{simId}
             </if>
         </where>
