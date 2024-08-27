@@ -10,4 +10,8 @@ package com.qtech.check.pojo;
 
 public class AaListParamsCheckResult extends EqReverseCtrlInfo {
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

@@ -1,6 +1,7 @@
 package com.qtech.check.kafka;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.processor.MessageProcessor;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -19,8 +20,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -49,7 +50,9 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class AaListParamsParseMessageCommonConsumer {
-
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParseMessageCommonConsumer.class);
     // 使用ScheduledExecutorService管理线程，便于控制和关闭
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
@@ -99,7 +102,7 @@ public class AaListParamsParseMessageCommonConsumer {
 
                 // logger.info("Received message: {}", aaListMessageStr);
                 // 将 AaListParams 对象转换为 JSON 字符串
-                String aaListParamsMessageStr = JSON.toJSONString(aaListParams);
+                String aaListParamsMessageStr = objectMapper.writeValueAsString(aaListParams);
 
                 // 创建消息头集合并添加时间戳消息头
                 Header timestampHeader = new RecordHeader("received-timestamp", Long.toString(currentTimeMillis).getBytes());
@@ -110,7 +113,7 @@ public class AaListParamsParseMessageCommonConsumer {
 
                 // 将解析后的消息发送到另一个 Kafka 主题
                 kafkaTemplate.send(producerRecord);
-                logger.info("Parsed message successfully: {}", aaListParamsMessageStr);
+                logger.info(">>>>> Parsed message successfully: {}", aaListParamsMessageStr);
 
                 // 发送结果到 RabbitMQ持久化
                 rabbitTemplate.convertAndSend("qtechImExchange", "aaListParamsParsedQueue", aaListParamsMessageStr);
@@ -121,7 +124,7 @@ public class AaListParamsParseMessageCommonConsumer {
             }
         } else {
             // 记录接收到空消息的情况
-            logger.warn("Received null or empty message from topic: {}", record.topic());
+            logger.warn(">>>>> Received null or empty message from topic: {}", record.topic());
         }
     }
 

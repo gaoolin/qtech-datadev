@@ -42,7 +42,7 @@ public class MessageProcessor {
                 throw new IllegalStateException("Handler did not return expected type.", e);
             }
         } else {
-            logger.warn("No handler found for message type: {}", clazz.getSimpleName());
+            logger.warn(">>>>> No handler found for message type: {}", clazz.getSimpleName());
             return null;
         }
     }

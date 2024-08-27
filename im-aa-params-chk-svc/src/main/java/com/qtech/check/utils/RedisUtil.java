@@ -1,6 +1,7 @@
 package com.qtech.check.utils;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.pojo.AaListParamsStdModel;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
@@ -9,8 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,21 +23,25 @@ import java.util.Map;
 @Component
 public class RedisUtil {
 
-    @Autowired
-    private RedisTemplate<String, AaListParams> redisTemplate;
-
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
     // 假设你有一个Map<String, AaListParams>，其中key是对象的唯一标识
     Map<String, AaListParams> messages = new HashMap<>();
+    @Autowired
+    private RedisTemplate<String, AaListParams> redisTemplate;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private  ObjectMapper objectMapper;
 
     // 将AaListParamsMessage对象存入哈希
     public void saveMessagesToHash(Map<String, AaListParams> messages, String hashKey) {
         for (Map.Entry<String, AaListParams> entry : messages.entrySet()) {
             String messageId = entry.getKey();
             AaListParams message = entry.getValue();
-            redisTemplate.opsForHash().put(hashKey, messageId, JSON.toJSONString(message));
+            try {
+                redisTemplate.opsForHash().put(hashKey, messageId, objectMapper.writeValueAsString(message));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -46,7 +49,11 @@ public class RedisUtil {
     public AaListParams getMessageFromHash(String hashKey, String messageId) {
         String jsonString = (String) redisTemplate.opsForHash().get(hashKey, messageId);
         if (jsonString != null) {
-            return JSON.parseObject(jsonString, AaListParams.class);
+            try {
+                return objectMapper.readValue(jsonString, AaListParams.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
@@ -58,25 +65,41 @@ public class RedisUtil {
         for (Map.Entry<Object, Object> entry : values.entrySet()) {
             String messageId = (String) entry.getKey();
             String jsonString = (String) entry.getValue();
-            messages.put(messageId, JSON.parseObject(jsonString, AaListParams.class));
+            try {
+                messages.put(messageId, objectMapper.readValue(jsonString, AaListParams.class));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return messages;
     }
 
     // 假设你有一个AaListParamsMessage对象，其名字为name
     public void saveAaListParamsStdModel(String name, AaListParamsStdModel message) {
-        stringRedisTemplate.opsForValue().set(name, JSON.toJSONString(message));
+        try {
+            stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void saveAaListParamsStdModelInfo(String name, AaListParamsStdModelInfo message) {
-        stringRedisTemplate.opsForValue().set(name, JSON.toJSONString(message));
+        try {
+            stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // 根据名字获取AaListParamsStdModel对象
     public AaListParamsStdModel getAaListParamsStdModel(String name) {
         String jsonString = stringRedisTemplate.opsForValue().get(name);
         if (jsonString != null) {
-            return JSON.parseObject(jsonString, AaListParamsStdModel.class);
+            try {
+                return objectMapper.readValue(jsonString, AaListParamsStdModel.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }
@@ -84,7 +107,11 @@ public class RedisUtil {
     public AaListParamsStdModelInfo getAaListParamsStdModelInfo(String name) {
         String jsonString = stringRedisTemplate.opsForValue().get(name);
         if (jsonString != null) {
-            return JSON.parseObject(jsonString, AaListParamsStdModelInfo.class);
+            try {
+                return objectMapper.readValue(jsonString, AaListParamsStdModelInfo.class);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }

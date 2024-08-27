@@ -38,7 +38,7 @@ public class CommandProcessor {
         });
 
         if (cachedHandler == null) {
-            logger.warn("Handler not found for type: {}", handlerName);
+            logger.warn(">>>>> Handler not found for type: {}", handlerName);
             return null;
         }
 

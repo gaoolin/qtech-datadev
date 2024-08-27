@@ -1,7 +1,9 @@
 package com.qtech.check.kafka;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.check.algorithm.AaListParamsComparator;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.pojo.AaListParamsCheckResult;
@@ -20,6 +22,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -35,24 +38,23 @@ import static com.qtech.check.constant.ComparisonConstants.*;
 @Slf4j
 @Component
 public class AaListParamsCheckMessageConsumer {
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
-
     @Autowired
     private IAaListParamsStdModelService aaListParamsStdModelService;
-
     @Autowired
     private IAaListParamsStdModelInfoService aaListParamsStdModelInfoService;
-
     @Autowired
     private RedisUtil redisUtil;
-
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @KafkaListener(topics = "qtech_im_aa_list_parsed_topic", groupId = "aaList-do-check-group", containerFactory = "kafkaListenerContainerFactory")
-    public void listenBatchMessages(List<ConsumerRecord<String, String>> records) {
+    public void listenBatchMessages(List<ConsumerRecord<String, String>> records) throws JsonProcessingException {
         AaListParamsStdModel modelObj = null;
         AaListParamsCheckResult aaListParamsCheckResult = new AaListParamsCheckResult();
         aaListParamsCheckResult.setSource("aa-list");
@@ -60,8 +62,7 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             // String key = record.key();
             String value = record.value();
-            AaListParams actualObj = JSON.parseObject(value, new TypeReference<AaListParams>() {
-            }.getType());
+            AaListParams actualObj = objectMapper.readValue(value, new TypeReference<AaListParams>() {});
 
             AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType());
             if (modelInfoObj == null) {
@@ -74,10 +75,10 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
                     aaListParamsCheckResult.setCode(0);
                     aaListParamsCheckResult.setDescription("Missing Template Information.");
-                    kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+                    kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
                     log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
 
-                    rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", JSON.toJSONString(aaListParamsCheckResult));
+                    rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
                     log.info(">>>>> AA list Result sent to RabbitMQ!");
                     continue;
                 }
@@ -91,10 +92,10 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResult.setCode(0);
                 aaListParamsCheckResult.setDescription("Template Offline.");
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
-                kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+                kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
                 log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
 
-                rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", JSON.toJSONString(aaListParamsCheckResult));
+                rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
                 log.info(">>>>> AA list Result sent to RabbitMQ!");
                 continue;
             }
@@ -110,10 +111,10 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
                     aaListParamsCheckResult.setCode(2);
                     aaListParamsCheckResult.setDescription("Missing Template.");
-                    kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+                    kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
                     log.warn(">>>>> Can not find standard template for prodType: {}. skip action.", actualObj.getProdType());
 
-                    rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", JSON.toJSONString(aaListParamsCheckResult));
+                    rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
                     log.info(">>>>> AA list Result sent to RabbitMQ!");
                     continue;
                 }
@@ -179,11 +180,13 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResult.setDescription(description.toString());
             }
 
-            kafkaTemplate.send("qtech_im_aa_list_checked_topic", JSON.toJSONString(aaListParamsCheckResult));
+            String jsonString = objectMapper.writeValueAsString(aaListParamsCheckResult);
+
+            kafkaTemplate.send("qtech_im_aa_list_checked_topic", jsonString);
             log.info(">>>>> Check message complete!");
 
             // 发送结果到 RabbitMQ
-            rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", JSON.toJSONString(aaListParamsCheckResult));
+            rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", jsonString);
             log.info(">>>>> AA list Result sent to RabbitMQ!");
         }
     }

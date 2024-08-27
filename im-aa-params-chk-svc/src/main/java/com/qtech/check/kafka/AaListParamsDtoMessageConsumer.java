@@ -1,7 +1,5 @@
 package com.qtech.check.kafka;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.service.IAaListParamsService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +32,7 @@ public class AaListParamsDtoMessageConsumer {
     @Autowired
     private IAaListParamsService aaListParamsService;
 
-    @KafkaListener(topics = "qtech_im_aa_list_parsed_topic", groupId = "aaList-parsed-dto-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "qtech_im_aa_list_parsed_topic", groupId = "aaList-parsed-serializer-group", containerFactory = "kafkaListenerContainerFactory")
     public void listenBatchMessages(List<ConsumerRecord<String, String>> records) {
         for (ConsumerRecord<String, String> record : records) {
             // 解析和处理消息

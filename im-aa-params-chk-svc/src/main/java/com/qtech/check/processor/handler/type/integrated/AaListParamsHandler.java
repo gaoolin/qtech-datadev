@@ -1,7 +1,8 @@
 package com.qtech.check.processor.handler.type.integrated;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.qtech.check.constant.ListItemMultiKeyMapConstants;
 import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.pojo.AaListCommand;
@@ -10,9 +11,10 @@ import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import com.qtech.common.utils.StringUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,16 +29,14 @@ import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
  * desc   :  List、Item 级联解析
  */
 
-@Slf4j
 @Component
 public class AaListParamsHandler extends MessageHandler<AaListCommand> {
-
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsHandler.class);
     private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
     private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
-
+    private final Map<String, String> listItemMap = new HashMap<>();
     @Autowired
     private CommandProcessor commandProcessor;
-
     @Autowired
     private ListItemMultiKeyMapConstants listItemMultiKeyMapConstants;
 
@@ -56,7 +56,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         } catch (RuntimeException e) {
             // 处理未找到处理器的情况
             // 其他错误处理逻辑...
-            log.warn(">>>>> 未找到List处理器: {}", e.getMessage());
+            logger.warn(">>>>> 未找到List处理器: {}", e.getMessage());
         }
         return null;
     }
@@ -73,11 +73,11 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
             } catch (RuntimeException e) {
                 // 处理未找到处理器的情况
                 // 其他错误处理逻辑...
-                log.warn(">>>>> 未找到Item处理器:{}\n{}", listItemMapperKey, e.getMessage());
+                logger.warn(">>>>> 未找到Item处理器:{}\n{}", listItemMapperKey, e.getMessage());
                 return null;
             }
         } else {
-            log.warn(">>>>> listItemMapper is empty");
+            logger.warn(">>>>> listItemMapper is empty");
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
             String[] parts = line.split("\\s+");
 
             if (parts.length == 0) {
-                log.warn(">>>>> Empty line encountered: " + line);
+                logger.warn(">>>>> Empty line encountered: " + line);
                 continue;
             }
             String startWithStr = parts[0];
@@ -125,12 +125,12 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
                         }
                     }
                 } else {
-                    log.warn(">>>>> Unsupported line: " + line);
+                    logger.warn(">>>>> Unsupported line: " + line);
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                log.error(">>>>> ArrayIndexOutOfBoundsException: " + e.getMessage() + " for line: " + line, e);
+                logger.error(">>>>> ArrayIndexOutOfBoundsException: " + e.getMessage() + " for line: " + line, e);
             } catch (Exception e) {
-                log.error(">>>>> Exception occurred while processing line: " + line, e);
+                logger.error(">>>>> Exception occurred while processing line: " + line, e);
             }
         }
 
@@ -143,19 +143,25 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
     public <R> R handleByType(Class<R> clazz, String msg) throws DecoderException {
         if (clazz == AaListParams.class) {
             AaListParams aaListParamsObj = null;
-            JSONObject jsonObject = JSON.parseObject(msg);
-            String aaListParamHexStr = jsonObject.getString("FactoryName");
-            String aaListParamStr = null;
+            ObjectMapper objectMapper = new ObjectMapper();
             try {
-                aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
-            } catch (DecoderException e) {
-                log.error(">>>>> Hex解码异常，机型: {}", jsonObject.getString("WoCode"));
+                Map<String, Object> jsonObject = objectMapper.readValue(msg, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class));
+                String aaListParamHexStr = (String) jsonObject.get("FactoryName");
+                String aaListParamStr = null;
+                try {
+                    aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
+                } catch (DecoderException e) {
+                    logger.error(">>>>> Hex解码异常，机型: {}", (String) jsonObject.get("WoCode"));
+                    return null;
+                }
+                aaListParamsObj = doParse(aaListParamStr);
+                aaListParamsObj.setSimId((String) jsonObject.get("OpCode"));
+                aaListParamsObj.setProdType(((String) jsonObject.get("WoCode")).split("#")[0]);
+                return clazz.cast(aaListParamsObj);
+            } catch (JsonProcessingException e) {
+                logger.error(">>>>> JSON 解析异常", e);
                 return null;
             }
-            aaListParamsObj = doParse(aaListParamStr);
-            aaListParamsObj.setSimId(jsonObject.getString("OpCode"));
-            aaListParamsObj.setProdType(jsonObject.getString("WoCode").split("#")[0]);
-            return clazz.cast(aaListParamsObj);
         }
         throw new UnsupportedOperationException("Unsupported message handling for type: " + clazz.getSimpleName());
     }
@@ -165,8 +171,6 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         return clazz.equals(AaListParams.class);
     }
 
-
-    private final Map<String, String> listItemMap = new HashMap<>();
     public void parseListStart(StringTokenizer tokenizer, AaListParams aaListParams, String token, Map<String, String> listItemMap) {
         String num = tokenizer.nextToken();
         String listName = tokenizer.nextToken();

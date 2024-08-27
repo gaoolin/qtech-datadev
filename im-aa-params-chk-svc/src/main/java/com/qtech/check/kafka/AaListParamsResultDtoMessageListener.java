@@ -1,7 +1,5 @@
 package com.qtech.check.kafka;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.qtech.check.pojo.AaListParamsCheckResult;
 import com.qtech.check.service.IAaListParamsCheckResultService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,7 @@ public class AaListParamsResultDtoMessageListener {
      * 因此，虽然@KafkaListener注解没有明确指定containerFactory，但通过依赖注入，Spring会自动选择并使用kafkaListenerContainerFactory方法创建的bean来创建和配置KafkaMessageListenerContainer，从而影响listen方法中消息的处理方式。
      *//*
 
-    @KafkaListener(topics = "qtech_im_aa_list_checked_topic", groupId = "aaList-checked-dto-group", containerFactory = "kafkaListenerContainerFactory")
+    @KafkaListener(topics = "qtech_im_aa_list_checked_topic", groupId = "aaList-checked-serializer-group", containerFactory = "kafkaListenerContainerFactory")
     public void listenBatchMessages(List<ConsumerRecord<String, String>> records) {
         for (ConsumerRecord<String, String> record : records) {
             // 解析和处理消息
@@ -52,7 +50,7 @@ public class AaListParamsResultDtoMessageListener {
             });
 
             int i = aaListParamsCheckResultService.save(pojo);
-            log.info(">>>>> checked message dto key:{},value:{}", key, value);
+            log.info(">>>>> checked message serializer key:{},value:{}", key, value);
         }
     }
 }*/
