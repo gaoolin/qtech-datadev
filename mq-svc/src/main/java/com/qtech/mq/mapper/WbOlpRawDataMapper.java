@@ -15,5 +15,5 @@ import java.util.List;
 
 @Mapper
 public interface WbOlpRawDataMapper {
-    public int addWbOLpRawDataBatch(@Param("wbOlpRawDataList") List<WbOlpRawData> wbOlpRawDataList);
+    public int addWbOlpRawDataBatch(@Param("wbOlpRawDataList") List<WbOlpRawData> wbOlpRawDataList);
 }

@@ -7,6 +7,7 @@ import com.qtech.mq.mapper.EqReverseCtrlInfoMapper;
 import com.qtech.mq.service.IEqReverseCtrlInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
     private static final Logger logger = LoggerFactory.getLogger(EqReverseCtrlInfoServiceImpl.class);
     private final EqReverseCtrlInfoMapper eqReverseCtrlInfoMapper;
 
+    @Autowired
     public EqReverseCtrlInfoServiceImpl(EqReverseCtrlInfoMapper eqReverseCtrlInfoMapper) {
         this.eqReverseCtrlInfoMapper = eqReverseCtrlInfoMapper;
     }

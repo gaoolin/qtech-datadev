@@ -17,12 +17,12 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
+import java.util.Date;
 
 /**
  * author :  gaozhilin
@@ -74,7 +74,16 @@ public class WbOlpRawDataKafkaDeduplicationTopology {
 
     public void sendToRabbitMQ(WbOlpRawDataRecord record) {
         WbOlpRawData wbOlpRawData = new WbOlpRawData();
-        BeanUtils.copyProperties(record, wbOlpRawData);
+        wbOlpRawData.setDt(Date.from(record.getDt()));
+        wbOlpRawData.setSimId(String.valueOf(record.getSimId()));
+        wbOlpRawData.setMcId(String.valueOf(record.getMcId()));
+        wbOlpRawData.setLineNo(record.getLineNo());
+        wbOlpRawData.setLeadX(String.valueOf(record.getLeadX()));
+        wbOlpRawData.setLeadY(String.valueOf(record.getLeadY()));
+        wbOlpRawData.setPadX(String.valueOf(record.getPadX()));
+        wbOlpRawData.setPadY(String.valueOf(record.getPadY()));
+        wbOlpRawData.setCheckPort(record.getCheckPort());
+        wbOlpRawData.setPiecesIndex(record.getPiecesIndex());
 
         String exchangeName = "qtechImExchange";
         String routingKey = "wbRawDataQueue"; // 此处应该是路由键，而不是队列名称

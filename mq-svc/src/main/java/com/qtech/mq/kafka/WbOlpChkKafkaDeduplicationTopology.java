@@ -62,19 +62,18 @@ public class WbOlpChkKafkaDeduplicationTopology {
 
         inputStream.foreach((key, value) -> logger.info(">>>>> Received record: key = {}, value = {}", key, value));
 
-        KStream<CompositeKey, Record> deduplicatedStream = inputStream
+        inputStream
                 .groupByKey()
                 .reduce((oldValue, newValue) -> oldValue != null ? oldValue : newValue,
                         Materialized.<CompositeKey, Record, KeyValueStore<Bytes, byte[]>>as(storeName)
                                 .withKeySerde(new CompositeKeySerde())
                                 .withValueSerde(new RecordSerde())
-                                .withRetention(Duration.ofMinutes(15))) // 设置存活时间（对于 RocksDB）
-                .toStream();
-
-        deduplicatedStream.foreach((key, value) -> {
-            logger.info(">>>>> Deduplicated record: key = {}, value = {}", key, value);
-            sendToRabbitMQ(value);
-        });
+                                .withRetention(Duration.ofMinutes(15)))
+                .toStream()
+                .foreach((key, value) -> {
+                    logger.info(">>>>> Deduplicated record: key = {}, value = {}", key, value);
+                    sendToRabbitMQ(value);
+                });
     }
 
 

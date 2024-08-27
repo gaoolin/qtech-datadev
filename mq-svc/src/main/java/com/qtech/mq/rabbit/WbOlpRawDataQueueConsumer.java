@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * author :  gaozhilin
@@ -42,7 +43,10 @@ public class WbOlpRawDataQueueConsumer {
     public void receive(String msg, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) throws IOException {
         try {
             List<WbOlpRawData> messages = validateAndParseMessage(msg, channel, deliveryTag);
-            int cnt = wbOlpRawDataService.addWbOlpRawDataBatch(messages);
+            CompletableFuture<Integer> future = wbOlpRawDataService.addWbOlpRawDataBatchAsync(messages);
+            if (future.isCompletedExceptionally()) {
+                logger.error(">>>>> 批量插入数据失败: {}", messages);
+            }
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             logger.error(">>>>> 处理消息失败: {} - Error: {}", msg, e.getMessage(), e);

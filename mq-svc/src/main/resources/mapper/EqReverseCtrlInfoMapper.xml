@@ -19,8 +19,7 @@
 
     <!-- 定义列名列表，用于在批量插入中复用 -->
     <sql id="columnList">
-        SIM_ID
-        , "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
+        SIM_ID, "SOURCE", PROD_TYPE, CHK_DT, CODE, DESCRIPTION, VERSION
     </sql>
 
     <insert id="upsertDoris">
@@ -32,7 +31,6 @@
             <if test="list[0].chkDt != null">CHK_DT,</if>
             <if test="list[0].code != null">CODE,</if>
             <if test="list[0].description != null">DESCRIPTION,</if>
-            <if test="list[0].version != null">VERSION</if>
         </trim>
         VALUES
         <foreach collection="list" item="item" separator=",">
@@ -43,7 +41,6 @@
                 <if test="item.chkDt != null">#{item.chkDt},</if>
                 <if test="item.code != null">#{item.code},</if>
                 <if test="item.description != null">#{item.description},</if>
-                <if test="item.version != null">#{item.version}</if>
             </trim>
         </foreach>
     </insert>

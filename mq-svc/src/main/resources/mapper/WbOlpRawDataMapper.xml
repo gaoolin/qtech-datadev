@@ -15,7 +15,7 @@
         <result property="loadTime" column="load_time"/>
     </resultMap>
 
-    <insert id="addWbOLpRawDataBatch">
+    <insert id="addWbOlpRawDataBatch">
         insert into qtech_eq_dwd.dwd_wb_coordinate_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="wbOlpRawDataList != null and wbOlpRawDataList.size() > 0">

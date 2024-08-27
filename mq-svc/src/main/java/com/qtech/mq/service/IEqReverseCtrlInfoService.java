@@ -27,19 +27,11 @@ public interface IEqReverseCtrlInfoService {
 
     int addWbOlpChkBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
 
-    @DataSourceSwitch(name = DataSourceNames.FIRST)
-    @Async
     CompletableFuture<Integer> upsertOracleAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
 
-    @DataSourceSwitch(name = DataSourceNames.SECOND)
-    @Async
     CompletableFuture<Integer> upsertDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
 
-    @DataSourceSwitch(name = DataSourceNames.SECOND)
-    @Async
     CompletableFuture<Integer> addAaListBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
 
-    @DataSourceSwitch(name = DataSourceNames.SECOND)
-    @Async
     CompletableFuture<Integer> addWbOlpChkBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
 }
