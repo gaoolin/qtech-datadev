@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -31,18 +32,19 @@ import java.util.Date;
  * desc   :
  */
 
-@Component
+// @Component
+// @EnableKafkaStreams
 public class WbOlpRawDataKafkaDeduplicationTopology {
     private static final Logger logger = LoggerFactory.getLogger(WbOlpRawDataKafkaDeduplicationTopology.class);
 
-    @Autowired
+    // @Autowired
     private RabbitTemplate rabbitTemplate;
-    @Autowired
+    // @Autowired
     private StreamsBuilder streamsBuilder;
-    @Autowired
+    // @Autowired
     private ObjectMapper objectMapper;
 
-    @PostConstruct
+    // @PostConstruct
     public void init() {
         logger.info(">>>>> Initializing Kafka Streams topology...");
         createTopology(streamsBuilder);
@@ -53,15 +55,13 @@ public class WbOlpRawDataKafkaDeduplicationTopology {
         Serde<WbOlpRawDataCompositeKey> wbOlpRawDataCompositeKeySerde = new WbOlpRawDataCompositeKeySerde();
         Serde<WbOlpRawDataRecord> wbOlpRawDataRecordSerde = new WbOlpRawDataRecordSerde();
 
-        streamsBuilder.stream("qtech_im_wb_olp_raw_data_topic", Consumed.with(wbOlpRawDataCompositeKeySerde, wbOlpRawDataRecordSerde));
-
         KStream<WbOlpRawDataCompositeKey, WbOlpRawDataRecord> inputStream = streamsBuilder.stream("qtech_im_wb_olp_raw_data_topic", Consumed.with(wbOlpRawDataCompositeKeySerde, wbOlpRawDataRecordSerde));
         inputStream.foreach((key, value) -> logger.info(">>>>> Received record: key = {}, value = {}", key, value));
 
         inputStream
                 .groupByKey()
                 .reduce((oldValue, newValue) -> oldValue != null ? oldValue : newValue,
-                        Materialized.<WbOlpRawDataCompositeKey, WbOlpRawDataRecord, KeyValueStore<Bytes, byte[]>>as("wbOlpRawDataDeduplicationStore")
+                        Materialized.<WbOlpRawDataCompositeKey, WbOlpRawDataRecord, KeyValueStore<Bytes, byte[]>>as("wbOlpRawDataStreamStateStore")
                                 .withKeySerde(wbOlpRawDataCompositeKeySerde)
                                 .withValueSerde(wbOlpRawDataRecordSerde)
                                 .withRetention(Duration.ofMinutes(30)))

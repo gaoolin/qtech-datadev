@@ -3,8 +3,6 @@ package com.qtech.mq.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.mq.domain.EqReverseCtrlInfo;
-import com.qtech.mq.serializer.CompositeKey;
-import com.qtech.mq.serializer.CompositeKeySerde;
 import com.qtech.mq.serializer.Record;
 import com.qtech.mq.serializer.RecordSerde;
 import org.apache.kafka.common.serialization.Serde;
@@ -17,11 +15,9 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -32,23 +28,21 @@ import java.time.Duration;
  * date   :  2024/08/24 19:56:11
  * desc   :
  */
-@Component
+// @Component
+// @EnableKafkaStreams
 public class WbOlpChkKafkaDeduplicationTopology {
     private static final Logger logger = LoggerFactory.getLogger(WbOlpChkKafkaDeduplicationTopology.class);
 
-    @Autowired
+    // @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
+    // @Autowired
     private StreamsBuilder streamsBuilder;
 
-    @Autowired
+    // @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${spring.kafka.store.name}")
-    private String storeName;  // 注入 store.name 配置
-
-    @PostConstruct
+    // @PostConstruct
     public void init() {
         logger.info(">>>>> Initializing Kafka Streams topology...");
         createTopology(streamsBuilder);
@@ -56,37 +50,44 @@ public class WbOlpChkKafkaDeduplicationTopology {
 
     public void createTopology(StreamsBuilder streamsBuilder) {
         logger.info(">>>>> Creating topology for topic qtech_im_wb_olp_chk_topic");
-        Serde<CompositeKey> keySerde = new CompositeKeySerde();
         Serde<Record> valueSerde = new RecordSerde();
-        KStream<CompositeKey, Record> inputStream = streamsBuilder.stream("qtech_im_wb_olp_chk_topic", Consumed.with(keySerde, valueSerde));
+        KStream<Record, Record> inputStream = streamsBuilder.stream("qtech_im_wb_olp_chk_topic", Consumed.with(valueSerde, valueSerde));
 
         inputStream.foreach((key, value) -> logger.info(">>>>> Received record: key = {}, value = {}", key, value));
 
-        inputStream
-                .groupByKey()
-                .reduce((oldValue, newValue) -> oldValue != null ? oldValue : newValue,
-                        Materialized.<CompositeKey, Record, KeyValueStore<Bytes, byte[]>>as(storeName)
-                                .withKeySerde(new CompositeKeySerde())
-                                .withValueSerde(new RecordSerde())
-                                .withRetention(Duration.ofMinutes(15)))
-                .toStream()
-                .foreach((key, value) -> {
-                    logger.info(">>>>> Deduplicated record: key = {}, value = {}", key, value);
-                    sendToRabbitMQ(value);
-                });
+        inputStream.groupByKey().reduce((oldValue, newValue) -> {
+                    if (oldValue != null) {
+                        // 如果旧值存在，返回旧值，丢弃新值
+                        logger.info(">>>>> Duplicate record detected, ignoring new record: oldValue = {}, newValue = {}", oldValue, newValue);
+                        return oldValue;
+                    } else {
+                        // 如果旧值不存在，保留新值
+                        // sendToRabbitMQ(newValue);
+                        return newValue;
+                    }
+                }, Materialized.<Record, Record, KeyValueStore<Bytes, byte[]>>as("wbOlpChkStreamStateStore")
+                        .withKeySerde(valueSerde)
+                        .withValueSerde(valueSerde)
+                        .withRetention(Duration.ofMinutes(30)))
+                .toStream();
     }
 
 
     public void sendToRabbitMQ(Record record) {
+        if (record == null) {
+            logger.warn(">>>>> Record is null, skipping sending to RabbitMQ");
+            return;
+        }
         try {
             EqReverseCtrlInfo eqReverseCtrlInfo = new EqReverseCtrlInfo();
 
-            // 使用 Spring 的 BeanUtils.copyProperties 复制除了 code 之外的所有属性
-            BeanUtils.copyProperties(record, eqReverseCtrlInfo, "code");
+            eqReverseCtrlInfo.setSimId(String.valueOf(record.getSimId()));
+            eqReverseCtrlInfo.setProdType(String.valueOf(record.getProdType()));
+            eqReverseCtrlInfo.setChkDt(String.valueOf(record.getChkDt()));
+            eqReverseCtrlInfo.setCode(Integer.parseInt(String.valueOf(record.getCode())));
+            eqReverseCtrlInfo.setDescription(String.valueOf(record.getDescription()));
 
             // 手动处理 code 属性的类型转换
-            Integer code = StringUtils.hasLength(record.getCode()) ? Integer.parseInt(record.getCode()) : null;
-            eqReverseCtrlInfo.setCode(code);
 
             eqReverseCtrlInfo.setSource("wb-olp");
 

@@ -24,13 +24,13 @@ import java.util.List;
  * desc   :
  */
 
-@Component
+// @Component
 public class OracleKafkaStateStore implements KeyValueStore<CompositeKey, Record> {
     private static final Logger logger = LoggerFactory.getLogger(OracleKafkaStateStore.class);
     private final String storeName;
 
-    @Autowired
-    @Qualifier("firstJdbcTemplate")
+    // @Autowired
+    // @Qualifier("firstJdbcTemplate")
     private JdbcTemplate dataSource;
 
     public OracleKafkaStateStore(@Value("${spring.kafka.store.name}") String storeName) {

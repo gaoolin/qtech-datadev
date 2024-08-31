@@ -15,10 +15,8 @@ import java.util.List;
 
 @Mapper
 public interface EqReverseCtrlInfoMapper {
-    int upsertDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
-
-    int addAaListBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
-    int addWbOlpChkBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
-
-    int upsertOracle(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    int upsertDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
+    int addAaListDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
+    int addWbOlpChkDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
+    int upsertOracle(EqReverseCtrlInfo eqReverseCtrlInfo);
 }

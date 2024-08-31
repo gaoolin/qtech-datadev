@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 /**
  * author :  gaozhilin
@@ -34,15 +33,13 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
 
     @DataSourceSwitch(name = DataSourceNames.FIRST)
     @Override
-    public int upsertOracle(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
-        if (eqReverseCtrlInfoList != null && !eqReverseCtrlInfoList.isEmpty()) {
+    public int upsertOracle(EqReverseCtrlInfo eqReverseCtrlInfo) {
+        if (eqReverseCtrlInfo != null) {
             try {
-                List<EqReverseCtrlInfo> distinctList = eqReverseCtrlInfoList.stream().distinct().collect(Collectors.toList());
-                logger.info(">>>>> eqReverseCtrlInfoList size: {}, distinctList size: {}", eqReverseCtrlInfoList.size(), distinctList.size());
-                eqReverseCtrlInfoMapper.upsertOracle(distinctList);
-                return distinctList.size();
+                return eqReverseCtrlInfoMapper.upsertOracle(eqReverseCtrlInfo);
             } catch (Exception e) {
                 logger.error("EqReverseCtrlInfoServiceImpl.upsertOracle error: {}", e.getMessage());
+                throw new RuntimeException(e);
             }
         }
         return 0;
@@ -50,10 +47,9 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
 
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
-    public int upsertDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public int upsertDoris(EqReverseCtrlInfo eqReverseCtrlInfo) {
         try {
-            eqReverseCtrlInfoMapper.upsertDoris(eqReverseCtrlInfoList);
-            return eqReverseCtrlInfoList.size();
+            return eqReverseCtrlInfoMapper.upsertDoris(eqReverseCtrlInfo);
         } catch (Exception e) {
             logger.error(">>>>> EqReverseCtrlInfoServiceImpl.upsertDoris error: {}", e.getMessage());
             throw new RuntimeException(e);
@@ -62,9 +58,9 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
 
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
-    public int addAaListBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public int addAaListDoris(EqReverseCtrlInfo eqReverseCtrlInfo) {
         try {
-            return eqReverseCtrlInfoMapper.addAaListBatchDoris(eqReverseCtrlInfoList);
+            return eqReverseCtrlInfoMapper.addAaListDoris(eqReverseCtrlInfo);
         } catch (Exception e) {
             logger.error("EqReverseCtrlInfoServiceImpl.addBatchDoris error: {}", e.getMessage());
             throw new RuntimeException(e);
@@ -73,9 +69,9 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
 
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
-    public int addWbOlpChkBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public int addWbOlpChkDoris(EqReverseCtrlInfo eqReverseCtrlInfo) {
         try {
-            return eqReverseCtrlInfoMapper.addWbOlpChkBatchDoris(eqReverseCtrlInfoList);
+            return eqReverseCtrlInfoMapper.addWbOlpChkDoris(eqReverseCtrlInfo);
         } catch (Exception e) {
             logger.error("EqReverseCtrlInfoServiceImpl.addBatchDoris error: {}", e.getMessage());
             throw new RuntimeException(e);
@@ -85,32 +81,27 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
     @DataSourceSwitch(name = DataSourceNames.FIRST)
     @Async
     @Override
-    public CompletableFuture<Integer> upsertOracleAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
-        CompletableFuture<Integer> future = new CompletableFuture<>();
-        if (eqReverseCtrlInfoList != null && !eqReverseCtrlInfoList.isEmpty()) {
+    public CompletableFuture<Integer> upsertOracleAsync(EqReverseCtrlInfo eqReverseCtrlInfo) {
+        if (eqReverseCtrlInfo != null) {
             try {
-                // List<EqReverseCtrlInfo> distinctList = eqReverseCtrlInfoList.stream().distinct().collect(Collectors.toList());
-                // logger.info(">>>>> eqReverseCtrlInfoList size: {}, distinctList size: {}", eqReverseCtrlInfoList.size(), distinctList.size());
-                eqReverseCtrlInfoMapper.upsertOracle(eqReverseCtrlInfoList);
-                future.complete(eqReverseCtrlInfoList.size());
+                eqReverseCtrlInfoMapper.upsertOracle(eqReverseCtrlInfo);
+                return CompletableFuture.completedFuture(1);
             } catch (Exception e) {
-                logger.error("EqReverseCtrlInfoServiceImpl.upsertOracle error: {}", e.getMessage());
-                future.completeExceptionally(e);
+                logger.error("EqReverseCtrlInfoServiceImpl.upsertOracleAsync error: {}", e.getMessage());
+                return CompletableFuture.completedFuture(0);
             }
-        } else {
-            future.complete(0);
         }
-        return future;
+        return CompletableFuture.completedFuture(0);
     }
 
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Async
     @Override
-    public CompletableFuture<Integer> upsertDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public CompletableFuture<Integer> upsertDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo) {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         try {
-            eqReverseCtrlInfoMapper.upsertDoris(eqReverseCtrlInfoList);
-            future.complete(eqReverseCtrlInfoList.size());
+            eqReverseCtrlInfoMapper.upsertDoris(eqReverseCtrlInfo);
+            future.complete(1);
         } catch (Exception e) {
             logger.error(">>>>> EqReverseCtrlInfoServiceImpl.upsertDoris error: {}", e.getMessage());
             future.completeExceptionally(e);
@@ -121,11 +112,11 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Async
     @Override
-    public CompletableFuture<Integer> addAaListBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public CompletableFuture<Integer> addAaListDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo) {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         try {
-            int result = eqReverseCtrlInfoMapper.addAaListBatchDoris(eqReverseCtrlInfoList);
-            future.complete(result);
+            int result = eqReverseCtrlInfoMapper.addAaListDoris(eqReverseCtrlInfo);
+            future.complete(1);
         } catch (Exception e) {
             logger.error("EqReverseCtrlInfoServiceImpl.addAaListBatchDoris error: {}", e.getMessage());
             future.completeExceptionally(e);
@@ -136,11 +127,11 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Async
     @Override
-    public CompletableFuture<Integer> addWbOlpChkBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList) {
+    public CompletableFuture<Integer> addWbOlpChkDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo) {
         CompletableFuture<Integer> future = new CompletableFuture<>();
         try {
-            int result = eqReverseCtrlInfoMapper.addWbOlpChkBatchDoris(eqReverseCtrlInfoList);
-            future.complete(result);
+            int result = eqReverseCtrlInfoMapper.addWbOlpChkDoris(eqReverseCtrlInfo);
+            future.complete(1);
         } catch (Exception e) {
             logger.error("EqReverseCtrlInfoServiceImpl.addWbOlpChkBatchDoris error: {}", e.getMessage());
             future.completeExceptionally(e);

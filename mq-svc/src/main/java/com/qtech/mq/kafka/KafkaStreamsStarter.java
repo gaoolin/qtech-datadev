@@ -17,21 +17,21 @@ import java.util.Properties;
  * desc   :
  */
 
-@Component
-@EnableKafkaStreams
+// @Component
+// @EnableKafkaStreams
 public class KafkaStreamsStarter {
 
     private final WbOlpChkKafkaDeduplicationTopology wbOlpChkKafkaDeduplicationTopology;
     private final WbOlpRawDataKafkaDeduplicationTopology wbOlpRawDataKafkaDeduplicationTopology;
 
-    @Autowired
+    // @Autowired
     public KafkaStreamsStarter(WbOlpChkKafkaDeduplicationTopology wbOlpChkKafkaDeduplicationTopology,
                                WbOlpRawDataKafkaDeduplicationTopology wbOlpRawDataKafkaDeduplicationTopology) {
         this.wbOlpChkKafkaDeduplicationTopology = wbOlpChkKafkaDeduplicationTopology;
         this.wbOlpRawDataKafkaDeduplicationTopology = wbOlpRawDataKafkaDeduplicationTopology;
     }
 
-    @Bean
+    // @Bean
     public KafkaStreams kafkaStreams() {
         StreamsBuilder streamsBuilder = new StreamsBuilder();
         wbOlpChkKafkaDeduplicationTopology.createTopology(streamsBuilder);

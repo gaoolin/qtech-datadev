@@ -19,19 +19,19 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IEqReverseCtrlInfoService {
 
-    int upsertOracle(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    int upsertOracle(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    int upsertDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    int upsertDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    int addAaListBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    int addAaListDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    int addWbOlpChkBatchDoris(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    int addWbOlpChkDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    CompletableFuture<Integer> upsertOracleAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    CompletableFuture<Integer> upsertOracleAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    CompletableFuture<Integer> upsertDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    CompletableFuture<Integer> upsertDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    CompletableFuture<Integer> addAaListBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    CompletableFuture<Integer> addAaListDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    CompletableFuture<Integer> addWbOlpChkBatchDorisAsync(List<EqReverseCtrlInfo> eqReverseCtrlInfoList);
+    CompletableFuture<Integer> addWbOlpChkDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 }

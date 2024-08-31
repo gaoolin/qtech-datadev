@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
  * desc   :  设备反控消费消费者
  */
 
-@Component
+// @Component
 public class WbOlpRawDataQueueConsumer {
     private static final Logger logger = LoggerFactory.getLogger(WbOlpRawDataQueueConsumer.class);
     private final IWbOlpRawDataService wbOlpRawDataService;

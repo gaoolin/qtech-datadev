@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "Record",
+  "namespace": "com.qtech.mq.serializer",
+  "fields": [
+    { "name": "simId", "type": "string" },
+    { "name": "prodType", "type": "string" },
+    { "name": "chkDt", "type": "string" },
+    { "name": "code", "type": "string" },
+    { "name": "description", "type": "string" }
+  ]
+}

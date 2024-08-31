@@ -44,6 +44,10 @@ public class WbOlpRawDataServiceImpl implements IWbOlpRawDataService {
     @Async
     @Override
     public CompletableFuture<Integer> addWbOlpRawDataBatchAsync(List<WbOlpRawData> wbOlpRawDataList) {
+        if (wbOlpRawDataList == null || wbOlpRawDataList.isEmpty()) {
+            return CompletableFuture.completedFuture(0);
+        }
+
         CompletableFuture<Integer> future = new CompletableFuture<>();
         try {
             int result = wbOlpRawDataMapper.addWbOlpRawDataBatch(wbOlpRawDataList);
