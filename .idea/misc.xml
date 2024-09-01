@@ -14,6 +14,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/wb-olp-check-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ocr-api/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

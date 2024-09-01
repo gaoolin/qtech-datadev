@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/im-aa-params-chk-svc.iml" filepath="$PROJECT_DIR$/im-aa-params-chk-svc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/im-service-api.iml" filepath="$PROJECT_DIR$/im-service-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/pulsar-api/pulsar-api.iml" filepath="$PROJECT_DIR$/pulsar-api/pulsar-api.iml" />
     </modules>
   </component>

@@ -13,8 +13,8 @@
         <module name="im-service-api" />
         <module name="comparison" />
         <module name="ocr-api" />
-        <module name="rabbitmq-api" />
         <module name="message-api" />
+        <module name="mq-svc" />
         <module name="pulsar-api" />
         <module name="im-aa-params-chk-svc" />
       </profile>
@@ -30,9 +30,9 @@
       <module name="im-aa-params-chk-svc" options="-parameters" />
       <module name="im-service-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
+      <module name="mq-svc" options="-parameters" />
       <module name="ocr-api" options="-parameters" />
       <module name="pulsar-api" options="-parameters" />
-      <module name="rabbitmq-api" options="-parameters" />
       <module name="wb-olp-check-api" options="-parameters" />
     </option>
   </component>
