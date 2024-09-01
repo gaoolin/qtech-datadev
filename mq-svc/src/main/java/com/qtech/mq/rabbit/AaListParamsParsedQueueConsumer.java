@@ -26,7 +26,7 @@ import java.util.List;
  * desc   :
  */
 
-// @Component
+@Component
 public class AaListParamsParsedQueueConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedQueueConsumer.class);
     private final ObjectMapper objectMapper;

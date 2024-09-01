@@ -32,10 +32,10 @@ public class RabbitMqConfig {
         return new Queue("aaListParamsParsedQueue", true);
     }
 
-    @Bean
-    public Queue jobRunStatQueue() {
-        return new Queue("wbRawDataQueue", true);
-    }
+    // @Bean
+    // public Queue jobRunStatQueue() {
+    //     return new Queue("wbRawDataQueue", true);
+    // }
 
     @Bean
     public Binding wbOlpCheckResultBinding() {
@@ -47,8 +47,8 @@ public class RabbitMqConfig {
         return new Binding("aaListParamsParsedQueue", Binding.DestinationType.QUEUE, "qtechImExchange", "aaListParamsParsedQueue", null);
     }
 
-    @Bean
-    public Binding jobRunStatBinding() {
-        return new Binding("wbRawDataQueue", Binding.DestinationType.QUEUE, "qtechImExchange", "wbRawDataQueue", null);
-    }
+    // @Bean
+    // public Binding jobRunStatBinding() {
+    //     return new Binding("wbRawDataQueue", Binding.DestinationType.QUEUE, "qtechImExchange", "wbRawDataQueue", null);
+    // }
 }

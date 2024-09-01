@@ -2,7 +2,7 @@ server:
   port: 8080
   tomcat:
     uri-encoding: UTF-8
-    accept-count: 1300
+    accept-count: 1000
     threads:
       max: 1000
       min-spare: 20
