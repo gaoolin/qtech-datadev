@@ -6,6 +6,7 @@ import com.qtech.service.utils.response.ResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,6 +60,15 @@ public class GlobalExceptionHandler {
         return new R<String>()
                 .setCode(ResponseCode.SUCCESS.getCode())
                 .setMsg(ex.getMessage())
+                .setData(null);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiResponse<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
+        logger.error("MethodArgumentNotValidException: ", ex);
+        return new R<String>()
+                .setCode(ResponseCode.SUCCESS.getCode())
+                .setMsg("simId validation failed")
                 .setData(null);
     }
 

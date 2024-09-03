@@ -23,6 +23,7 @@ public class Constants {
     public static final String EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX = "qtech:im:chk:reverse:";
     public static final String EQ_REVERSE_IGNORE_SIM_PREFIX = "qtech:im:chk:ignored:";
     public static final int EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH = 100;
+
     private Constants() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }

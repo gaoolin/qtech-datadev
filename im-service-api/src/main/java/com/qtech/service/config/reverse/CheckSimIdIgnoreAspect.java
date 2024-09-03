@@ -1,11 +1,15 @@
 package com.qtech.service.config.reverse;
 
 import com.qtech.service.exception.SimIdIgnoredException;
+import com.qtech.service.utils.response.R;
+import com.qtech.service.utils.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -22,11 +26,10 @@ import static com.qtech.service.common.Constants.EQ_REVERSE_IGNORE_SIM_PREFIX;
  * 如果存在，则直接返回一个成功响应R<String>，否则继续执行控制器的方法。
  */
 
-@Slf4j
 @Aspect
 @Component
 public class CheckSimIdIgnoreAspect {
-
+    private static final Logger logger = LoggerFactory.getLogger(CheckSimIdIgnoreAspect.class);
     @Autowired
     private RedisTemplate<String, Boolean> redisTemplate;
 
@@ -36,11 +39,15 @@ public class CheckSimIdIgnoreAspect {
 
     @Around(value = "checkSimIdPointcut(simId)", argNames = "joinPoint,simId")
     public Object checkSimId(ProceedingJoinPoint joinPoint, String simId) throws Throwable {
-        Boolean isIgnored = redisTemplate.opsForValue().get(EQ_REVERSE_IGNORE_SIM_PREFIX + simId);
-        if (Boolean.TRUE.equals(isIgnored)) {
-            log.info("simId is ignored: " + simId);
-            throw new SimIdIgnoredException();
+        // Boolean isIgnored = redisTemplate.opsForValue().get(EQ_REVERSE_IGNORE_SIM_PREFIX + simId);
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(EQ_REVERSE_IGNORE_SIM_PREFIX + simId))) {
+            logger.warn(">>>>> simId is ignored: " + simId);
+            return new R<String>()
+                .setCode(ResponseCode.SUCCESS.getCode())
+                .setMsg("Equipment reverse ignored")
+                .setData(null);
+        } else {
+            return joinPoint.proceed();
         }
-        return joinPoint.proceed();
     }
 }

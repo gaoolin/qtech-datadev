@@ -7,7 +7,8 @@ import com.qtech.service.exception.ImChkException;
 import com.qtech.service.exception.TooManyResultsException;
 import com.qtech.service.mapper.chk.EqReverseCtrlInfoMapper;
 import com.qtech.service.service.chk.IEqReverseCtrlService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,9 @@ import static com.qtech.service.common.Constants.EQ_REVERSE_CTRL_INFO_REDIS_KEY_
  * desc   :
  */
 
-@Slf4j
 @Service
 public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
+    private static final Logger logger = LoggerFactory.getLogger(EqReverseCtrlServiceImpl.class);
 
     private final EqReverseCtrlInfoMapper eqReverseCtrlInfoMapper;
     private final RedisTemplate<String, EqReverseCtrlInfo> eqReverseCtrlInfoRedisTemplate;
@@ -40,54 +41,44 @@ public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
         try {
             return eqReverseCtrlInfoMapper.selectEqReverseCtrlInfo(eqReverseCtrlInfo);
         } catch (Exception e) {
-            log.error("selectEqReverseCtrlInfo error: ", e);
+            logger.error(">>>>> 查询数据库发生错误，selectEqReverseCtrlInfo error: ", e);
             throw new ImChkException();
         }
     }
 
     @Override
     public EqReverseCtrlInfo selectOneEqReverseCtrlInfo(EqReverseCtrlInfo eqReverseCtrlInfo) {
-
-        try {
-            List<EqReverseCtrlInfo> list = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfo(eqReverseCtrlInfo);
-            if (list != null) {
-                if (!list.isEmpty()) {
-                    return list.get(0);
-                } else {
-                    log.error("selectEqReverseCtrlInfoBySimId error: ");
-                    throw new TooManyResultsException();
-                }
+        List<EqReverseCtrlInfo> list = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfo(eqReverseCtrlInfo);
+        if (list != null) {
+            if (!list.isEmpty()) {
+                return list.get(0);
+            } else {
+                logger.error("selectOneEqReverseCtrlInfo error");
+                throw new TooManyResultsException();
             }
-            return null;
-        } catch (ImChkException e) {
-            log.error("selectEqReverseCtrlInfoBySimId error: ", e);
-            throw new ImChkException();
         }
+        return null;
     }
 
     @DataSourceSwitch(name = DataSourceNames.FIRST)
     @Override
     public EqReverseCtrlInfo selectEqReverseCtrlInfoBySimId(String simId) {
         EqReverseCtrlInfo eqReverseCtrlInfo = null;
-        try {
-            // 尝试从Redis中获取EqReverseCtrlInfo
-            if (Boolean.TRUE.equals(eqReverseCtrlInfoRedisTemplate.hasKey(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId))) {
-                eqReverseCtrlInfo = eqReverseCtrlInfoRedisTemplate.opsForValue().get(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId);
+
+        // 尝试从Redis中获取EqReverseCtrlInfo
+        if (Boolean.TRUE.equals(eqReverseCtrlInfoRedisTemplate.hasKey(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId))) {
+            eqReverseCtrlInfo = eqReverseCtrlInfoRedisTemplate.opsForValue().get(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId);
+            return eqReverseCtrlInfo;
+        } else {
+            eqReverseCtrlInfo = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfoBySimId(simId);
+            if (eqReverseCtrlInfo != null) {
+                // 将EqReverseCtrlInfo存入Redis
+                eqReverseCtrlInfoRedisTemplate.opsForValue().set(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId, eqReverseCtrlInfo, Duration.ofMinutes(30));
                 return eqReverseCtrlInfo;
             } else {
-                eqReverseCtrlInfo = eqReverseCtrlInfoMapper.selectEqReverseCtrlInfoBySimId(simId);
-                if (eqReverseCtrlInfo != null) {
-                    // 将EqReverseCtrlInfo存入Redis
-                    eqReverseCtrlInfoRedisTemplate.opsForValue().set(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + simId, eqReverseCtrlInfo, Duration.ofMinutes(30));
-                    return eqReverseCtrlInfo;
-                } else {
-                    // 如果数据库中也没有，则返回null
-                    return null;
-                }
+                // 如果数据库中也没有，则返回null
+                return null;
             }
-        } catch (ImChkException e) {
-            log.error("selectEqReverseCtrlInfoBySimId error: ", e);
-            throw new ImChkException();
         }
     }
 }
