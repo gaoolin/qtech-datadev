@@ -1,9 +1,7 @@
 package com.qtech.service.config.reverse;
 
-import com.qtech.service.exception.SimIdIgnoredException;
 import com.qtech.service.utils.response.R;
 import com.qtech.service.utils.response.ResponseCode;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static com.qtech.service.common.Constants.EQ_REVERSE_IGNORE_SIM_PREFIX;
 
@@ -33,19 +33,25 @@ public class CheckSimIdIgnoreAspect {
     @Autowired
     private RedisTemplate<String, Boolean> redisTemplate;
 
-    @Pointcut("execution(public * com.qtech.service.controller.chk.EqReverseCtrlInfoController.getEqReverseCtrlInfo(..)) && args(simId)")
-    public void checkSimIdPointcut(String simId) {
+    @Pointcut("execution(* com.qtech.service.controller.chk.EqReverseCtrlInfoController.getEqReverseCtrlInfo(..))")
+    public void checkSimIdPointcut() {
     }
 
-    @Around(value = "checkSimIdPointcut(simId)", argNames = "joinPoint,simId")
-    public Object checkSimId(ProceedingJoinPoint joinPoint, String simId) throws Throwable {
-        // Boolean isIgnored = redisTemplate.opsForValue().get(EQ_REVERSE_IGNORE_SIM_PREFIX + simId);
+    @Around(value = "checkSimIdPointcut()")
+    public Object checkSimIdAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
+        // 记录请求参数
+        Object[] args = joinPoint.getArgs();
+        String simId = (String) args[0];
+        HttpServletRequest request = (HttpServletRequest) args[1];
+        String requestPath = request.getRequestURI();
+        logger.info(">>>>> Received request for path: {}", requestPath);
+
         if (Boolean.TRUE.equals(redisTemplate.hasKey(EQ_REVERSE_IGNORE_SIM_PREFIX + simId))) {
             logger.warn(">>>>> simId is ignored: " + simId);
             return new R<String>()
-                .setCode(ResponseCode.SUCCESS.getCode())
-                .setMsg("Equipment reverse ignored")
-                .setData(null);
+                    .setCode(ResponseCode.SUCCESS.getCode())
+                    .setMsg("Equipment reverse ignored")
+                    .setData(null);
         } else {
             return joinPoint.proceed();
         }
