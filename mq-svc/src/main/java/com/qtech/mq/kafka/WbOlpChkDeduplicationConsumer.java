@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.qtech.mq.common.Constants.REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -63,6 +65,9 @@ public class WbOlpChkDeduplicationConsumer {
             // 然后将数据转换为 EqReverseCtrlInfo 并添加到 List
             EqReverseCtrlInfo eqInfo = convertToEqReverseCtrlInfo(record.value());
 
+            // 过渡
+            redisTemplate.opsForValue().set(REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX + eqInfo.getSimId(), eqInfo.getCode() + "*" + eqInfo.getDescription(), 30, TimeUnit.MINUTES);
+            eqReverseCtrlInfoService.upsertPostgresAsync(eqInfo);
             eqReverseCtrlInfoService.upsertOracleAsync(eqInfo);
             eqReverseCtrlInfoService.upsertDorisAsync(eqInfo);
             eqReverseCtrlInfoService.addWbOlpChkDorisAsync(eqInfo);

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -78,6 +77,17 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
         }
     }
 
+    @DataSourceSwitch(name = DataSourceNames.THIRD)
+    @Override
+    public int upsertPostgres(EqReverseCtrlInfo eqReverseCtrlInfo) {
+        try {
+            return eqReverseCtrlInfoMapper.upsertPostgres(eqReverseCtrlInfo);
+        } catch (Exception e) {
+            logger.error("EqReverseCtrlInfoServiceImpl.upsertPostgres error: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
     @DataSourceSwitch(name = DataSourceNames.FIRST)
     @Async
     @Override
@@ -134,6 +144,20 @@ public class EqReverseCtrlInfoServiceImpl implements IEqReverseCtrlInfoService {
             future.complete(1);
         } catch (Exception e) {
             logger.error("EqReverseCtrlInfoServiceImpl.addWbOlpChkBatchDoris error: {}", e.getMessage());
+            future.completeExceptionally(e);
+        }
+        return future;
+    }
+
+    @DataSourceSwitch(name = DataSourceNames.THIRD)
+    @Override
+    public CompletableFuture<Integer> upsertPostgresAsync(EqReverseCtrlInfo eqReverseCtrlInfo) {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        try {
+            int result = eqReverseCtrlInfoMapper.upsertPostgres(eqReverseCtrlInfo);
+            future.complete(1);
+        } catch (Exception e) {
+            logger.error("EqReverseCtrlInfoServiceImpl.upsertPostgresAsync error: {}", e.getMessage());
             future.completeExceptionally(e);
         }
         return future;

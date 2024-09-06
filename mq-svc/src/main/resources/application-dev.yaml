@@ -12,10 +12,14 @@ spring:
         password: M5F5JkfnQ
       # 从库数据源
       second:
-        driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://10.170.6.40:32333/qtech_eq_dwd?useServerPrepStmts=false&rewriteBatchedStatements=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
         username: root
         password:
+      third:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://10.170.6.40:32120/qtech_wb?currentSchema=public&binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true&TimeZone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&stringtype=unspecified
+        username: qtech_pg_db
+        password: 0q)cLgEP
 
       # 连接池配置
       initialSize: 5

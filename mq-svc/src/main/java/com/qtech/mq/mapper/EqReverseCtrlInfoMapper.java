@@ -19,4 +19,5 @@ public interface EqReverseCtrlInfoMapper {
     int addAaListDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
     int addWbOlpChkDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
     int upsertOracle(EqReverseCtrlInfo eqReverseCtrlInfo);
+    int upsertPostgres(EqReverseCtrlInfo eqReverseCtrlInfo);
 }

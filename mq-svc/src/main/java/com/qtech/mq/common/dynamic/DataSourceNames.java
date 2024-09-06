@@ -13,7 +13,9 @@ package com.qtech.mq.common.dynamic;
  * 数据源名称枚举
  */
 public enum DataSourceNames {
-    FIRST("first"), SECOND("second");
+    FIRST("first"),
+    SECOND("second"),
+    THIRD("third");
 
     private final String name;
 

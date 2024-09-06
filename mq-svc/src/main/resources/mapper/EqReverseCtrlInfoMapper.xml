@@ -118,4 +118,34 @@
         </trim>
     </insert>
 
+    <insert id="upsertPostgres" parameterType="EqReverseCtrlInfo">
+        INSERT INTO qtech_wb.public.eq_control_info
+        <trim prefix="(" suffix=")">
+            <if test="simId != null">sim_id,</if>
+            <if test="chkDt != null">dt,</if>
+            <if test="code != null">code,</if>
+            <if test="description != null">description</if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")">
+            <if test="simId != null">#{simId},</if>
+            <if test="chkDt != null">#{chkDt},</if>
+            <if test="code != null">#{code},</if>
+            <if test="description != null">#{description}</if>
+        </trim>
+        ON CONFLICT ON CONSTRAINT eq_control_info_unique_key
+        DO UPDATE SET
+        <trim prefix="" prefixOverrides=", " suffix="">
+            <if test="chkDt != null">
+                dt = EXCLUDED.chkDt,
+            </if>
+            <if test="code != null">
+                code = EXCLUDED.code,
+            </if>
+            <if test="description != null">
+                description = EXCLUDED.description
+            </if>
+        </trim>
+    </insert>
+
+
 </mapper>
