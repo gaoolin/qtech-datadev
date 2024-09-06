@@ -136,7 +136,7 @@
         DO UPDATE SET
         <trim prefix="" prefixOverrides=", " suffix="">
             <if test="chkDt != null">
-                dt = EXCLUDED.chkDt,
+                dt = EXCLUDED.dt,
             </if>
             <if test="code != null">
                 code = EXCLUDED.code,
