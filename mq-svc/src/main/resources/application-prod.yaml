@@ -17,8 +17,8 @@ spring:
       third:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://pg-ha-pgpool.postgresql-ha:5432/qtech_wb?binaryTransfer=false&forceBinary=false&reWriteBatchedInserts=true
-        username: qtech_pg_db
-        password: 0q)cLgEP
+        username: qtech_pg_wb
+        password: Ft!*NcYe
 
       # 初始连接数
       initialSize: 5
