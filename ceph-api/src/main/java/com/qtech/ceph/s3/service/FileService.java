@@ -112,8 +112,9 @@ public interface FileService {
 
     /**
      * 获取文件元数据
+     *
      * @param bucketName 存储桶名称
-     * @param fileName 文件名称
+     * @param fileName   文件名称
      * @return 文件元数据
      * @throws StorageException 存储异常
      */

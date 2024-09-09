@@ -5,7 +5,6 @@ import com.qtech.ceph.s3.service.FileService;
 import com.qtech.ceph.s3.utils.S3Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
@@ -22,7 +21,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 @Service
 public class FileServiceImpl implements FileService {
-    private static final Logger logger = LoggerFactory.getLogger(FileServiceSyncImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
 
@@ -44,7 +45,6 @@ public class FileServiceImpl implements FileService {
      * @param s3Presigner S3 预签名生成器，用于生成预签名 URL。
      */
 
-    @Autowired
     public FileServiceImpl(S3Client s3Client, S3Presigner s3Presigner) {
         this.s3Client = s3Client;
         this.s3Presigner = s3Presigner;
@@ -62,7 +62,7 @@ public class FileServiceImpl implements FileService {
      * @throws IOException      如果读取文件内容过程中出现任何错误。
      */
     @Override
-    public void uploadFile(String bucketName, String fileName, InputStream file) throws StorageException, IOException {
+    public void uploadFile(String bucketName, String fileName, InputStream file) throws StorageException {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -227,9 +227,7 @@ public class FileServiceImpl implements FileService {
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 byteArrayOutputStream.write(buffer, 0, bytesRead);
             }
-
             return byteArrayOutputStream.toByteArray();
-
         } catch (IOException e) {
             throw new StorageException("Failed to download file as bytes", e);
         }
@@ -326,6 +324,28 @@ public class FileServiceImpl implements FileService {
      * 获取文件元数据
      * <p>
      * 从指定存储桶中获取文件的元数据。如果操作失败，将抛出 StorageException。
+     * <p>
+     * HeadObjectResponse 中的常见元数据字段：
+     * <p>
+     * contentLength(): 文件的大小（以字节为单位）。
+     * lastModified(): 文件的最后修改时间。
+     * contentType(): 文件的 MIME 类型。
+     * eTag(): 文件的 ETag（通常是文件的哈希值，用于文件的一致性检查）。
+     * metadata(): 用户定义的自定义元数据（通常在上传文件时指定）。
+     * contentDisposition(): 内容处置（通常用于指定文件下载时的处理方式，如是否作为附件下载）。
+     * contentEncoding(): 内容编码（如 GZIP 编码）。
+     * contentLanguage(): 内容语言。
+     * contentRange(): 文件的内容范围。
+     * expires(): 文件的过期时间。
+     * serverSideEncryption(): 文件的服务端加密类型。
+     * versionId(): 文件的版本 ID（如果启用了版本控制）。
+     * storageClass(): 文件的存储类别（如 STANDARD, REDUCED_REDUNDANCY, GLACIER 等）。
+     * cacheControl(): HTTP 缓存控制头信息。
+     * restore(): 文件是否正在从 Glacier 等低频存储中恢复。
+     * objectLockMode(): 文件的锁定模式（如合规锁定或合法持有锁定）。
+     * objectLockRetainUntilDate(): 文件的锁定保留日期。
+     * objectLockLegalHoldStatus(): 文件的法律保留状态。
+     * partsCount(): 如果是分段上传文件，这是文件的分段数量。
      *
      * @param bucketName 存储桶名称。文件所在的存储桶。
      * @param fileName   文件名称。要获取元数据的文件名称。
@@ -341,7 +361,16 @@ public class FileServiceImpl implements FileService {
                     .build();
 
             HeadObjectResponse response = s3Client.headObject(headObjectRequest);
-            return response.metadata();
+            HashMap<String, String> meta = new HashMap<>();
+            if (response.sdkHttpResponse().isSuccessful()) {
+                meta.put("contentLength", String.valueOf(response.contentLength()));
+                meta.put("lastModified", String.valueOf(response.lastModified().atZone(ZoneId.systemDefault())));
+                meta.put("contentType", response.contentType());
+                meta.put("eTag", response.eTag());
+                meta.put("metadata", response.metadata().toString());
+                return meta;
+            }
+            throw new StorageException("Failed to get file metadata: " + fileName + " from bucket: " + bucketName);
         } catch (Exception e) {
             throw new StorageException("Failed to get file metadata: " + fileName + " from bucket: " + bucketName, e);
         }

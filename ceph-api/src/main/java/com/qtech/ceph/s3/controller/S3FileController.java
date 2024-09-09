@@ -5,7 +5,6 @@ import com.qtech.ceph.common.ApiResponse;
 import com.qtech.ceph.s3.service.FileService;
 import com.qtech.ceph.s3.utils.FileNameUtils;
 import com.qtech.ceph.s3.utils.S3Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,7 +34,7 @@ public class S3FileController {
 
     private final FileService fileService;
 
-    public S3FileController(@Qualifier("fileServiceSyncImpl") FileService fileService) {
+    public S3FileController(@Qualifier("fileServiceImpl") FileService fileService) {
         this.fileService = fileService;
     }
 
@@ -167,7 +166,6 @@ public class S3FileController {
         }
     }
 
-
     @GetMapping("/chk-exist")
     public ApiResponse<Boolean> checkFileExist(@RequestParam String bucketName,
                                                @RequestParam String fileName) {
@@ -222,6 +220,33 @@ public class S3FileController {
 
     /**
      * 生成文件的预签名URL。
+     * 预签名URL可以用于上传和下载文件，具体取决于生成预签名URL时指定的操作权限。以下是两种常见的使用场景：
+     * <p>
+     * 1. 用于上传文件：
+     * 你可以生成一个具有PUT权限的预签名URL，客户端可以使用这个URL直接上传文件到存储桶。
+     * 使用场景：你希望外部用户或服务将文件上传到你的存储系统（例如S3、Ceph），但不希望他们有完整的存储访问权限。生成预签名URL后，用户可以通过该URL在一定时间内上传文件。
+     * 流程：
+     * <p>
+     * 服务端生成一个预签名URL，允许客户端上传文件。
+     * 客户端用PUT请求将文件上传到预签名URL。
+     * // Example: Generate a presigned URL for uploading a file
+     * GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileName)
+     * .withMethod(HttpMethod.PUT);  // Grant upload (PUT) permissions
+     * URL presignedUrl = s3Client.generatePresignedUrl(request);
+     * <p>
+     * 2. 用于下载文件：
+     * 你可以生成一个具有GET权限的预签名URL，允许客户端通过该URL下载文件。
+     * 使用场景：你希望提供给外部用户一个临时下载链接，他们可以通过该链接下载存储在系统中的文件，而不需要登录或具有访问权限。
+     * 流程：
+     * <p>
+     * 服务端生成一个具有GET权限的预签名URL。
+     * 客户端用GET请求访问该URL并下载文件。
+     * // Example: Generate a presigned URL for downloading a file
+     * GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileName)
+     * .withMethod(HttpMethod.GET);  // Grant download (GET) permissions
+     * URL presignedUrl = s3Client.generatePresignedUrl(request);
+     * <p>
+     * 决定生成预签名URL时的操作权限。如果你希望生成用于下载的预签名URL，需要确保生成时指定的是GET操作。
      *
      * @param bucketName 存储桶名称
      * @param fileName   文件名称
@@ -277,6 +302,10 @@ public class S3FileController {
         try {
             // 首先将文件上传到指定的 S3 存储桶
             String fileName = file.getOriginalFilename();
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (flag) {
+                return ApiResponse.conflict("文件已存在");
+            }
 
             // 使用 try-with-resources 语句确保 InputStream 被正确关闭
             try (InputStream inputStream = file.getInputStream()) {
@@ -294,4 +323,19 @@ public class S3FileController {
         }
     }
 
+    @GetMapping("/rename")
+    public ApiResponse<String> renameFile(@RequestParam String bucketName,
+                                          @RequestParam String currentFileName,
+                                          @RequestParam String newFileName) {
+        try {
+            boolean flag = fileService.doesFileExist(bucketName, currentFileName);
+            if (!flag) {
+                return ApiResponse.notFound("文件不存在");
+            }
+            fileService.renameFile(bucketName, currentFileName, newFileName);
+            return ApiResponse.success("文件重命名成功", null);
+        } catch (Exception e) {
+            return ApiResponse.internalServerError("文件重命名失败: " + e.getMessage());
+        }
+    }
 }

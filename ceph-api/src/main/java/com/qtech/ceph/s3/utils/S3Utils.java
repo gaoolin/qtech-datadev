@@ -134,7 +134,7 @@ public class S3Utils {
     }
 
     /**
-     * @param keyName               key名称: test/2022/06/123.pdf
+     * @param keyName key名称: test/2022/06/123.pdf
      * @param signatureDurationTime 有效期 单位：秒
      * @return java.lang.String
      * @description: 生成预签名URL
