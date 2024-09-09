@@ -64,15 +64,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void uploadFile(String bucketName, String fileName, InputStream file) throws StorageException {
         try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
-            s3Client.putObject(
-                    putObjectRequest,
-                    RequestBody.fromInputStream(file, file.available())
-            );
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file, file.available()));
         } catch (Exception e) {
             throw new StorageException("Failed to upload file: " + fileName + " to bucket: " + bucketName, e);
         }
@@ -91,15 +85,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void uploadByteArrayAsObj(String bucketName, String fileName, byte[] bytes) throws StorageException {
         try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
-            s3Client.putObject(
-                    putObjectRequest,
-                    RequestBody.fromBytes(bytes)
-            );
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes));
         } catch (Exception e) {
             throw new StorageException("Failed to upload byte array as object: " + fileName + " to bucket: " + bucketName, e);
         }
@@ -118,15 +106,9 @@ public class FileServiceImpl implements FileService {
     @Override
     public void uploadFileStream(String bucketName, String fileName, InputStream fileStream) throws StorageException {
         try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
-            s3Client.putObject(
-                    putObjectRequest,
-                    RequestBody.fromInputStream(fileStream, fileStream.available())
-            );
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(fileStream, fileStream.available()));
         } catch (Exception e) {
             throw new StorageException("Failed to upload file stream: " + fileName + " to bucket: " + bucketName, e);
         }
@@ -169,15 +151,9 @@ public class FileServiceImpl implements FileService {
         Path tempFilePath = Paths.get("/home/qtech/" + fileName);
 
         try {
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
-            s3Client.getObject(
-                    getObjectRequest,
-                    ResponseTransformer.toFile(tempFilePath)
-            );
+            s3Client.getObject(getObjectRequest, ResponseTransformer.toFile(tempFilePath));
 
             long fileSize = Files.size(tempFilePath);
             if (fileSize > 2 * 1024 * 1024 * 1024L) { // 2GB
@@ -213,13 +189,9 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public byte[] downloadFileAsBytes(String bucketName, String fileName) throws StorageException {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(fileName)
-                .build();
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
-        try (InputStream inputStream = s3Client.getObject(getObjectRequest);
-             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (InputStream inputStream = s3Client.getObject(getObjectRequest); ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
 
             byte[] buffer = new byte[8192];
             int bytesRead;
@@ -245,10 +217,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void deleteFile(String bucketName, String fileName) throws StorageException {
         try {
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
             s3Client.deleteObject(deleteObjectRequest);
         } catch (Exception e) {
@@ -269,13 +238,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public URL generatePresignedUrl(String bucketName, String fileName) throws StorageException {
         try {
-            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                    .getObjectRequest(GetObjectRequest.builder()
-                            .bucket(bucketName)
-                            .key(fileName)
-                            .build())
-                    .signatureDuration(S3Constants.DEFAULT_SIGNATURE_DURATION)
-                    .build();
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder().getObjectRequest(GetObjectRequest.builder().bucket(bucketName).key(fileName).build()).signatureDuration(S3Constants.DEFAULT_SIGNATURE_DURATION).build();
 
             PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
             return presignedRequest.url();
@@ -301,9 +264,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public List<String> listFiles(String bucketName) throws StorageException {
-        ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
-                .bucket(bucketName)
-                .build();
+        ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder().bucket(bucketName).build();
 
         try {
             ListObjectsV2Response listObjectsResponse = s3Client.listObjectsV2(listObjectsRequest);
@@ -355,10 +316,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public Map<String, String> getFileMetadata(String bucketName, String fileName) throws StorageException {
         try {
-            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
             HeadObjectResponse response = s3Client.headObject(headObjectRequest);
             HashMap<String, String> meta = new HashMap<>();
@@ -386,10 +344,7 @@ public class FileServiceImpl implements FileService {
     public boolean doesFileExist(String bucketName, String fileName) {
         try {
             // 构建 HeadObjectRequest 请求
-            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(fileName)
-                    .build();
+            HeadObjectRequest headObjectRequest = HeadObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
             // 调用 headObject 方法
             HeadObjectResponse headObjectResponse = s3Client.headObject(headObjectRequest);
@@ -417,26 +372,19 @@ public class FileServiceImpl implements FileService {
     @Override
     public void renameFile(String bucketName, String oldFileName, String newFileName) throws StorageException {
         try {
-            if (!doesFileExist(bucketName, newFileName)) {
-                throw new StorageException("File exists: " + newFileName);
-            }
-            // 复制文件到新名称
-            CopyObjectRequest copyRequest = CopyObjectRequest.builder()
-                    .copySource(bucketName + "/" + oldFileName)
-                    .destinationBucket(bucketName)
-                    .destinationKey(newFileName)
-                    .build();
+            // 构建复制请求，推荐使用 sourceBucket 和 sourceKey 替代 copySource
+            CopyObjectRequest copyRequest = CopyObjectRequest.builder().sourceBucket(bucketName)  // 替代 copySource
+                    .sourceKey(oldFileName)    // 替代 copySource
+                    .destinationBucket(bucketName).destinationKey(newFileName).build();
 
+            // 复制文件
             s3Client.copyObject(copyRequest);
 
             // 删除原文件
-            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(oldFileName)
-                    .build();
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder().bucket(bucketName).key(oldFileName).build();
 
             s3Client.deleteObject(deleteRequest);
-        } catch (Exception e) {
+        } catch (S3Exception e) {
             throw new StorageException("Failed to rename file: " + oldFileName + " to: " + newFileName + " in bucket: " + bucketName, e);
         }
     }
