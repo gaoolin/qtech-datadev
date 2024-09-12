@@ -12,18 +12,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.qtech.mq.common.Constants.KAFKA_TOPIC;
-import static com.qtech.mq.common.Constants.REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX;
+import static com.qtech.mq.common.Constants.*;
 
 /**
  * author :  gaozhilin
@@ -41,7 +42,11 @@ public class WbOlpChkDeduplicationConsumer {
     private final List<EqReverseCtrlInfo> messageList = new ArrayList<>();
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedisTemplate<String, EqReverseCtrlInfo> eqReverseCtrlInfoRedisTemplate;
+
     @Autowired
     private IEqReverseCtrlInfoService eqReverseCtrlInfoService;
 
@@ -52,21 +57,22 @@ public class WbOlpChkDeduplicationConsumer {
         String redisKey = generateRedisKey(record.value());
 
         // 检查 Redis 中是否存在该 key
-        if (!Boolean.TRUE.equals(redisTemplate.hasKey(REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX + redisKey))) {
+        if (!Boolean.TRUE.equals(stringRedisTemplate.hasKey(REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX + redisKey))) {
             // 如果 Redis 中没有该 key，先保存到 Redis
             String jsonRecord = convertRecordToJson(record.value());
-            redisTemplate.opsForValue().set(REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX + redisKey, jsonRecord, 30, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX + redisKey, jsonRecord, 30, TimeUnit.MINUTES);
             // redisTemplate.opsForValue().set(REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX + redisKey, objectMapper.writeValueAsString(record.value()), 30, TimeUnit.MINUTES);
 
             // 然后将数据转换为 EqReverseCtrlInfo 并添加到 List
-            EqReverseCtrlInfo eqInfo = convertToEqReverseCtrlInfo(record.value());
+            EqReverseCtrlInfo eqReverseCtrlInfo = convertToEqReverseCtrlInfo(record.value());
 
             // 过渡
             // redisTemplate.opsForValue().set(REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX + eqInfo.getSimId(), eqInfo.getCode() + "*" + eqInfo.getDescription(), 30, TimeUnit.MINUTES);
             // eqReverseCtrlInfoService.upsertPostgresAsync(eqInfo);
-            eqReverseCtrlInfoService.upsertOracleAsync(eqInfo);
-            eqReverseCtrlInfoService.upsertDorisAsync(eqInfo);
-            eqReverseCtrlInfoService.addWbOlpChkDorisAsync(eqInfo);
+            eqReverseCtrlInfoRedisTemplate.opsForValue().set(EQ_REVERSE_CTRL_INFO_REDIS_KEY_PREFIX + eqReverseCtrlInfo.getSimId(), eqReverseCtrlInfo, Duration.ofMinutes(30));
+            eqReverseCtrlInfoService.upsertOracleAsync(eqReverseCtrlInfo);
+            eqReverseCtrlInfoService.upsertDorisAsync(eqReverseCtrlInfo);
+            eqReverseCtrlInfoService.addWbOlpChkDorisAsync(eqReverseCtrlInfo);
             logger.info(">>>>> WbOlpChk deduplication record consumed: " + record.value());
         }
     }
