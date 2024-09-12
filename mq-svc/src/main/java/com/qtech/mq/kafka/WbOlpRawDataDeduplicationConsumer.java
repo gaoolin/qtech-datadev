@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static com.qtech.mq.common.Constants.REDIS_OLP_RAW_DUPLICATION_KEY_PREFIX;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -35,11 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class WbOlpRawDataDeduplicationConsumer {
     private static final Logger logger = LoggerFactory.getLogger(WbOlpRawDataDeduplicationConsumer.class);
     private static final int BATCH_SIZE = 1000;
-    private static final String KAFKA_TOPIC = "qtech_im_wb_olp_raw_data_topic";
-    private static final String KAFKA_GROUP_ID = "wb-olp-raw-data-consumer-group";
-    private static final String REDIS_OLP_RAW_DUPLICATION_KEY_PREFIX = "qtech:im:olp_raw:";
     private final List<WbOlpRawData> messageList = new CopyOnWriteArrayList<>();
-
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -69,6 +67,7 @@ public class WbOlpRawDataDeduplicationConsumer {
 
     private synchronized void persistData() {
         wbOlpRawDataService.addWbOlpRawDataBatch(messageList);
+        logger.info(">>>>> Persisted {} messages.", 1000);
         // 清空 List
         messageList.clear();
     }

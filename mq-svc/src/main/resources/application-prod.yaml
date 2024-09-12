@@ -81,18 +81,20 @@ spring:
         - 10.170.6.26:6379
         - 10.170.6.141:6379
         - 10.170.6.142:6379
+        - 10.170.1.68:6379
       ### 最大重定向数，最好为集群节点数，比如第一台挂了，连第二台，第二台挂了连第三台，这个是重新连接的最大数量
-      max-redirects: 6
+      max-redirects: 3
     lettuce:
+      read-from: REPLICA_PREFERRED # 配置从节点优先读
       pool:
         ## 连接池最大连接数（使用负值表示没有限制）
-        max-active: 8
+        max-active: 20
         ## 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1
         ## 连接池中的最大空闲连接
-        max-idle: 8
+        max-idle: 10
         ## 连接池中的最小空闲连接
-        min-idle: 1
+        min-idle: 5
       ## 集群配置
       cluster:
         refresh:
@@ -121,6 +123,6 @@ DORIS_STREAM_LOAD_URL: http://doris-follower-bak.doris-bak:9030/api/qtech_eq_dwd
 logging:
   level:
     root: INFO
-    org.mybatis.spring: INFO
-    org.apache.ibatis: INFO
-    com.qtech.mq.mapper: INFO
+#    org.mybatis.spring: INFO
+#    org.apache.ibatis: INFO
+#    com.qtech.mq.mapper: INFO

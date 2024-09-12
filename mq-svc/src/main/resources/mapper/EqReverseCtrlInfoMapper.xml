@@ -128,7 +128,7 @@
         </trim>
         <trim prefix="VALUES(" suffix=")">
             <if test="simId != null">#{simId},</if>
-            <if test="chkDt != null">#{chkDt},</if>
+            <if test="chkDt != null">TO_TIMESTAMP(#{chkDt}, 'YYYY-MM-DD HH24:MI:SS'),</if>
             <if test="code != null">#{code},</if>
             <if test="description != null">#{description}</if>
         </trim>

@@ -20,10 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.qtech.mq.common.Constants.REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX;
+import static com.qtech.mq.common.Constants.KAFKA_TOPIC;
+import static com.qtech.mq.common.Constants.REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX;
 
 /**
  * author :  gaozhilin
@@ -36,11 +36,7 @@ import static com.qtech.mq.common.Constants.REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX;
 @Service
 public class WbOlpChkDeduplicationConsumer {
     private static final Logger logger = LoggerFactory.getLogger(WbOlpChkDeduplicationConsumer.class);
-
-    private static final String KAFKA_TOPIC = "qtech_im_wb_olp_chk_topic";
     private static final int BATCH_SIZE = 100; // 批处理的大小
-    private static final String REDIS_OLP_CHECK_DUPLICATION_KEY_PREFIX = "qtech:im:olp_chk:";
-
     // 用于存储批量处理的 List
     private final List<EqReverseCtrlInfo> messageList = new ArrayList<>();
 
@@ -66,11 +62,12 @@ public class WbOlpChkDeduplicationConsumer {
             EqReverseCtrlInfo eqInfo = convertToEqReverseCtrlInfo(record.value());
 
             // 过渡
-            redisTemplate.opsForValue().set(REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX + eqInfo.getSimId(), eqInfo.getCode() + "*" + eqInfo.getDescription(), 30, TimeUnit.MINUTES);
-            eqReverseCtrlInfoService.upsertPostgresAsync(eqInfo);
+            // redisTemplate.opsForValue().set(REDIS_OLP_CHECK_WB_OLP_KEY_PREFIX + eqInfo.getSimId(), eqInfo.getCode() + "*" + eqInfo.getDescription(), 30, TimeUnit.MINUTES);
+            // eqReverseCtrlInfoService.upsertPostgresAsync(eqInfo);
             eqReverseCtrlInfoService.upsertOracleAsync(eqInfo);
             eqReverseCtrlInfoService.upsertDorisAsync(eqInfo);
             eqReverseCtrlInfoService.addWbOlpChkDorisAsync(eqInfo);
+            logger.info(">>>>> WbOlpChk deduplication record consumed: " + record.value());
         }
     }
 
