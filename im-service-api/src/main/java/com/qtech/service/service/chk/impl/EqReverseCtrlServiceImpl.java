@@ -27,7 +27,6 @@ import static com.qtech.service.common.Constants.EQ_REVERSE_CTRL_INFO_REDIS_KEY_
 @Service
 public class EqReverseCtrlServiceImpl implements IEqReverseCtrlService {
     private static final Logger logger = LoggerFactory.getLogger(EqReverseCtrlServiceImpl.class);
-
     private final EqReverseCtrlInfoMapper eqReverseCtrlInfoMapper;
     private final RedisTemplate<String, EqReverseCtrlInfo> eqReverseCtrlInfoRedisTemplate;
 

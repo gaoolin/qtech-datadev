@@ -20,11 +20,9 @@ public class IoTReverseMsgBuilder {
      * @return 合成的消息
      */
     public static String buildResponseMessage(EqReverseCtrlInfo info) {
-        // 根据source字段选择前缀
-        String prefix = "ECheck NG: ";
-        if ("aa-list".equals(info.getSource())) {
-            prefix = "Parameter Monitoring AA-List NG: ";
-        }
+        String prefixWbOlp = "ECheck NG:";
+        String prefixAaList = "Parameter Monitoring AA-List:";
+
 
         // 获取description字段的内容，并限制长度
         String description = truncateDescription(info.getDescription());
@@ -32,8 +30,23 @@ public class IoTReverseMsgBuilder {
         // 获取格式化的时间戳
         String formattedTime = info.getFormattedChkDt();
 
-        // 合成消息，时间在description前面
-        return prefix + formattedTime + " " + description;
+        if (info.getCode() == 0) {
+            if ("wb-olp".equals(info.getSource())) {
+                return formattedTime + " " + " " + description;
+            } else if ("aa-list".equals(info.getSource())) {
+                return formattedTime + " " + description;
+            } else {
+                return "unknown check source.";
+            }
+        } else {
+            if ("wb-olp".equals(info.getSource())) {
+                return prefixWbOlp + formattedTime + " " + description;
+            } else if ("aa-list".equals(info.getSource())) {
+                return prefixAaList + formattedTime + " " + description;
+            } else {
+                return "unknown check source.";
+            }
+        }
     }
 
     /**

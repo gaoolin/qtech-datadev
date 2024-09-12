@@ -17,6 +17,8 @@ import java.util.Date;
 
 public class EqReverseCtrlInfo implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    private Long id;
     private String simId;
     private String source;
     private String prodType;
@@ -30,6 +32,14 @@ public class EqReverseCtrlInfo implements Serializable {
 
     @JsonIgnore // 指示Jackson序列化器忽略此字段
     transient private int version;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSimId() {
         return simId;
@@ -97,7 +107,8 @@ public class EqReverseCtrlInfo implements Serializable {
     @Override
     public String toString() {
         return "EqReverseCtrlInfo{" +
-                "simId='" + simId + '\'' +
+                "id=" + id +
+                ", simId='" + simId + '\'' +
                 ", source='" + source + '\'' +
                 ", prodType='" + prodType + '\'' +
                 ", chkDt=" + chkDt +

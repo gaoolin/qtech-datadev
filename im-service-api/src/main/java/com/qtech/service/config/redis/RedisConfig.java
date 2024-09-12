@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.qtech.service.entity.EqReverseCtrlInfo;
 import com.qtech.service.entity.OcrLabelInfo;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfig {
     // 只针对EqReverseCtrlInfo实体对象的序列化配置，默认序列化方式。
     // 其他的实体类的序列化方式，需要单独配置。
+
     @Bean
     public RedisTemplate<String, EqReverseCtrlInfo> eqReverseCtrlInfoRedisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, EqReverseCtrlInfo> template = new RedisTemplate<>();
@@ -35,21 +38,8 @@ public class RedisConfig {
 
         Jackson2JsonRedisSerializer<EqReverseCtrlInfo> serializer = new Jackson2JsonRedisSerializer<>(EqReverseCtrlInfo.class);
         ObjectMapper objectMapper = new ObjectMapper();
-
-        // Configure the ObjectMapper to serialize and deserialize objects
-        PolymorphicTypeValidator ptv = BasicPolymorphicTypeValidator.builder()
-                .allowIfBaseType(EqReverseCtrlInfo.class)
-                .build();
-        objectMapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.WRAPPER_ARRAY);
-
-        // Enable recognition of transient fields and @JsonIgnore annotations
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setVisibility(PropertyAccessor.IS_GETTER, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setVisibility(PropertyAccessor.SETTER, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setVisibility(PropertyAccessor.CREATOR, JsonAutoDetect.Visibility.ANY);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         serializer.setObjectMapper(objectMapper);
 
