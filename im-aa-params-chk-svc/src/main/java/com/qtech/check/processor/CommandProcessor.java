@@ -21,11 +21,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CommandProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(CommandProcessor.class);
-
+    private final Map<String, AaListCommandHandler<?>> commandHandlerCache = new ConcurrentHashMap<>();
     @Autowired
     private AaListCommandHandlerRegistry aaListCommandHandlerRegistry;
-
-    private final Map<String, AaListCommandHandler<?>> commandHandlerCache = new ConcurrentHashMap<>();
 
     public <T> AaListCommandHandler<T> getCommandHandler(String handlerName) {
         // 使用缓存来获取处理器

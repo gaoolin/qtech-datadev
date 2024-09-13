@@ -5,6 +5,7 @@ import com.qtech.ceph.common.ApiResponse;
 import com.qtech.ceph.s3.service.FileService;
 import com.qtech.ceph.s3.utils.FileNameUtils;
 import com.qtech.ceph.s3.utils.S3Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,7 +55,7 @@ public class S3FileController {
                 return ApiResponse.conflict("文件已存在");
             }
             fileService.uploadFile(bucketName, file.getOriginalFilename(), inputStream);
-            return ApiResponse.success("文件上传成功");
+            return ApiResponse.success(StringUtils.joinWith(" ", "文件上传成功:", bucketName, file.getOriginalFilename()));
         } catch (IOException e) {
             return ApiResponse.internalServerError("文件上传失败: " + e.getMessage());
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class S3FileController {
         try {
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (flag) {
-                return ApiResponse.conflict("文件已存在");
+                return ApiResponse.conflict(StringUtils.joinWith(" ", "文件已存在:", bucketName, fileName));
             }
             fileService.uploadByteArrayAsObj(bucketName, fileName, contents);
             return ApiResponse.success("文件上传成功", null);
@@ -137,7 +138,7 @@ public class S3FileController {
         try {
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (!flag) {
-                return ApiResponse.notFound("文件不存在");
+                return ApiResponse.notFound(StringUtils.joinWith(" ", "文件不存在:", fileName));
             }
             // 图片数据编码问题 确保图片数据在传输前进行了适当的编码。对于图片等二进制数据，通常需要将其编码为Base64字符串，以便通过JSON安全地传输。
             // 使用Base64编码有助于避免因字符集或编码问题导致的数据损坏。
@@ -172,9 +173,9 @@ public class S3FileController {
         try {
             boolean fileExists = fileService.doesFileExist(bucketName, fileName);
             if (fileExists) {
-                return ApiResponse.conflict("文件已存在");
+                return ApiResponse.conflict(StringUtils.joinWith(" ", "文件已存在:", bucketName, fileName));
             } else {
-                return ApiResponse.notFound("文件不存在");
+                return ApiResponse.notFound(StringUtils.joinWith(" ", "文件不存在:", bucketName, fileName));
             }
         } catch (Exception e) {
             return ApiResponse.internalServerError("文件检查失败: " + e.getMessage());
@@ -193,12 +194,12 @@ public class S3FileController {
                                                             @RequestParam("fileName") String fileName) {
         try {
             if (!fileService.doesFileExist(bucketName, fileName)) {
-                return ApiResponse.notFound("文件不存在");
+                return ApiResponse.notFound(StringUtils.joinWith(" ", "文件不存在:", bucketName, fileName));
             }
             Map<String, String> metadata = fileService.getFileMetadata(bucketName, fileName);
             return ApiResponse.success(metadata);
         } catch (Exception e) {
-            return ApiResponse.internalServerError("获取文件元数据失败：" + e.getMessage());
+            return ApiResponse.internalServerError("获取文件元数据失败: " + e.getMessage());
         }
     }
 
@@ -214,7 +215,7 @@ public class S3FileController {
             List<String> fileList = fileService.listFiles(bucketName);
             return ApiResponse.success(fileList);
         } catch (Exception e) {
-            return ApiResponse.internalServerError("列出文件失败：" + e.getMessage());
+            return ApiResponse.internalServerError("列出文件失败: " + e.getMessage());
         }
     }
 
@@ -250,20 +251,35 @@ public class S3FileController {
      *
      * @param bucketName 存储桶名称
      * @param fileName   文件名称
-     * @return 预签名的URL
+     * @return 用于下载的预签名的URL
      */
-    @GetMapping("/presigned-url")
-    public ApiResponse<URL> generatePresignedUrl(@RequestParam("bucketName") String bucketName,
-                                                 @RequestParam("fileName") String fileName) {
+    @GetMapping("/generatePresignedGetUrl")
+    public ApiResponse<URL> generatePresignedGetUrl(@RequestParam("bucketName") String bucketName,
+                                                    @RequestParam("fileName") String fileName) {
+        try {
+            boolean flag = fileService.doesFileExist(bucketName, fileName);
+            if (!flag) {
+                return ApiResponse.conflict(StringUtils.joinWith(" ", "文件不存在:", bucketName, fileName));
+            }
+            URL getUrl = fileService.generatePresignedGetUrl(bucketName, fileName);
+            return ApiResponse.success("ok", getUrl);
+        } catch (Exception e) {
+            return ApiResponse.internalServerError("生成预签名URL失败: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/generatePresignedPutUrl")
+    public ApiResponse<URL> generatePresignedPutUrl(@RequestParam("bucketName") String bucketName,
+                                                    @RequestParam("fileName") String fileName) {
         try {
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (flag) {
-                return ApiResponse.conflict("文件已存在");
+                return ApiResponse.conflict(StringUtils.joinWith(" ", "文件已存在:", bucketName, fileName));
             }
-            URL presignedUrl = fileService.generatePresignedUrl(bucketName, fileName);
-            return ApiResponse.success(presignedUrl);
+            URL putUrl = fileService.generatePresignedPutUrl(bucketName, fileName);
+            return ApiResponse.success("ok", putUrl);
         } catch (Exception e) {
-            return ApiResponse.internalServerError("生成预签名URL失败：" + e.getMessage());
+            return ApiResponse.internalServerError("生成预签名URL失败，" + e.getMessage());
         }
     }
 
@@ -280,7 +296,7 @@ public class S3FileController {
         try {
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (!flag) {
-                return ApiResponse.notFound("文件不存在");
+                return ApiResponse.notFound(StringUtils.joinWith(" ", "文件不存在:", bucketName, fileName));
             }
             fileService.deleteFile(bucketName, fileName);
             return ApiResponse.success("文件删除成功", null);
@@ -296,15 +312,15 @@ public class S3FileController {
      * @param bucketName 存储桶名称
      * @return 包含预签名URL的响应数据
      */
-    @PostMapping("/upload/generate-url")
-    public ApiResponse<URL> uploadFileAndGenerateUrl(@RequestParam("file") MultipartFile file,
-                                                     @RequestParam("bucketName") String bucketName) {
+    @PostMapping("/upload/generatePresignedGetUrl")
+    public ApiResponse<URL> uploadFileAndGenerateGetUrl(@RequestParam("file") MultipartFile file,
+                                                        @RequestParam("bucketName") String bucketName) {
         try {
             // 首先将文件上传到指定的 S3 存储桶
             String fileName = file.getOriginalFilename();
             boolean flag = fileService.doesFileExist(bucketName, fileName);
             if (flag) {
-                return ApiResponse.conflict("文件已存在");
+                return ApiResponse.conflict(StringUtils.joinWith(" ", "文件已存在:", bucketName, fileName));
             }
 
             // 使用 try-with-resources 语句确保 InputStream 被正确关闭
@@ -313,10 +329,10 @@ public class S3FileController {
             }
 
             // 然后生成该文件的预签名 URL
-            URL presignedUrl = fileService.generatePresignedUrl(bucketName, fileName);
+            URL getUrl = fileService.generatePresignedGetUrl(bucketName, fileName);
 
             // 返回成功响应，包含生成的预签名 URL
-            return ApiResponse.success("预签名URL有效期为" + S3Constants.DEFAULT_SIGNATURE_DURATION.toMinutes() + "分钟", presignedUrl);
+            return ApiResponse.success("预签名URL有效期为: " + S3Constants.DEFAULT_SIGNATURE_DURATION.toMinutes() + "分钟", getUrl);
         } catch (Exception e) {
             // 如果出现异常，返回服务器内部错误响应
             return ApiResponse.internalServerError("上传文件失败：" + e.getMessage());
@@ -330,7 +346,7 @@ public class S3FileController {
         try {
             boolean flag = fileService.doesFileExist(bucketName, currentFileName);
             if (!flag) {
-                return ApiResponse.notFound("文件不存在");
+                return ApiResponse.notFound(StringUtils.joinWith(" ", "文件不存在:", bucketName, currentFileName));
             }
             fileService.renameFile(bucketName, currentFileName, newFileName);
             return ApiResponse.success("文件重命名成功", null);

@@ -1,7 +1,5 @@
 package com.qtech.check.processor.handler;
 
-import org.apache.commons.codec.DecoderException;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -15,6 +13,7 @@ import org.apache.commons.codec.DecoderException;
 
 public abstract class MessageHandler<T> implements QtechBaseHandler<T> {
 
-    public void handle(String msg) {}
+    public void handle(String msg) {
+    }
 }
 

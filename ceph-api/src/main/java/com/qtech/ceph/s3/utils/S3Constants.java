@@ -16,7 +16,7 @@ public final class S3Constants {
      * <p>
      * 例如，设置为 3600 秒（1 小时）。
      */
-    public static final Duration DEFAULT_SIGNATURE_DURATION = Duration.ofMinutes(10);
+    public static final Duration DEFAULT_SIGNATURE_DURATION = Duration.ofMinutes(5);
     public static final Duration MAX_SIGNATURE_DURATION = Duration.ofDays(7); // 10080 minutes
     public static final int EXPIRATION_DAYS = 30;
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";

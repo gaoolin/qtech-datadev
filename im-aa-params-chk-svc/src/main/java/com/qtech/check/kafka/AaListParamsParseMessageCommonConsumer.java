@@ -9,13 +9,12 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
-import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -50,27 +49,42 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class AaListParamsParseMessageCommonConsumer {
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParseMessageCommonConsumer.class);
+
     // 使用ScheduledExecutorService管理线程，便于控制和关闭
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
+    // private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
+    private final ScheduledExecutorService executorService;
+    private final MessageProcessor messageProcessor;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper objectMapper;
+    private final Consumer<String, Object> consumer;
     private volatile boolean isRunning = true;
+
+    @Value("${im.thread.pool.size}")
+    private int threadPoolSize;
+
     @Autowired
-    @Qualifier("aaListParamsCommonKafkaConsumer")
-    private Consumer<String, Object> consumer;
-    @Autowired
-    private MessageProcessor messageProcessor;
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    public AaListParamsParseMessageCommonConsumer(MessageProcessor messageProcessor,
+                                                  KafkaTemplate<String, String> kafkaTemplate,
+                                                  RabbitTemplate rabbitTemplate,
+                                                  ObjectMapper objectMapper,
+                                                  @Qualifier("aaListParamsCommonKafkaConsumer") Consumer<String, Object> consumer
+    ) {
+        this.messageProcessor = messageProcessor;
+        this.kafkaTemplate = kafkaTemplate;
+        this.rabbitTemplate = rabbitTemplate;
+        this.objectMapper = objectMapper;
+        this.consumer = consumer;
+        this.executorService = Executors.newScheduledThreadPool(threadPoolSize);
+    }
 
     @PostConstruct
     public void startConsumer() {
         consumer.subscribe(Collections.singletonList("qtech_im_aa_list_topic"));
         executorService.scheduleWithFixedDelay(this::pollAndProcessRecords, 0, 1, TimeUnit.SECONDS);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
     private void pollAndProcessRecords() {
@@ -93,34 +107,36 @@ public class AaListParamsParseMessageCommonConsumer {
         String aaListMessageStr = (String) record.value();
         if (aaListMessageStr != null) {
             try {
-                // 获取当前时间戳
-                long currentTimeMillis = System.currentTimeMillis();
-
                 // 处理消息并转换为 AaListParams
                 AaListParams aaListParams = messageProcessor.processMessage(AaListParams.class, aaListMessageStr);
                 aaListParams.setReceivedTime(new Date());
 
-                // logger.info("Received message: {}", aaListMessageStr);
+                // 从 AaListParams 中获取 prodType 和 simId
+                String prodType = aaListParams.getProdType();
+                String simId = aaListParams.getSimId();
+
+                // 构建消息的 key
+                String messageKey = prodType + "-" + simId;
+
                 // 将 AaListParams 对象转换为 JSON 字符串
                 String aaListParamsMessageStr = objectMapper.writeValueAsString(aaListParams);
 
-                // 创建消息头集合并添加时间戳消息头
-                Header timestampHeader = new RecordHeader("received-timestamp", Long.toString(currentTimeMillis).getBytes());
+                // 使用 Kafka 自带的时间戳，省去手动获取时间戳的步骤
+                ProducerRecord<String, String> producerRecord = new ProducerRecord<>(
+                        "qtech_im_aa_list_parsed_topic", messageKey, aaListParamsMessageStr
+                );
 
-                // 将消息头添加到消息中
-                ProducerRecord<String, String> producerRecord = new ProducerRecord<>("qtech_im_aa_list_parsed_topic", null, null, aaListParamsMessageStr);
-                producerRecord.headers().add(timestampHeader);
-
-                // 将解析后的消息发送到另一个 Kafka 主题
+                // 将解析后的消息发送到 Kafka
                 kafkaTemplate.send(producerRecord);
-                logger.info(">>>>> Parsed message successfully: {}", aaListParamsMessageStr);
+                logger.info(">>>>> Parsed message successfully with key {}: {}", messageKey, aaListParamsMessageStr);
 
-                // 发送结果到 RabbitMQ持久化
+                // 发送结果到 RabbitMQ 持久化
                 rabbitTemplate.convertAndSend("qtechImExchange", "aaListParamsParsedQueue", aaListParamsMessageStr);
                 logger.info(">>>>> Parsed AA list sent to RabbitMQ!");
+
             } catch (Exception e) {
                 // 记录处理消息时出现的异常
-                logger.error("Error processing message: {}", aaListMessageStr, e);
+                logger.error(">>>>> Error processing message: {}", aaListMessageStr, e);
             }
         } else {
             // 记录接收到空消息的情况

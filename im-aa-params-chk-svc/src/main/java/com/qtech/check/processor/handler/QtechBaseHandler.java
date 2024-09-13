@@ -13,9 +13,13 @@ import org.apache.commons.codec.DecoderException;
 public interface QtechBaseHandler<T> {
 
 
-    <R> R handleByType(Class<R> clazz, String line) throws DecoderException;
+    default <R> R handleByType(Class<R> clazz, String line) throws DecoderException {
+        return null;
+    }
 
-    <U> boolean supportsType(Class<U> clazz);
+    default <U> boolean supportsType(Class<U> clazz) {
+        return false;
+    }
 
     default String getMessageType() {
         return this.getClass().getSimpleName().replace("Handler", "");

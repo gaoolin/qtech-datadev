@@ -1,8 +1,10 @@
 package com.qtech.check.processor.handler.type.item;
 
-import com.qtech.check.algorithm.Range;
+import com.qtech.check.algorithm.model.ItemXyResParser;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,31 +16,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ChartAlignmentHandler extends AaListCommandHandler<AaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(ChartAlignmentHandler.class);
+
     @Override
-    public AaListCommand handle(String[] parts) {
-        String command = parts[2];
-        if ("X_RES".equals(command) || "Y_RES".equals(command)) {
-            Integer num = Integer.parseInt(parts[1]);
-            String max = parts[3];
-            String min = parts[4];
-            Range<String> chartAlignmentRange = new Range<>(min, max);
-            return new AaListCommand(null, num, command, null, null, chartAlignmentRange);
+    public AaListCommand handle(String[] parts, String prefixCommand) {
+        try {
+            return ItemXyResParser.apply(parts, prefixCommand);
+        } catch (Exception e) {
+            logger.error(">>>>> ChartAlignmentHandler handle error: " + e.getMessage());
         }
         return null;
     }
-
-    @Override
-    public <R> R handleByType(Class<R> clazz, String msg) {
-        if (AaListCommand.class.equals(clazz)) {
-            String[] parts = msg.split("\\s+");
-            return clazz.cast(handle(parts));
-        }
-        return null;
-    }
-
-    @Override
-    public <U> boolean supportsType(Class<U> clazz) {
-        return AaListCommand.class.equals(clazz);
-    }
-
 }

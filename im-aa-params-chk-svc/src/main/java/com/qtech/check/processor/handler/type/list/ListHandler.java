@@ -2,6 +2,8 @@ package com.qtech.check.processor.handler.type.list;
 
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,25 +15,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListHandler extends AaListCommandHandler<AaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(ListHandler.class);
+
+    @Override
+    public AaListCommand handle(String[] parts, String prefixCmd) {
+        return null;
+    }
 
     @Override
     public AaListCommand handle(String[] parts) {
         String command = parts[2];
         String enable = parts[parts.length - 1];
-        return new AaListCommand(null, null, command, null, enable, null);
-    }
-
-    @Override
-    public <R> R handleByType(Class<R> clazz, String msg) {
-        if (AaListCommand.class.equals(clazz)) {
-            String[] parts = msg.split("\\s+");
-            return clazz.cast(handle(parts));
-        }
-        return null;
-    }
-
-    @Override
-    public <U> boolean supportsType(Class<U> clazz) {
-        return AaListCommand.class.equals(clazz);
+        logger.info(">>>>> ListHandler: Command: {}, status: {}", command, enable);
+        return new AaListCommand(null, null, null, command, null, enable, null);
     }
 }

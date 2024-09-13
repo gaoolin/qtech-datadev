@@ -18,15 +18,28 @@ public class ListItemMultiKeyMapConstants {
     // 使用静态方法初始化映射
     static final Map<String, Set<String>> KEY_MAP = createKeyMap();
 
+    // 解析规则映射器
     private static Map<String, Set<String>> createKeyMap() {
         Map<String, Set<String>> keyMap = new HashMap<>();
-        keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
+    /*  keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
         keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check2", "MTF_Check3", "VCMPowerOffCheck", "Save_MTF", "MTF_OffAxisCheck1", "MTF_OffAxisCheck2", "MTF_OffAxisCheck1")));
         keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment1", "ChartAlignment2", "ChartAlignment3", "LP_OC")));
         keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
         keyMap.put("VcmCheck", new HashSet<>(Arrays.asList("VCM_ZHall", "VCM_Hall2", "VCM_Hall")));
         keyMap.put("ZOffset", new HashSet<>(Collections.singletonList("Z_Offset")));
+        */
+
         // 可以继续添加其他映射
+        keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
+        keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment", "ChartAlignment1", "ChartAlignment2")));
+        keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
+        keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check2", "MTF_Check3")));
+        keyMap.put("RecordPosition", new HashSet<>(Collections.singletonList("RecordPosition")));
+        keyMap.put("SaveMtf", new HashSet<>(Arrays.asList("Save_MTF", "SaveMTF")));
+        keyMap.put("VcmHall", new HashSet<>(Arrays.asList("VCM_Hall", "VCM_Hall2", "VCM_Run", "VCMPowerOffCheck")));
+        keyMap.put("OcCheck", new HashSet<>(Collections.singletonList("Oc_Check")));
+        keyMap.put("SaveOc", new HashSet<>(Collections.singletonList("save_oc")));
+
         return keyMap;
     }
 

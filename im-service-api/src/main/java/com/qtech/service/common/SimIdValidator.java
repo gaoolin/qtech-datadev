@@ -1,5 +1,7 @@
 package com.qtech.service.common;
 
+import org.springframework.stereotype.Component;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.net.URLDecoder;
@@ -12,6 +14,7 @@ import java.nio.charset.StandardCharsets;
  * desc   :
  */
 
+@Component
 public class SimIdValidator implements ConstraintValidator<QtechValidSimId, String> {
     @Override
     public void initialize(QtechValidSimId constraintAnnotation) {

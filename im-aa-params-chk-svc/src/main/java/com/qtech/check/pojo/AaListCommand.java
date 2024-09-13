@@ -15,18 +15,48 @@ public class AaListCommand {
 
     private String integration;
     private Integer num;
+    private String prefixCommand;
     private String command;
     private String subsystem;
     private String value;
 
     private Range<String> range;
 
+    public AaListCommand(String integration, Integer num, String prefixCommand, String command, String subsystem, String value, Range<String> range) {
+        this.integration = integration;
+        this.num = num;
+        this.prefixCommand = prefixCommand;
+        this.command = command;
+        this.subsystem = subsystem;
+        this.value = value;
+        this.range = range;
+    }
+
+    // 定义静态方法 nonNull
+    public static boolean nonNull(AaListCommand aaListCommand) {
+        return aaListCommand != null;
+    }
+
     public String getIntegration() {
         if (StringUtils.isBlank(integration)) {
-            if (StringUtils.isBlank(subsystem)) {
-                return command;
+            StringBuilder sb = new StringBuilder();
+            boolean hasContent = false;
+
+            if (StringUtils.isNotBlank(prefixCommand)) {
+                sb.append(prefixCommand);
+                hasContent = true;
             }
-            return StringUtils.joinWith("_", command, subsystem);
+            if (StringUtils.isNotBlank(command)) {
+                if (hasContent) sb.append("_");
+                sb.append(command);
+                hasContent = true;
+            }
+            if (StringUtils.isNotBlank(subsystem)) {
+                if (hasContent) sb.append("_");
+                sb.append(subsystem);
+            }
+
+            return sb.toString();
         }
         return integration;
     }
@@ -41,6 +71,14 @@ public class AaListCommand {
 
     public void setNum(Integer num) {
         this.num = num;
+    }
+
+    public String getPrefixCommand() {
+        return prefixCommand;
+    }
+
+    public void setPrefixCommand(String prefixCommand) {
+        this.prefixCommand = prefixCommand;
     }
 
     public String getCommand() {
@@ -73,19 +111,5 @@ public class AaListCommand {
 
     public void setRange(Range<String> range) {
         this.range = range;
-    }
-
-    public AaListCommand(String integration, Integer num, String command, String subsystem, String value, Range<String> range) {
-        this.integration = integration;
-        this.num = num;
-        this.command = command;
-        this.subsystem = subsystem;
-        this.value = value;
-        this.range = range;
-    }
-
-    // 定义静态方法 nonNull
-    public static boolean nonNull(AaListCommand aaListCommand) {
-        return aaListCommand != null;
     }
 }

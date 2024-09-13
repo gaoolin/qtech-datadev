@@ -19,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
+import static com.qtech.check.utils.AggregateCommandsUtil.aggregateMtfCheckCommands;
 
 /**
  * author :  gaozhilin
@@ -28,58 +30,26 @@ import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
  * date   :  2024/05/27 14:24:19
  * desc   :  List、Item 级联解析
  */
-
 @Component
 public class AaListParamsHandler extends MessageHandler<AaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsHandler.class);
     private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
     private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
     private final Map<String, String> listItemMap = new HashMap<>();
+
     @Autowired
     private CommandProcessor commandProcessor;
+
     @Autowired
     private ListItemMultiKeyMapConstants listItemMultiKeyMapConstants;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static HashMap<Integer, String> getThreadListItemMapper() {
         HashMap<Integer, String> map = listItemMapper.get();
         map.clear();
         return map;
-    }
-
-    public AaListCommand parseRowStartWithList(String[] parts) {
-        try {
-            // 获取处理器
-            AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler("List");
-            // 使用处理器处理命令
-            return handler.handle(parts);
-            // 处理结果...
-        } catch (RuntimeException e) {
-            // 处理未找到处理器的情况
-            // 其他错误处理逻辑...
-            logger.warn(">>>>> 未找到List处理器: {}", e.getMessage());
-        }
-        return null;
-    }
-
-    // FIXME : 优化 根据mapper 获取对应的commandHandler
-    public AaListCommand parseRowStartWithItem(String[] parts, String listItemMapperKey) {
-        if (listItemMapperKey != null) {
-            try {
-                // 获取处理器
-                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(listItemMapperKey);
-                // 使用处理器处理命令
-                return handler.handle(parts);
-                // 处理结果...
-            } catch (RuntimeException e) {
-                // 处理未找到处理器的情况
-                // 其他错误处理逻辑...
-                logger.warn(">>>>> 未找到Item处理器:{}\n{}", listItemMapperKey, e.getMessage());
-                return null;
-            }
-        } else {
-            logger.warn(">>>>> listItemMapper is empty");
-            return null;
-        }
     }
 
     private AaListParams getThreadLocalAaListParams() {
@@ -88,54 +58,82 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         return aaListParams;
     }
 
-    public AaListParams doParse(String msg) {
+    public AaListCommand parseRowStartWithList(String[] parts) {
+        try {
+            // 获取处理器
+            AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler("List");
+            // 使用处理器处理命令
+            return handler.handle(parts);
+        } catch (RuntimeException e) {
+            // 处理未找到处理器的情况
+            logger.warn(">>>>> 未找到List处理器: {}", e.getMessage());
+        }
+        return null;
+    }
+
+    // FIXME : 优化 根据mapper 获取对应的commandHandler
+    public AaListCommand parseRowStartWithItem(String[] parts, String handlerName, String command) {
+        if (handlerName != null) {
+            try {
+                // 获取处理器
+                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(handlerName);
+                // 使用处理器处理命令
+                return handler.handle(parts, command);
+            } catch (RuntimeException e) {
+                // 处理未找到处理器的情况
+                logger.warn(">>>>> 未找到Item处理器:{}\n{}", handlerName, e.getMessage());
+                return null;
+            }
+        } else {
+            logger.warn(">>>>> listItemMapper is empty");
+            return null;
+        }
+    }
+
+    public AaListParams doFullParse(String msg) {
         AaListParams aaListParams = getThreadLocalAaListParams();
         HashMap<Integer, String> mapper = getThreadListItemMapper();
-        String[] lines = msg.split("\n");
-        List<AaListCommand> aaListCommandList = new ArrayList<>();
-        for (String line : lines) {
-            if (line.trim().isEmpty()) {
-                continue; // 跳过空行
-            }
-            String[] parts = line.split("\\s+");
 
-            if (parts.length == 0) {
-                logger.warn(">>>>> Empty line encountered: " + line);
-                continue;
-            }
-            String startWithStr = parts[0];
-            try {
-                if ("LIST".equals(startWithStr)) {
-
-                    String listNmb = parts[1];
-                    String command = parts[2];
-                    if (CONTROL_LIST_SET.contains(command)) {
-                        mapper.put(Integer.parseInt(listNmb), command);
-                    }
-                    AaListCommand aaListCommand = parseRowStartWithList(parts);
-                    if (aaListCommand != null) {
-                        aaListCommandList.add(aaListCommand);
-                    }
-                } else if ("ITEM".equals(startWithStr)) {
-                    Integer key = Integer.parseInt(parts[1]);
-                    if (!StringUtils.isEmpty(listItemMultiKeyMapConstants.get(mapper.get(key)))) {
-                        AaListCommand aaListCommand = parseRowStartWithItem(parts, listItemMultiKeyMapConstants.get(mapper.get(key)));
-                        if (aaListCommand != null) {
-                            aaListCommandList.add(aaListCommand);
+        // 将每一行数据拆分并转换为 AaListCommand 对象
+        List<AaListCommand> aaListCommandList = Arrays.stream(msg.split("\n"))
+                .map(String::trim)  // 去除每行的空白字符
+                .filter(line -> !line.isEmpty())  // 跳过空行
+                .map(line -> line.split("\\s+"))  // 按空格分割每一行
+                .filter(parts -> parts.length > 0)  // 过滤掉空的行
+                .map(parts -> {
+                    String startWithStr = parts[0];
+                    try {
+                        if ("LIST".equals(startWithStr)) {
+                            String listNmb = parts[1];
+                            String command = parts[2];
+                            if (CONTROL_LIST_SET.contains(command)) {
+                                mapper.put(Integer.parseInt(listNmb), command);
+                            }
+                            return parseRowStartWithList(parts);  // 解析 LIST 行
+                        } else if ("ITEM".equals(startWithStr)) {
+                            Integer key = Integer.parseInt(parts[1]);
+                            String command = mapper.get(key);
+                            String handlerName = listItemMultiKeyMapConstants.get(command);
+                            if (!StringUtils.isEmpty(handlerName)) {
+                                return parseRowStartWithItem(parts, handlerName, command);  // 解析 ITEM 行
+                            }
+                        } else {
+                            logger.warn(">>>>> Unsupported line: {}", Arrays.toString(parts));
                         }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        logger.error(">>>>> ArrayIndexOutOfBoundsException: {}", e.getMessage(), e);
+                    } catch (Exception e) {
+                        logger.error(">>>>> Exception occurred while processing line: {}", Arrays.toString(parts), e);
                     }
-                } else {
-                    logger.warn(">>>>> Unsupported line: " + line);
-                }
-            } catch (ArrayIndexOutOfBoundsException e) {
-                logger.error(">>>>> ArrayIndexOutOfBoundsException: " + e.getMessage() + " for line: " + line, e);
-            } catch (Exception e) {
-                logger.error(">>>>> Exception occurred while processing line: " + line, e);
-            }
-        }
+                    return null;  // 如果处理失败返回 null
+                })
+                .filter(Objects::nonNull)  // 过滤掉 null 的结果
+                .collect(Collectors.toList());  // 收集到列表中
 
-        aaListParams.fillWithData(aaListCommandList);
-        // log.info(">>>>> 解析后aaListParams: {}", aaListParams);
+        // 聚合 AaListCommand
+        List<AaListCommand> aggregatedCommands = aggregateMtfCheckCommands(aaListCommandList);
+        // 将命令列表填充到 aaListParams 中
+        aaListParams.fillWithData(aggregatedCommands);
         return aaListParams;
     }
 
@@ -143,7 +141,6 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
     public <R> R handleByType(Class<R> clazz, String msg) throws DecoderException {
         if (clazz == AaListParams.class) {
             AaListParams aaListParamsObj = null;
-            ObjectMapper objectMapper = new ObjectMapper();
             try {
                 Map<String, Object> jsonObject = objectMapper.readValue(msg, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class));
                 String aaListParamHexStr = (String) jsonObject.get("FactoryName");
@@ -151,10 +148,10 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
                 try {
                     aaListParamStr = new String(Hex.decodeHex(aaListParamHexStr));
                 } catch (DecoderException e) {
-                    logger.error(">>>>> Hex解码异常，机型: {}", (String) jsonObject.get("WoCode"));
+                    logger.error(">>>>> Hex解码异常，机型: {}", jsonObject.get("WoCode"));
                     return null;
                 }
-                aaListParamsObj = doParse(aaListParamStr);
+                aaListParamsObj = doFullParse(aaListParamStr);
                 aaListParamsObj.setSimId((String) jsonObject.get("OpCode"));
                 aaListParamsObj.setProdType(((String) jsonObject.get("WoCode")).split("#")[0]);
                 return clazz.cast(aaListParamsObj);

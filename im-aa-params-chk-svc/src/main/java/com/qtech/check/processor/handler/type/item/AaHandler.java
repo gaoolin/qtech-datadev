@@ -1,7 +1,10 @@
 package com.qtech.check.processor.handler.type.item;
 
+import com.qtech.check.algorithm.model.ItemAaParser;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,29 +16,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AaHandler extends AaListCommandHandler<AaListCommand> {
-    @Override
-    public AaListCommand handle(String[] parts) {
-        String command = parts[2];
-        String subSystem = parts[3];
-        if ("ROI".equals(command) && ("CC".equals(subSystem) || "UL".equals(subSystem) || "UR".equals(subSystem) || "LL".equals(subSystem) || "LR".equals(subSystem))) {
-            Integer num = Integer.parseInt(parts[1]);
-            String val = parts[6];
-            return new AaListCommand(null, num, command, subSystem, val, null);
-        }
-        return null;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(AaHandler.class);
 
     @Override
-    public <R> R handleByType(Class<R> clazz, String msg) {
-        if (AaListCommand.class.equals(clazz)) {
-            String[] parts = msg.split("\\s+");
-            return clazz.cast(handle(parts));
+    public AaListCommand handle(String[] parts, String prefixCommand) {
+        try {
+            return ItemAaParser.apply(parts, prefixCommand);
+        } catch (Exception e) {
+            logger.error(">>>>> AaHandler handle error: " + e.getMessage());
         }
         return null;
-    }
-
-    @Override
-    public <U> boolean supportsType(Class<U> clazz) {
-        return AaListCommand.class.equals(clazz);
     }
 }

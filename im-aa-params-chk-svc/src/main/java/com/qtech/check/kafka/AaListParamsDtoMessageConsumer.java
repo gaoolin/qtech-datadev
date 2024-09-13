@@ -1,20 +1,5 @@
 package com.qtech.check.kafka;
 
-import com.qtech.check.pojo.AaListParams;
-import com.qtech.check.service.IAaListParamsService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.Headers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.List;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com

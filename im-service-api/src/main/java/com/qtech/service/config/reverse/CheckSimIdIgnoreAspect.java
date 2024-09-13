@@ -13,6 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static com.qtech.service.common.Constants.EQ_REVERSE_IGNORE_SIM_PREFIX;
 
@@ -41,19 +44,29 @@ public class CheckSimIdIgnoreAspect {
     public Object checkSimIdAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         // 记录请求参数
         Object[] args = joinPoint.getArgs();
-        String simId = (String) args[0];
-        HttpServletRequest request = (HttpServletRequest) args[1];
-        String requestPath = request.getRequestURI();
-        logger.info(">>>>> Received request for path: {}", requestPath);
+        // HttpServletRequest request = (HttpServletRequest) args[1];
+        String simId = URLDecoder.decode((String) args[0], StandardCharsets.UTF_8.name());
+        // 打印原始请求路径
+        logger.info(">>>>> Received request for path: {}", simId);
 
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(EQ_REVERSE_IGNORE_SIM_PREFIX + simId))) {
-            logger.warn(">>>>> simId is ignored: " + simId);
+        try {
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(EQ_REVERSE_IGNORE_SIM_PREFIX + simId))) {
+                logger.warn(">>>>> simId is ignored: " + simId);
+                return new R<String>()
+                        .setCode(ResponseCode.SUCCESS.getCode())
+                        .setMsg("Equipment reverse ignored")
+                        .setData(null);
+            } else {
+                return joinPoint.proceed();
+            }
+        } catch (ConstraintViolationException ex) {
+            // 捕获并处理 ConstraintViolationException
+            // logger.error("ConstraintViolationException caught in aspect: {}", ex.getMessage(), ex);
+            // 返回自定义的错误响应
             return new R<String>()
                     .setCode(ResponseCode.SUCCESS.getCode())
-                    .setMsg("Equipment reverse ignored")
+                    .setMsg(ex.getConstraintViolations().iterator().next().getMessage())
                     .setData(null);
-        } else {
-            return joinPoint.proceed();
         }
     }
 }

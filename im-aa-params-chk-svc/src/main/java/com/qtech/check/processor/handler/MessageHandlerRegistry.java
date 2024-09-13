@@ -26,11 +26,6 @@ public class MessageHandlerRegistry implements ApplicationContextAware {
     private final Map<String, MessageHandler<?>> messageHandlerMap = new HashMap<>();
     private ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(@Nullable ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
     @PostConstruct
     public void init() {
         // 获取所有MessageHandler的Bean实例
@@ -62,5 +57,10 @@ public class MessageHandlerRegistry implements ApplicationContextAware {
 
     public ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext(@Nullable ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

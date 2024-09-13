@@ -9,102 +9,120 @@ import java.util.*;
  * desc   :
  */
 
-
 public class ComparisonConstants {
+    /*
+     * 需要点检是否开启的属性名称
+     * 即所有的List项
+     */
     public static final List<String> PROPERTIES_TO_COMPARE = Arrays.asList(
             "prodType",
+            "aa1",
+            "aa2",
+            "aa3",
+            "backToPosition",
+            "blemish",
             "clampOnOff",
+            "chartAlignment",
+            "chartAlignment1",
+            "chartAlignment2",
+            "delay",
+            "destroy",
             "destroyStart",
-            "init",
+            "dispense",
+            "epoxyInspection",
+            "epoxyInspectionAuto",
             "grab",
+            "gripperOpen",
+            "init",
+            "lpBlemish",
+            "lpOc",
+            "lpOnBlemish",
+            "lpOcCheck",
+            "lpOn",
+            "lpOff",
+            "moveToBlemishPos",
+            "mtfCheck",
+            "mtfCheck1",
+            "mtfCheck2",
+            "mtfCheck3",
+            "openCheck",
+            "ocCheck",
+            "recordPosition",
             "reInit",
+            "saveOc",
+            "saveMtf",
             "senserReset",
             "sid",
+            "uvon",
+            "uvoff",
             "vcmHall",
-            "vcmInit",
             "vcmHall2",
+            "vcmMoveToZ",
+            "vcmMoveToZPos",
+            "vcmPowerOffCheck",
+            "vcmRun",
+            "vcmInit",
+            "vcmOisInit",
             "vcmPowerOff",
             "vcmPowerOn",
             "vcmTop",
             "vcmTopHall",
             "vcmZ",
             "vcmZHall",
-            "vcmOisInit",
-            "chartAlignment1",
-            "AA1",
-            "AA2",
-            "mtfCheck",
-            "AA3",
-            "mtfCheck2",
-            "lpOn",
-            "lpOcCheck",
-            "lpOc",
-            "lpOnBlemish",
-            "blemish",
-            "lpOff",
-            "chartAlignment",
-            "vcmMoveToZ",
-            "delay",
-            "vcmPowerOffCheck",
-            "recordPosition",
-            "dispense",
-            "epoxyInspectionAuto",
-            "epoxyInspection",
-            "backToPosition",
-            "uvon",
-            "yLevel",
-            "uvoff",
-            "gripperOpen",
-            "saveOc",
-            "saveMtf",
-            "destroy",
-            "moveToBlemishPos",
-            "mtfCheck3",
-            "mtfOffAxisCheck1",
-            "mtfOffAxisCheck2",
-            "mtfOffAxisCheck3",
-            "lpBlemish",
-            "chartAlignment2",
-            "vcmMoveToZPos",
-            "zOffset",
-            "openCheck"
+            "yLevel"
             // ... 其他需要比较是否相等的属性名称
     );
 
+    /*
+     * 需要解析对应List项的Item参数值并比对的List项目（不是所有List的Item参数都需要解析，也不是都需要比对和反控）
+     * 即List对应的Item项中有哪些参数需要解析，哪些参数需要比对，哪些参数需要反控
+     * 需要增减List参数的管控，则可直接在下列列表中添加或删除
+     */
+    public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(
+            new HashSet<>(
+                    Arrays.asList(
+                            "AA1",
+                            "AA2",
+                            "AA3",
+                            "ChartAlignment",
+                            "ChartAlignment1",
+                            "ChartAlignment2",
+                            "EpoxyInspection_Auto",
+                            "MTF_Check",
+                            "MTF_Check1",
+                            "MTF_Check2",
+                            "MTF_Check3",
+                            "RecordPosition",
+                            "Save_MTF"
+                    )
+            )
+    );
+
+    /*
+     * 需要计算值的Item项名称
+     * 上面 CONTROL_LIST_SET 数组中List对应的Item项中，具体command或者subCommand的value
+     * 上面的 CONTROL_LIST_SET 数组发生了增减，下面的数组也要对应的增减相关command或者subCommand
+     */
     public static final List<String> PROPERTIES_TO_COMPUTE = Arrays.asList(
-            "roiCc", "roiUl", "roiUr", "roiLl", "roiLr",
-            "result1", "result2", "result3", "result4", "result5", "result6", "result7", "result8", "result9", "result10",
-            "result11", "result12", "result13", "result14", "result15", "result16", "result17", "result18", "result19", "result20",
-            "result21", "result22", "result23", "result24", "result25", "result26", "result27", "result28", "result29", "result30",
-            "result31", "result32", "result33", "result34", "result35", "result36", "result37", "result38", "result39", "result40",
-            "result41", "result42", "result43", "result44", "result45", "result46", "result47", "result48", "result49", "result50",
-            "result51", "result52",
-            "xResMin", "xResMax", "yResMin", "yResMax",
-            "resultCheckMin", "resultCheckMax",
-            "epoxyInspectionInterval"
-            );
+            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr", "aa1FC", "aa1F1", "aa1F2", "aa1F3", "aa1F4", "aa1MtfOffAxisCheck1", "aa1MtfOffAxisCheck2", "aa1MtfOffAxisCheck3",
+            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr", "aa2FC", "aa2F1", "aa2F2", "aa2F3", "aa2F4", "aa2MtfOffAxisCheck1", "aa2MtfOffAxisCheck2", "aa2MtfOffAxisCheck3",
+            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr", "aa3FC", "aa3F1", "aa3F2", "aa3F3", "aa3F4", "aa3MtfOffAxisCheck1", "aa3MtfOffAxisCheck2", "aa3MtfOffAxisCheck3",
+            "mtfCheckFC", "mtfCheckF1", "mtfCheckF2", "mtfCheckF3", "mtfCheckF4",
+            "mtfCheck1FC", "mtfCheck1F1", "mtfCheck1F2", "mtfCheck1F3", "mtfCheck1F4",
+            "mtfCheck2FC", "mtfCheck2F1", "mtfCheck2F2", "mtfCheck2F3", "mtfCheck2F4",
+            "mtfCheck3FC", "mtfCheck3F1", "mtfCheck3F2", "mtfCheck3F3", "mtfCheck3F4",
+            "chartAlignmentXResMin", "chartAlignmentXResMax", "chartAlignmentYResMin", "chartAlignmentYResMax",
+            "chartAlignment1XResMin", "chartAlignment1XResMax", "chartAlignment1YResMin", "chartAlignment1YResMax",
+            "chartAlignment2XResMin", "chartAlignment2XResMax", "chartAlignment2YResMin", "chartAlignment2YResMax",
+            "epoxyInspectionInterval",
+            "vcmCheckResultCheckMin", "vcmCheckResultCheckMax",
+            "recordPositionUtXyzMove",
+            "ocCheckXOffsetMin", "ocCheckXOffsetMax", "ocCheckYOffsetMin", "ocCheckYOffsetMax",
+            "saveOcXOffsetMin", "saveOcXOffsetMax", "saveOcYOffsetMin", "saveOcYOffsetMax",
+            "saveMtfCcMin", "saveMtfCcMax"
+    );
 
-    public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:chk:list:params:";
-    public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:chk:list:params:info:";
-
-    public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
-            "AA1",
-            "AA2",
-            "AA3",
-            "ChartAlignment",
-            "ChartAlignment1",
-            "ChartAlignment2",
-            "EpoxyInspection_Auto",
-            "LP_OC",
-            "MTF_Check",
-            "MTF_Check2",
-            "MTF_Check3",
-            "MTF_OffAxisCheck1",
-            "MTF_OffAxisCheck2",
-            "MTF_OffAxisCheck3",
-            "Save_MTF",
-            "VCM_Init",
-            "VCMPowerOffCheck",
-            "Z_Offset"
-    )));
+    // redis key prefix
+    public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:im:aa:list:model:";
+    public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:im:aa:list:model:info:";
 }

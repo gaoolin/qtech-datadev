@@ -30,4 +30,5 @@ WORKDIR /home
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ENTRYPOINT ["/bin/sh", "-c", "java -Dloader.path=/home/libs/ -Dfile.encoding=utf8 -Djava.security.egd=file:/dev/./urandom -jar /home/app.jar ${PARAMS}"]
+# 指定了jvm启动的内存大小
+ENTRYPOINT ["/bin/sh", "-c", "java -Dloader.path=/home/libs/ -Dfile.encoding=utf8 -Djava.security.egd=file:/dev/./urandom -jar -Xmx2048m -Xms2048m /home/app.jar ${PARAMS}"]

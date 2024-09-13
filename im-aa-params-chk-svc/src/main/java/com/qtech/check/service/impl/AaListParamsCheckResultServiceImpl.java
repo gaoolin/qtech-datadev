@@ -1,11 +1,12 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.pojo.AaListParamsCheckResult;
-import com.qtech.check.mapper.AaListParamsCheckResultMapper;
-import com.qtech.check.service.IAaListParamsCheckResultService;
 import com.qtech.check.config.dynamic.DataSourceNames;
 import com.qtech.check.config.dynamic.DataSourceSwitch;
-import lombok.extern.slf4j.Slf4j;
+import com.qtech.check.mapper.AaListParamsCheckResultMapper;
+import com.qtech.check.pojo.AaListParamsCheckResult;
+import com.qtech.check.service.IAaListParamsCheckResultService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,9 @@ import org.springframework.stereotype.Service;
  * desc   :
  */
 
-@Slf4j
 @Service
 public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckResultService {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckResultServiceImpl.class);
 
     @Autowired
     private AaListParamsCheckResultMapper aaListParamsCheckResultMapper;
@@ -31,9 +32,9 @@ public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckRes
         try {
             i = aaListParamsCheckResultMapper.insertAaListParamsLatestCheckResult(aaListParamsCheckResult);
             j = aaListParamsCheckResultMapper.insertAaListParamsCheckResult(aaListParamsCheckResult);
-            log.info(">>>>> save aaListParamsCheckResult success:{}", aaListParamsCheckResult);
+            logger.info(">>>>> save aaListParamsCheckResult success:{}", aaListParamsCheckResult);
         } catch (Exception e) {
-            log.error(">>>>> save aaListParamsCheckResult error:{}", e.getMessage());
+            logger.error(">>>>> save aaListParamsCheckResult error:{}", e.getMessage());
         }
         return i & j;
     }

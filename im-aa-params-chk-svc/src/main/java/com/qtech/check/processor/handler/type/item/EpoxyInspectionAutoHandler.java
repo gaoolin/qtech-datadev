@@ -1,7 +1,10 @@
 package com.qtech.check.processor.handler.type.item;
 
+import com.qtech.check.algorithm.model.ItemEpoxyInspectionParser;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,32 +13,17 @@ import org.springframework.stereotype.Component;
  * date   :  2024/05/28 11:21:44
  * desc   :  EpoxyInspectionAuto
  */
-
 @Component
 public class EpoxyInspectionAutoHandler extends AaListCommandHandler<AaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(EpoxyInspectionAutoHandler.class);
+
     @Override
-    public AaListCommand handle(String[] parts) {
-        String command = parts[2];
-        if ("EpoxyInspection".equals(command)) {
-            Integer num = Integer.parseInt(parts[1]);
-            String val = parts[3];
-            return new AaListCommand(null, num, command, null, val, null);
+    public AaListCommand handle(String[] parts, String prefixCommand) {
+        try {
+            return ItemEpoxyInspectionParser.apply(parts, prefixCommand);
+        } catch (Exception e) {
+            logger.error(">>>>> EpoxyInspectionAutoHandler: Error: {}", e.getMessage());
         }
         return null;
     }
-
-    @Override
-    public <R> R handleByType(Class<R> clazz, String msg) {
-        if (AaListCommand.class.equals(clazz)) {
-            String[] parts = msg.split("\\s+");
-            return clazz.cast(handle(parts));
-        }
-        return null;
-    }
-
-    @Override
-    public <U> boolean supportsType(Class<U> clazz) {
-        return AaListCommand.class.equals(clazz);
-    }
-
 }

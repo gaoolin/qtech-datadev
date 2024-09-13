@@ -27,11 +27,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MessageProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageProcessor.class);
-
+    private final Map<Class<?>, MessageHandler<?>> handlerCache = new ConcurrentHashMap<>();
     @Autowired
     private MessageHandlerRegistry messageHandlerRegistry;
-
-    private final Map<Class<?>, MessageHandler<?>> handlerCache = new ConcurrentHashMap<>();
 
     public <R> R processMessage(Class<R> clazz, String msg) {
         MessageHandler<?> messageHandler = handlerCache.computeIfAbsent(clazz, messageHandlerRegistry::getMessageHandlerForType);
@@ -53,8 +51,7 @@ public class MessageProcessor {
  * @description 这个注解会告诉Spring在实例化该Bean之后，但在该Bean的任何方法被调用之前，执行init()方法。这样可以确保在使用applicationContext.getBean()方法之前，ApplicationContext已经被刷新。
  * @param
  * @return void
- *     @PostConstruct
- *     public void init() {
- *         this.messageHandlerRegistry = applicationContext.getBean(MessageHandlerRegistry.class);
- *     }
+ * @PostConstruct public void init() {
+ * this.messageHandlerRegistry = applicationContext.getBean(MessageHandlerRegistry.class);
+ * }
  */

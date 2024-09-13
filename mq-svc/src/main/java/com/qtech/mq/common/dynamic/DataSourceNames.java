@@ -14,8 +14,7 @@ package com.qtech.mq.common.dynamic;
  */
 public enum DataSourceNames {
     FIRST("first"),
-    SECOND("second"),
-    THIRD("third");
+    SECOND("second");
 
     private final String name;
 

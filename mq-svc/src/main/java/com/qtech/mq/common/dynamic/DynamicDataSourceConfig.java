@@ -40,14 +40,6 @@ public class DynamicDataSourceConfig {
     @Value("${spring.datasource.druid.second.password}")
     private String secondPassword;
 
-    @Value("${spring.datasource.druid.third.url}")
-    private String thirdUrl;
-    @Value("${spring.datasource.druid.third.username}")
-    private String thirdUsername;
-    @Value("${spring.datasource.druid.third.password}")
-    private String thirdPassword;
-
-
     /**
      * 实例化数据源master
      *
@@ -70,12 +62,6 @@ public class DynamicDataSourceConfig {
         return DruidDataSourceBuilder.create().build();
     }
 
-    @Bean
-    @ConfigurationProperties("spring.datasource.druid.third")
-    public DataSource thirdDataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
-
     /**
      * 实例化DynamicDataSource
      *
@@ -85,11 +71,10 @@ public class DynamicDataSourceConfig {
      */
     @Bean
     @Primary
-    public DynamicDataSource dynamicDataSource(DataSource firstDataSource, DataSource secondDataSource, DataSource thirdDataSource) {
+    public DynamicDataSource dynamicDataSource(DataSource firstDataSource, DataSource secondDataSource) {
         HashMap<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(DataSourceNames.FIRST, firstDataSource);
         targetDataSources.put(DataSourceNames.SECOND, secondDataSource);
-        targetDataSources.put(DataSourceNames.THIRD, thirdDataSource);
 
         return new DynamicDataSource(targetDataSources, firstDataSource);
     }

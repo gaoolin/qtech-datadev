@@ -4,12 +4,11 @@ import com.qtech.check.utils.ToCamelCaseConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -18,173 +17,220 @@ import java.util.stream.Collectors;
  * date   :  2024/06/06 09:03:13
  * desc   :
  */
-
 @Data
 @Accessors(chain = true) // 表示启用链式调用
 @EqualsAndHashCode(callSuper = false)
 public class AaListParamsBaseEntity {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsBaseEntity.class);
+    private String aa1;
+    private String aa2;
+    private String aa3;
+    private String backToPosition;
+    private String blemish;
     private String clampOnOff;
+    private String chartAlignment;
+    private String chartAlignment1;
+    private String chartAlignment2;
+    private String delay;
+    private String destroy;
     private String destroyStart;
-    private String init;
+    private String dispense;
+    private String epoxyInspection;
+    private String epoxyInspectionAuto;
     private String grab;
+    private String gripperOpen;
+    private String init;
+    private String lpBlemish;
+    private String lpOc;
+    private String lpOcCheck;
+    private String lpOn;
+    private String lpOnBlemish;
+    private String lpOff;
+    private String moveToBlemishPos;
+    private String mtfCheck;
+    private String mtfCheck1;
+    private String mtfCheck2;
+    private String mtfCheck3;
+    private String openCheck;
+    private String ocCheck;
+    private String recordPosition;
     private String reInit;
+    private String saveOc;
+    private String saveMtf;
     private String senserReset;
     private String sid;
+    private String uvon;
+    private String uvoff;
     private String vcmHall;
-    private String vcmInit;
     private String vcmHall2;
+    private String vcmMoveToZ;
+    private String vcmMoveToZPos;
+    private String vcmPowerOffCheck;
+    private String vcmRun;
+    private String vcmInit;
+    private String vcmOisInit;
     private String vcmPowerOff;
     private String vcmPowerOn;
     private String vcmTop;
     private String vcmTopHall;
     private String vcmZ;
     private String vcmZHall;
-    private String vcmOisInit;
-    private String chartAlignment1;
-    private String AA1;
-    private String AA2;
-    private String mtfCheck;
-    private String AA3;
-    private String mtfCheck2;
-    private String lpOn;
-    private String lpOcCheck;
-    private String lpOc;
-    private String lpOnBlemish;
-    private String blemish;
-    private String lpOff;
-    private String chartAlignment;
-    private String vcmMoveToZ;
-    private String delay;
-    private String vcmPowerOffCheck;
-    private String recordPosition;
-    private String dispense;
-    private String epoxyInspectionAuto;
-    private String epoxyInspection;
-    private String backToPosition;
-    private String uvon;
     private String yLevel;
-    private String uvoff;
-    private String gripperOpen;
-    private String saveOc;
-    private String saveMtf;
-    private String destroy;
-    private String moveToBlemishPos;
-    private String mtfCheck3;
-    private String mtfOffAxisCheck1;
-    private String mtfOffAxisCheck2;
-    private String mtfOffAxisCheck3;
-    private String lpBlemish;
-    private String chartAlignment2;
-    private String vcmMoveToZPos;
-    private String zOffset;
-    private String openCheck;
+
     // AA Item 指标
-    private String roiCc;
-    private String roiUl;
-    private String roiUr;
-    private String roiLl;
-    private String roiLr;
+    private String aa1RoiCc;
+    private String aa1RoiUl;
+    private String aa1RoiUr;
+    private String aa1RoiLl;
+    private String aa1RoiLr;
+    private String aa1FC;
+    private String aa1F1;
+    private String aa1F2;
+    private String aa1F3;
+    private String aa1F4;
+    private String aa1MtfOffAxisCheck1;
+    private String aa1MtfOffAxisCheck2;
+    private String aa1MtfOffAxisCheck3;
+
+    private String aa2RoiCc;
+    private String aa2RoiUl;
+    private String aa2RoiUr;
+    private String aa2RoiLl;
+    private String aa2RoiLr;
+    private String aa2FC;
+    private String aa2F1;
+    private String aa2F2;
+    private String aa2F3;
+    private String aa2F4;
+    private String aa2MtfOffAxisCheck1;
+    private String aa2MtfOffAxisCheck2;
+    private String aa2MtfOffAxisCheck3;
+
+    private String aa3RoiCc;
+    private String aa3RoiUl;
+    private String aa3RoiUr;
+    private String aa3RoiLl;
+    private String aa3RoiLr;
+    private String aa3FC;
+    private String aa3F1;
+    private String aa3F2;
+    private String aa3F3;
+    private String aa3F4;
+    private String aa3MtfOffAxisCheck1;
+    private String aa3MtfOffAxisCheck2;
+    private String aa3MtfOffAxisCheck3;
+
     // mtfCheck Item 指标
-    private String result1;
-    private String result2;
-    private String result3;
-    private String result4;
-    private String result5;
-    private String result6;
-    private String result7;
-    private String result8;
-    private String result9;
-    private String result10;
-    private String result11;
-    private String result12;
-    private String result13;
-    private String result14;
-    private String result15;
-    private String result16;
-    private String result17;
-    private String result18;
-    private String result19;
-    private String result20;
-    private String result21;
-    private String result22;
-    private String result23;
-    private String result24;
-    private String result25;
-    private String result26;
-    private String result27;
-    private String result28;
-    private String result29;
-    private String result30;
-    private String result31;
-    private String result32;
-    private String result33;
-    private String result34;
-    private String result35;
-    private String result36;
-    private String result37;
-    private String result38;
-    private String result39;
-    private String result40;
-    private String result41;
-    private String result42;
-    private String result43;
-    private String result44;
-    private String result45;
-    private String result46;
-    private String result47;
-    private String result48;
-    private String result49;
-    private String result50;
-    private String result51;
-    private String result52;
-        // chartAlignment Item 指标
-    private String xResMin;
-    private String xResMax;
-    private String yResMin;
-    private String yResMax;
+    private String mtfCheckFC;
+    private String mtfCheckF1;
+    private String mtfCheckF2;
+    private String mtfCheckF3;
+    private String mtfCheckF4;
+
+    private String mtfCheck1FC;
+    private String mtfCheck1F1;
+    private String mtfCheck1F2;
+    private String mtfCheck1F3;
+    private String mtfCheck1F4;
+
+    private String mtfCheck2FC;
+    private String mtfCheck2F1;
+    private String mtfCheck2F2;
+    private String mtfCheck2F3;
+    private String mtfCheck2F4;
+
+    private String mtfCheck3FC;
+    private String mtfCheck3F1;
+    private String mtfCheck3F2;
+    private String mtfCheck3F3;
+    private String mtfCheck3F4;
+
+    // chartAlignment Item 指标
+    private String chartAlignmentXResMin;
+    private String chartAlignmentXResMax;
+    private String chartAlignmentYResMin;
+    private String chartAlignmentYResMax;
+
+    private String chartAlignment1XResMin;
+    private String chartAlignment1XResMax;
+    private String chartAlignment1YResMin;
+    private String chartAlignment1YResMax;
+
+    private String chartAlignment2XResMin;
+    private String chartAlignment2XResMax;
+    private String chartAlignment2YResMin;
+    private String chartAlignment2YResMax;
+
     // EpoxyInspection Auto Item 指标
     private String epoxyInspectionInterval;
+
     // vcmCheck 指标
-    private String resultCheckMin;
-    private String resultCheckMax;
+    private String vcmCheckResultCheckMin;
+    private String vcmCheckResultCheckMax;
+
+    // RecordPosition 指标
+    private String recordPositionUtXyzMove;
+
+    // OcCheck 指标 Save Oc
+    private String ocCheckXOffsetMin;
+    private String ocCheckXOffsetMax;
+    private String ocCheckYOffsetMin;
+    private String ocCheckYOffsetMax;
+
+    private String saveOcXOffsetMin;
+    private String saveOcXOffsetMax;
+    private String saveOcYOffsetMin;
+    private String saveOcYOffsetMax;
+
+    // SaveMtf 指标
+    private String saveMtfCcMin;
+    private String saveMtfCcMax;
+
+    // Vcm Run 指标
+
 
     public void reset() {
-        try {
-            for (Field field : getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if (field.getType().equals(String.class)) {
-                    field.set(this, null);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Failed to reset properties due to reflection error", e);
+        resetFields(this.getClass());
+    }
+
+    private void resetFields(Class<?> clazz) {
+        if (clazz == null) {
+            return;
         }
+
+        Arrays.stream(clazz.getDeclaredFields()).filter(field -> String.class.equals(field.getType()) || Date.class.equals(field.getType())).forEach(field -> {
+            field.setAccessible(true);
+            try {
+                field.set(this, null);  // 重置字段为 null
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Failed to reset properties due to reflection error", e);
+            }
+        });
+
+        resetFields(clazz.getSuperclass());  // 递归处理父类
     }
 
     public void fillWithData(List<AaListCommand> aaListCommands) {
         if (aaListCommands.isEmpty()) {
+            logger.warn(">>>>> aaListCommands is empty, No data to fill");
             return;
         }
 
-        List<Map<String, String>> camelCaseData = aaListCommands.stream()
-                .filter(AaListCommand::nonNull)
-                .map(aaListCommand -> {
-                    Map<String, String> map = new HashMap<>();
-                    Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
-                        String cmdObjVal = aaListCommand.getValue();
-                        if (cmdObjVal == null) {
-                            String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
-                            String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
-                            map.put(metricsMin, aaListCommand.getRange().getMin());
-                            map.put(metricsMax, aaListCommand.getRange().getMax());
-                        } else {
-                            map.put(ToCamelCaseConverter.doConvert(integration), cmdObjVal);
-                        }
-                    });
-                    return map;
-                })
-                .filter(map -> !map.isEmpty())
-                .collect(Collectors.toList());
+        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(AaListCommand::nonNull).map(aaListCommand -> {
+            Map<String, String> map = new HashMap<>();
+            Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
+                String cmdObjVal = aaListCommand.getValue();
+                if (cmdObjVal == null) {
+                    String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
+                    String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
+                    map.put(metricsMin, aaListCommand.getRange().getMin());
+                    map.put(metricsMax, aaListCommand.getRange().getMax());
+                } else {
+                    map.put(ToCamelCaseConverter.doConvert(integration), cmdObjVal);
+                }
+            });
+            return map;
+        }).filter(map -> !map.isEmpty()).collect(Collectors.toList());
 
         try {
             for (Field field : this.getClass().getDeclaredFields()) {

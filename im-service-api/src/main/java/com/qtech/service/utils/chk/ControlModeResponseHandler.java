@@ -30,17 +30,17 @@ public class ControlModeResponseHandler {
             switch (mode) {
                 case ALWAYS_NULL:
                     // 始终返回 null
-                    return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("success").setData(null);
+                    return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("Control Model: ALWAYS_NULL, always return Ok.").setData(null);
                 case DEFAULT:  // 默认，按照工作日时间控制
                     LocalDateTime now = LocalDateTime.now();
                     if (isWithinWorkingHours(now)) {
                         return doConvert(eqReverseCtrlInfo);
                     } else {
-                        return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("success").setData(null); // 非工作时间返回null
+                        return new R<String>().setCode(ResponseCode.SUCCESS.getCode()).setMsg("Control Model: DEFAULT. not in working time, return Ok.").setData(null); // 非工作时间返回null
                     }
                 case ALWAYS_RETURN:// 始终返回正常数据
                 default:
-                    // 默认模式，返回正常数据
+                    // 其余状况，返回正常数据
                     return doConvert(eqReverseCtrlInfo);
             }
         }

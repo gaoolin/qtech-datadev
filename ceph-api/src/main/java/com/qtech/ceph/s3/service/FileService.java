@@ -81,7 +81,8 @@ public interface FileService {
      * @return 预签名URL
      * @throws StorageException 存储异常
      */
-    URL generatePresignedUrl(String bucketName, String fileName) throws StorageException;
+    URL generatePresignedGetUrl(String bucketName, String fileName) throws StorageException;
+    URL generatePresignedPutUrl(String bucketName, String fileName) throws StorageException;
 
     /**
      * 分块下载文件

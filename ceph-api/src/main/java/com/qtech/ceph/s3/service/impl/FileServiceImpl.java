@@ -13,6 +13,8 @@ import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -236,13 +238,35 @@ public class FileServiceImpl implements FileService {
      * @throws StorageException 如果生成预签名 URL 过程中出现任何错误。
      */
     @Override
-    public URL generatePresignedUrl(String bucketName, String fileName) throws StorageException {
+    public URL generatePresignedGetUrl(String bucketName, String fileName) throws StorageException {
         try {
-            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder().getObjectRequest(GetObjectRequest.builder().bucket(bucketName).key(fileName).build()).signatureDuration(S3Constants.DEFAULT_SIGNATURE_DURATION).build();
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .getObjectRequest(GetObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(fileName)
+                            .build())
+                    .signatureDuration(S3Constants.DEFAULT_SIGNATURE_DURATION).build();
 
             PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
             return presignedRequest.url();
         } catch (Exception e) {
+            throw new StorageException("Failed to generate presigned URL for file: " + fileName + " in bucket: " + bucketName, e);
+        }
+    }
+
+    @Override
+    public URL generatePresignedPutUrl(String bucketName, String fileName) throws StorageException {
+        try {
+            PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+                    .putObjectRequest(PutObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(fileName)   // 要上传的对象的文件名（Key）
+                            .build())
+                    .signatureDuration(S3Constants.DEFAULT_SIGNATURE_DURATION).build();
+
+            PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
+            return presignedRequest.url();
+        } catch (Exception e){
             throw new StorageException("Failed to generate presigned URL for file: " + fileName + " in bucket: " + bucketName, e);
         }
     }
@@ -273,7 +297,6 @@ public class FileServiceImpl implements FileService {
             for (S3Object s3Object : listObjectsResponse.contents()) {
                 fileNames.add(s3Object.key());
             }
-
             return fileNames;
 
         } catch (Exception e) {

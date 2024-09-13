@@ -12,6 +12,10 @@ import static com.qtech.service.common.Constants.EQ_REVERSE_CTRL_INFO_RESPONSE_M
  */
 
 public class IoTReverseMsgBuilder {
+    private static final String PREFIX_WB_OLP = "ECheck";
+    private static final String PREFIX_AA_LIST = "Parameter Monitoring AA-List";
+    private static final String NG_MSG = " NG";
+    private static final String SEPARATOR = ": ";
 
     /**
      * 构建响应消息。
@@ -20,10 +24,6 @@ public class IoTReverseMsgBuilder {
      * @return 合成的消息
      */
     public static String buildResponseMessage(EqReverseCtrlInfo info) {
-        String prefixWbOlp = "ECheck NG:";
-        String prefixAaList = "Parameter Monitoring AA-List:";
-
-
         // 获取description字段的内容，并限制长度
         String description = truncateDescription(info.getDescription());
 
@@ -32,17 +32,17 @@ public class IoTReverseMsgBuilder {
 
         if (info.getCode() == 0) {
             if ("wb-olp".equals(info.getSource())) {
-                return formattedTime + " " + " " + description;
+                return PREFIX_WB_OLP + SEPARATOR + formattedTime + " " + description;
             } else if ("aa-list".equals(info.getSource())) {
-                return formattedTime + " " + description;
+                return PREFIX_AA_LIST + SEPARATOR + formattedTime + " " + description;
             } else {
                 return "unknown check source.";
             }
         } else {
             if ("wb-olp".equals(info.getSource())) {
-                return prefixWbOlp + formattedTime + " " + description;
+                return PREFIX_WB_OLP + NG_MSG + SEPARATOR + formattedTime + " " + description;
             } else if ("aa-list".equals(info.getSource())) {
-                return prefixAaList + formattedTime + " " + description;
+                return PREFIX_AA_LIST + NG_MSG + SEPARATOR + formattedTime + " " + description;
             } else {
                 return "unknown check source.";
             }
@@ -59,6 +59,6 @@ public class IoTReverseMsgBuilder {
         if (description == null) {
             return "";
         }
-        return description.length() > EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH ? description.substring(0, EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH) : description;
+        return description.length() > EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH ? description.substring(0, EQ_REVERSE_CTRL_INFO_RESPONSE_MSG_LENGTH) + "..." : description;
     }
 }

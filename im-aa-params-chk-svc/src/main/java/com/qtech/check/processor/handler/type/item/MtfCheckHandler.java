@@ -1,11 +1,11 @@
 package com.qtech.check.processor.handler.type.item;
 
+import com.qtech.check.algorithm.model.ItemCcParser;
 import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * author :  gaozhilin
@@ -16,38 +16,15 @@ import java.util.regex.Pattern;
 
 @Component
 public class MtfCheckHandler extends AaListCommandHandler<AaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(MtfCheckHandler.class);
 
     @Override
-    public AaListCommand handle(String[] parts) {
-        String command = parts[2];
-        if ("RESULT".equals(command)) {
-            Integer num = Integer.parseInt(parts[1]);
-
-            String subSystem = null;
-            Pattern pattern = Pattern.compile("\\[(\\d+)\\]");
-            Matcher matcher = pattern.matcher(parts[3]);
-            if (matcher.find()) {
-                subSystem = matcher.group(1); // Return the first capturing group (the number)
-            } else {
-                throw new IllegalArgumentException("MtfCheckHandler string does not match the expected pattern");
-            }
-            String val = parts[6];
-            return new AaListCommand(null, num, command, subSystem, val, null);
+    public AaListCommand handle(String[] parts, String prefixCommand) {
+        try {
+            return ItemCcParser.apply(parts, prefixCommand);
+        } catch (Exception e) {
+            logger.error(">>>>> MtfCheckHandler handle error: " + e.getMessage());
         }
         return null;
-    }
-
-    @Override
-    public <R> R handleByType(Class<R> clazz, String msg) {
-        if (AaListCommand.class.equals(clazz)) {
-            String[] parts = msg.split("\\s+");
-            return clazz.cast(handle(parts));
-        }
-        return null;
-    }
-
-    @Override
-    public <U> boolean supportsType(Class<U> clazz) {
-        return AaListCommand.class.equals(clazz);
     }
 }

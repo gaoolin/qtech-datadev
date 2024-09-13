@@ -13,9 +13,10 @@ import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import com.qtech.check.service.IAaListParamsStdModelService;
 import com.qtech.check.utils.RedisUtil;
 import com.qtech.common.utils.DateUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -35,9 +36,9 @@ import static com.qtech.check.constant.ComparisonConstants.*;
  * desc   :
  */
 
-@Slf4j
 @Component
 public class AaListParamsCheckMessageConsumer {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckMessageConsumer.class);
     private final ObjectMapper objectMapper = new ObjectMapper()
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -62,7 +63,8 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             // String key = record.key();
             String value = record.value();
-            AaListParams actualObj = objectMapper.readValue(value, new TypeReference<AaListParams>() {});
+            AaListParams actualObj = objectMapper.readValue(value, new TypeReference<AaListParams>() {
+            });
 
             AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType());
             if (modelInfoObj == null) {
@@ -74,12 +76,13 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
                     aaListParamsCheckResult.setCode(0);
+                    // 模版信息表中没有对应机型的模版信息（1.没有标准模版 2.模版明细存在，而模版信息丢失）
                     aaListParamsCheckResult.setDescription("Missing Template Information.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                    log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
+                    logger.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
 
                     rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                    log.info(">>>>> AA list Result sent to RabbitMQ!");
+                    logger.info(">>>>> AA list Result sent to RabbitMQ!");
                     continue;
                 }
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
@@ -90,13 +93,14 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResult.setProdType(actualObj.getProdType());
                 aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
                 aaListParamsCheckResult.setCode(0);
+                // 模版信息表中有对应机型的模版信息，但模版信息处于离线状态
                 aaListParamsCheckResult.setDescription("Template Offline.");
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
                 kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                log.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
+                logger.warn(">>>>> Missing template info for prodType: {}. skip action.", actualObj.getProdType());
 
                 rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                log.info(">>>>> AA list Result sent to RabbitMQ!");
+                logger.info(">>>>> AA list Result sent to RabbitMQ!");
                 continue;
             }
 
@@ -110,12 +114,13 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
                     aaListParamsCheckResult.setCode(2);
+                    // 模版信息表中有对应机型的信息，但是模版明细表中没有模版的明细。
                     aaListParamsCheckResult.setDescription("Missing Template.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                    log.warn(">>>>> Can not find standard template for prodType: {}. skip action.", actualObj.getProdType());
+                    logger.warn(">>>>> Can not find standard template for prodType: {}. skip action.", actualObj.getProdType());
 
                     rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResult));
-                    log.info(">>>>> AA list Result sent to RabbitMQ!");
+                    logger.info(">>>>> AA list Result sent to RabbitMQ!");
                     continue;
                 }
                 redisUtil.saveAaListParamsStdModel(REDIS_COMPARISON_MODEL_KEY_PREFIX + actualObj.getProdType(), modelObj);
@@ -183,11 +188,11 @@ public class AaListParamsCheckMessageConsumer {
             String jsonString = objectMapper.writeValueAsString(aaListParamsCheckResult);
 
             kafkaTemplate.send("qtech_im_aa_list_checked_topic", jsonString);
-            log.info(">>>>> Check message complete!");
+            logger.info(">>>>> Check message complete!");
 
             // 发送结果到 RabbitMQ
             rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", jsonString);
-            log.info(">>>>> AA list Result sent to RabbitMQ!");
+            logger.info(">>>>> AA list Result sent to RabbitMQ!");
         }
     }
 }

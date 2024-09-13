@@ -1,8 +1,9 @@
 package com.qtech.check.algorithm;
 
 import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -13,15 +14,13 @@ import java.util.*;
  * date   :  2024/05/20 10:59:31
  * desc   :
  */
-
 /*
 Objects.equals()方法用于比较两个对象是否相等，包括null值。这意味着Objects.equals(value1, value2)会正确处理null值的情况。如果value1和value2都为null，
 Objects.equals()会返回true，否则如果它们不相等（包括一个为null，另一个不为null），它会返回false。因此，if (!Objects.equals(value1, value2))会捕获不相等的值，
 包括null和非null的组合。接下来的两个if语句分别检查value1和value2的空值情况，确保不会错过任何情况。
 */
-
-@Slf4j
 public class AaListParamsComparator {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsComparator.class);
 
     /**
      * 比较两个对象的指定属性并返回不一致的属性及其值。
@@ -32,8 +31,7 @@ public class AaListParamsComparator {
      * @param propertiesToCompute 需要额外处理的属性列表
      * @return 包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
      */
-    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(
-            Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
+    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
 
         if ((propertiesToCompare == null || propertiesToCompare.isEmpty()) && (propertiesToCompute == null || propertiesToCompute.isEmpty())) {
             // 如果没有属性需要比较，则直接返回表示没有不一致的结果
@@ -75,9 +73,9 @@ public class AaListParamsComparator {
                     }
                 }
             } catch (NoSuchFieldException e) {
-                log.error(">>>>> Field not found: {}", propertyName);
+                logger.error(">>>>> Field not found in actualVal: {}", propertyName);
             } catch (IllegalAccessException e) {
-                log.error(">>>>> Access denied for field: {}", propertyName);
+                logger.error(">>>>> Access denied for field: {}", propertyName);
             }
         }
 
@@ -136,10 +134,7 @@ public class AaListParamsComparator {
      * @param emptyInActual          实际对象为空的属性集合
      * @param emptyInStandard        标准对象为空的属性集合
      */
-    private static void addToResult(Object modelVal, Object actualVal, String propertyName,
-                                    Map<String, Map.Entry<Object, Object>> inconsistentProperties,
-                                    Map<String, Object> emptyInActual,
-                                    Map<String, Object> emptyInStandard) {
+    private static void addToResult(Object modelVal, Object actualVal, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
         if (modelVal == null) {
             emptyInStandard.put(propertyName, null);
         } else if (actualVal == null) {
@@ -166,8 +161,7 @@ public class AaListParamsComparator {
                 Integer value1 = (Integer) field1.get(obj1);
                 Integer value2 = (Integer) field2.get(obj2);
 
-                if (value1 == null || value1 < entry.getValue().getMin() || value1 > entry.getValue().getMax() ||
-                        value2 == null || value2 < entry.getValue().getMin() || value2 > entry.getValue().getMax()) {
+                if (value1 == null || value1 < entry.getValue().getMin() || value1 > entry.getValue().getMax() || value2 == null || value2 < entry.getValue().getMin() || value2 > entry.getValue().getMax()) {
                     return false;
                 }
             } catch (NoSuchFieldException | IllegalAccessException e) {

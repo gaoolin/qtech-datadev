@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
  * date   :  2024/05/14 11:50:36
  * desc   :
  */
-
-
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -31,11 +29,12 @@ public class AaListParams extends AaListParamsBaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedTime;
 
+    @Override
     public void reset() {
         this.simId = null;
         this.prodType = null;
         this.receivedTime = null;
-        super.reset();
+        super.reset();  // 调用父类的 reset 方法，重置父类的字段
     }
 
     @Override
@@ -44,25 +43,21 @@ public class AaListParams extends AaListParamsBaseEntity {
             return;
         }
 
-        List<Map<String, String>> camelCaseData = aaListCommands.stream()
-                .filter(AaListCommand::nonNull)
-                .map(aaListCommand -> {
-                    Map<String, String> map = new HashMap<>();
-                    Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
-                        String cmdObjVal = aaListCommand.getValue();
-                        if (cmdObjVal == null) {
-                            String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
-                            String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
-                            map.put(metricsMin, aaListCommand.getRange().getMin());
-                            map.put(metricsMax, aaListCommand.getRange().getMax());
-                        } else {
-                            map.put(ToCamelCaseConverter.doConvert(integration), cmdObjVal);
-                        }
-                    });
-                    return map;
-                })
-                .filter(map -> !map.isEmpty())
-                .collect(Collectors.toList());
+        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(AaListCommand::nonNull).map(aaListCommand -> {
+            Map<String, String> map = new HashMap<>();
+            Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
+                String cmdObjVal = aaListCommand.getValue();
+                if (cmdObjVal == null) {
+                    String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
+                    String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
+                    map.put(metricsMin, aaListCommand.getRange().getMin());
+                    map.put(metricsMax, aaListCommand.getRange().getMax());
+                } else {
+                    map.put(ToCamelCaseConverter.doConvert(integration), cmdObjVal);
+                }
+            });
+            return map;
+        }).filter(map -> !map.isEmpty()).collect(Collectors.toList());
 
         try {
             setFieldsFromData(this, camelCaseData);

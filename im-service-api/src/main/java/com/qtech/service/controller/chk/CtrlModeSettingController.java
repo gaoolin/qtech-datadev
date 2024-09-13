@@ -4,10 +4,7 @@ import com.qtech.service.controller.BaseController;
 import com.qtech.service.utils.chk.ControlMode;
 import com.qtech.service.utils.chk.ControlModeFlag;
 import com.qtech.service.utils.response.ApiResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * author :  gaozhilin
@@ -21,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 控制设备反向控制信息的控制器。
  */
 @RestController
-@RequestMapping(value = "/im/ctrl")
+@RequestMapping(value = "/im/control-mode")
 public class CtrlModeSettingController extends BaseController {
 
     /**
@@ -30,7 +27,7 @@ public class CtrlModeSettingController extends BaseController {
      * @param mode 新的控制模式字符串
      * @return 成功或错误的消息响应
      */
-    @PostMapping("/control-mode")
+    @PostMapping
     public ApiResponse<String> changeControlMode(@RequestParam("mode") String mode) {
         try {
             ControlMode newMode = ControlMode.valueOf(mode.toUpperCase());
@@ -39,5 +36,10 @@ public class CtrlModeSettingController extends BaseController {
         } catch (IllegalArgumentException e) {
             return ApiResponse.badRequest("Invalid control mode");
         }
+    }
+
+    @GetMapping
+    public ApiResponse<String> getControlMode() {
+        return ApiResponse.success("Current control mode is: " + ControlModeFlag.controlMode, null);
     }
 }

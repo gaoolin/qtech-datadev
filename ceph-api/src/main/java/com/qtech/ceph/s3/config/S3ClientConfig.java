@@ -62,7 +62,13 @@ public class S3ClientConfig {
     @Bean
     public S3AsyncClient s3AsyncClient() {
         try {
-            return S3AsyncClient.builder().credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey))).region(Region.of(region)).endpointOverride(new URI(endpoint)).build();
+            return S3AsyncClient.builder()
+                    .credentialsProvider(StaticCredentialsProvider
+                            .create(AwsBasicCredentials
+                                    .create(accessKeyId, secretAccessKey)))
+                    .region(Region.of(region))
+                    .endpointOverride(new URI(endpoint))
+                    .build();
         } catch (URISyntaxException e) {
             logger.error("Invalid S3 endpoint URI: " + endpoint, e);
             throw new RuntimeException("Failed to create S3AsyncClient", e);
@@ -75,7 +81,13 @@ public class S3ClientConfig {
     @Bean
     public S3Presigner s3Presigner() {
         try {
-            return S3Presigner.builder().credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKeyId, secretAccessKey))).region(Region.of(region)).endpointOverride(new URI(endpoint)).build();
+            return S3Presigner.builder()
+                    .credentialsProvider(StaticCredentialsProvider
+                            .create(AwsBasicCredentials
+                                    .create(accessKeyId, secretAccessKey)))
+                    .region(Region.of(region))
+                    .endpointOverride(new URI(endpoint))
+                    .build();
         } catch (URISyntaxException e) {
             logger.error("Invalid S3 endpoint URI: " + endpoint, e);
             throw new RuntimeException("Failed to create S3Presigner", e);

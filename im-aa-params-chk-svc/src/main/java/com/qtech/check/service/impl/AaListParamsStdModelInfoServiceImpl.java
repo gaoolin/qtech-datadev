@@ -3,9 +3,10 @@ package com.qtech.check.service.impl;
 import com.qtech.check.mapper.AaListParamsStdModelInfoMapper;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +19,9 @@ import java.util.List;
  * desc   :
  */
 
-@Slf4j
 @Service
 public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdModelInfoService {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsStdModelInfoServiceImpl.class);
 
     @Autowired
     private AaListParamsStdModelInfoMapper aaListParamsStdModelInfoMapper;
@@ -30,7 +31,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
         try {
             return aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfo);
         } catch (Exception e) {
-            log.error("selectAaListParamsStdModelInfoList error", e);
+            logger.error("selectAaListParamsStdModelInfoList error", e);
         }
         return null;
     }
@@ -41,7 +42,7 @@ public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdMode
         try {
             list = aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfo);
         } catch (Exception e) {
-            log.error("selectOneAaListParamsStdModelInfo error", e);
+            logger.error("selectOneAaListParamsStdModelInfo error", e);
         }
 
         if (CollectionUtils.isNotEmpty(list)) {

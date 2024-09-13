@@ -27,8 +27,6 @@ public interface IEqReverseCtrlInfoService {
 
     int addWbOlpChkDoris(EqReverseCtrlInfo eqReverseCtrlInfo);
 
-    int upsertPostgres(EqReverseCtrlInfo eqReverseCtrlInfo);
-
     CompletableFuture<Integer> upsertOracleAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 
     CompletableFuture<Integer> upsertDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
@@ -36,6 +34,4 @@ public interface IEqReverseCtrlInfoService {
     CompletableFuture<Integer> addAaListDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 
     CompletableFuture<Integer> addWbOlpChkDorisAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
-
-    CompletableFuture<Integer> upsertPostgresAsync(EqReverseCtrlInfo eqReverseCtrlInfo);
 }

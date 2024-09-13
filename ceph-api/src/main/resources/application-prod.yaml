@@ -1,8 +1,3 @@
-logging:
-  config: classpath:logback-spring.xml
-  level:
-    root: info
-
 #AWS S3配置
 aws:
   s3:
