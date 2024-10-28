@@ -15,9 +15,12 @@ import java.util.regex.Pattern;
  * desc   :  CC处理器
  * 处理形如以下格式的字符
  * ITEM	18	RESULT		[CC]	Check	30.00	0.00	Log	100.00	100.00	100.00	100.00	30.00	30.00	50.00	1.00	NoCompare	0.00	0.00	0.00
+ *
+ * 用到此解析器的List 命令包括：
+ * VCM_Check
+ * mtf_check
+ *
  */
-
-
 public class ItemCcParser {
     private static final Logger logger = LoggerFactory.getLogger(ItemCcParser.class);
 

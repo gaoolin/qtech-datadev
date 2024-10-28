@@ -288,7 +288,7 @@
                save_oc_y_offset_max,
                save_mtf_cc_min,
                save_mtf_cc_max
-        FROM qtech_eq_dwd.im_aa_list_parsed_detail_test
+        FROM qtech_eq_dwd.im_aa_list_parsed_detail
     </sql>
 
     <select id="selectAaListParamsList" resultMap="AaListParamsMessageResult">

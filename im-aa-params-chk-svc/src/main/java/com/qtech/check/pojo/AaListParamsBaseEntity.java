@@ -91,6 +91,15 @@ public class AaListParamsBaseEntity {
     private String aa1MtfOffAxisCheck1;
     private String aa1MtfOffAxisCheck2;
     private String aa1MtfOffAxisCheck3;
+    // 新增
+    private String aa1Target;
+    private String aa1CcToCornerLimit;
+    private String aa1CcToCornerLimitMin;
+    private String aa1CornerScoreDifferenceRejectValue;
+    private String aa1ZRef;
+    private String aa1SrchStep;
+    private String aa1GoldenGlueThicknessMin;
+    private String aa1GoldenGlueThicknessMax;
 
     private String aa2RoiCc;
     private String aa2RoiUl;
@@ -105,6 +114,15 @@ public class AaListParamsBaseEntity {
     private String aa2MtfOffAxisCheck1;
     private String aa2MtfOffAxisCheck2;
     private String aa2MtfOffAxisCheck3;
+    // 新增
+    private String aa2Target;
+    private String aa2CcToCornerLimit;
+    private String aa2CcToCornerLimitMin;
+    private String aa2CornerScoreDifferenceRejectValue;
+    private String aa2ZRef;
+    private String aa2SrchStep;
+    private String aa2GoldenGlueThicknessMin;
+    private String aa2GoldenGlueThicknessMax;
 
     private String aa3RoiCc;
     private String aa3RoiUl;
@@ -119,6 +137,15 @@ public class AaListParamsBaseEntity {
     private String aa3MtfOffAxisCheck1;
     private String aa3MtfOffAxisCheck2;
     private String aa3MtfOffAxisCheck3;
+    // 新增
+    private String aa3Target;
+    private String aa3CcToCornerLimit;
+    private String aa3CcToCornerLimitMin;
+    private String aa3CornerScoreDifferenceRejectValue;
+    private String aa3ZRef;
+    private String aa3SrchStep;
+    private String aa3GoldenGlueThicknessMin;
+    private String aa3GoldenGlueThicknessMax;
 
     // mtfCheck Item 指标
     private String mtfCheckFC;

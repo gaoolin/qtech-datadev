@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/10/08 10:40:42
- * desc   :
+ * desc   :  解析AA相关参数的解析器
  */
 
 
@@ -21,7 +21,7 @@ public class ItemAaParser {
 
     public static AaListCommand apply(String[] parts, String prefixCommand) {
         String command = parts[2];
-        if ("ROI".equals(StringUtils.upperCase(command))) {
+        if ("ROI".equals(StringUtils.upperCase(command))) {  // 光学性能测试
             Integer num = Integer.parseInt(parts[1]);
             String subSystem = parts[3];
             String val = parts[5];
@@ -36,11 +36,51 @@ public class ItemAaParser {
             }
             logger.info(">>>>> {}-ItemAaParser: ROI: subSystem: {}, {}", prefixCommand, subSystem, val);
             return new AaListCommand(null, num, prefixCommand, command, subSystem, val, null);
-        } else if (StringUtils.startsWith(command, "MTF_OFF_AXIS_CHECK")) {
+        } else if (StringUtils.startsWith(StringUtils.upperCase(command), "MTF_OFF_AXIS_CHECK")) {
             String val = parts[3];
             Integer num = Integer.parseInt(parts[1]);
             logger.info(">>>>> {}-ItemAaParser: MTF_OFF_AXIS_CHECK: {}", prefixCommand, val);
             return new AaListCommand(null, num, prefixCommand, command, null, val, null);
+        } else if ("TARGET".equals(StringUtils.upperCase(command))) {  // AA方式
+            int num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("CC_TO_CORNER_LIMIT".equals(StringUtils.upperCase(command))) {  // 场曲
+            Integer num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("CC_TO_CORNER_LIMIT_MIN".equals(StringUtils.upperCase(command))) {
+            Integer num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("CORNER_SCORE_DIFFERENCE_REJECT_VALUE".equals(StringUtils.upperCase(command))) {  // 四角均匀性
+            Integer num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("Z_REF".equals(StringUtils.upperCase(command))) {  // AA Z的位置
+            int num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("SRCH_STEP".equals(StringUtils.upperCase(command))) {  // 步距（3步)
+            int num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("GoldenGlueThicknessMin".equals(StringUtils.upperCase(command))) {  // 压合后厚度
+            int num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
+        } else if ("GoldenGlueThicknessMax".equals(StringUtils.upperCase(command))) {
+            int num = Integer.parseInt(parts[1]);
+            String value = parts[3];
+            logger.info(">>>>> {}-ItemAaParser: {}, value: {}", prefixCommand, command, value);
+            return new AaListCommand(null, num, prefixCommand, command, null, value, null);
         } else {
             return null;
         }
