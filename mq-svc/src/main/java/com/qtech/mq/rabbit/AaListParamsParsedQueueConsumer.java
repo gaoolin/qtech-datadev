@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.mq.domain.AaListParams;
 import com.qtech.mq.service.IAaListParamsParsedService;
+import com.qtech.mq.service.IImAaListParamsService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,11 @@ public class AaListParamsParsedQueueConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedQueueConsumer.class);
     private final ObjectMapper objectMapper;
     private final IAaListParamsParsedService aaListParamsParsedService;
+    private final IImAaListParamsService imAaListParamsService;
 
-    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService aaListParamsParsedService, ObjectMapper objectMapper) {
+    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService aaListParamsParsedService, IImAaListParamsService imAaListParamsService, ObjectMapper objectMapper) {
         this.aaListParamsParsedService = aaListParamsParsedService;
+        this.imAaListParamsService = imAaListParamsService;
         this.objectMapper = objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
@@ -42,7 +45,8 @@ public class AaListParamsParsedQueueConsumer {
         logger.info(">>>>> receive aaListParamsParsedQueue message: {}", msg);
         try {
             AaListParams singleMessage = validateAndParseMessage(msg, channel, deliveryTag);
-            int cnt = aaListParamsParsedService.save(singleMessage);
+            // int cnt = aaListParamsParsedService.save(singleMessage);
+            imAaListParamsService.save(singleMessage);
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             logger.error(">>>>> receive aaListParamsParsedQueue message error: {}", e.getMessage(), e);

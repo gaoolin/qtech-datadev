@@ -266,11 +266,11 @@
                vcm_check_result_check_min,
                vcm_check_result_check_max,
                record_position_ut_xyz_move
-        FROM qtech_eq_dwd.im_aa_list_parsed_detail_test
+        FROM qtech_eq_dwd.im_aa_list_parsed_detail
     </sql>
 
     <insert id="save" parameterType="AaListParams">
-        INSERT INTO qtech_eq_dwd.im_aa_list_parsed_detail_test
+        INSERT INTO qtech_eq_dwd.im_aa_list_parsed_detail
         (sim_id, prod_type, received_time,
          aa1, aa2, aa3,
          back_to_position, blemish, clamp_on_off,
