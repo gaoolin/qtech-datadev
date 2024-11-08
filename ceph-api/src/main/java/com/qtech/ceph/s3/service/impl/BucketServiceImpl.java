@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class BucketServiceImpl implements BucketService {
-
     private final S3Client s3Client;
 
     /**

@@ -104,13 +104,13 @@ public class ComparisonConstants {
      * 上面的 CONTROL_LIST_SET 数组发生了增减，下面的数组也要对应的增减相关command或者subCommand
      */
     public static final List<String> PROPERTIES_TO_COMPUTE = Arrays.asList(
-            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr", "aa1FC", "aa1F1", "aa1F2", "aa1F3", "aa1F4", "aa1MtfOffAxisCheck1", "aa1MtfOffAxisCheck2", "aa1MtfOffAxisCheck3",
-            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr", "aa2FC", "aa2F1", "aa2F2", "aa2F3", "aa2F4", "aa2MtfOffAxisCheck1", "aa2MtfOffAxisCheck2", "aa2MtfOffAxisCheck3",
-            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr", "aa3FC", "aa3F1", "aa3F2", "aa3F3", "aa3F4", "aa3MtfOffAxisCheck1", "aa3MtfOffAxisCheck2", "aa3MtfOffAxisCheck3",
-            "mtfCheckFC", "mtfCheckF1", "mtfCheckF2", "mtfCheckF3", "mtfCheckF4",
-            "mtfCheck1FC", "mtfCheck1F1", "mtfCheck1F2", "mtfCheck1F3", "mtfCheck1F4",
-            "mtfCheck2FC", "mtfCheck2F1", "mtfCheck2F2", "mtfCheck2F3", "mtfCheck2F4",
-            "mtfCheck3FC", "mtfCheck3F1", "mtfCheck3F2", "mtfCheck3F3", "mtfCheck3F4",
+            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr", "aa1Fc", "aa1F1", "aa1F2", "aa1F3", "aa1F4", "aa1MtfOffAxisCheck1", "aa1MtfOffAxisCheck2", "aa1MtfOffAxisCheck3",
+            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr", "aa2Fc", "aa2F1", "aa2F2", "aa2F3", "aa2F4", "aa2MtfOffAxisCheck1", "aa2MtfOffAxisCheck2", "aa2MtfOffAxisCheck3",
+            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr", "aa3Fc", "aa3F1", "aa3F2", "aa3F3", "aa3F4", "aa3MtfOffAxisCheck1", "aa3MtfOffAxisCheck2", "aa3MtfOffAxisCheck3",
+            "mtfCheckFc", "mtfCheckF1", "mtfCheckF2", "mtfCheckF3", "mtfCheckF4",
+            "mtfCheck1Fc", "mtfCheck1F1", "mtfCheck1F2", "mtfCheck1F3", "mtfCheck1F4",
+            "mtfCheck2Fc", "mtfCheck2F1", "mtfCheck2F2", "mtfCheck2F3", "mtfCheck2F4",
+            "mtfCheck3Fc", "mtfCheck3F1", "mtfCheck3F2", "mtfCheck3F3", "mtfCheck3F4",
             "chartAlignmentXResMin", "chartAlignmentXResMax", "chartAlignmentYResMin", "chartAlignmentYResMax",
             "chartAlignment1XResMin", "chartAlignment1XResMax", "chartAlignment1YResMin", "chartAlignment1YResMax",
             "chartAlignment2XResMin", "chartAlignment2XResMax", "chartAlignment2YResMin", "chartAlignment2YResMax",

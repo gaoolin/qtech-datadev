@@ -27,7 +27,6 @@ import static com.qtech.ceph.s3.utils.S3Constants.EXPIRATION_DAYS;
 @RestController
 @RequestMapping("/s3/lifecycle")
 public class S3FileLifecycleController {
-
     private static final Logger logger = LoggerFactory.getLogger(S3FileLifecycleController.class);
 
     @Autowired

@@ -20,13 +20,13 @@
         <include refid="select_eq_reverse_ctrl_info" />
         <where>
             <if test="simId != null and simId != ''">
-                and sim_id = #{simId}
+                and SIM_ID = #{simId}
             </if>
             <if test="source != null and source != ''">
-                and source = #{source}
+                and "SOURCE" = #{source}
             </if>
             <if test="prodType != null and prodType != ''">
-                and prod_type = #{prodType}
+                and PROD_TYPE = #{prodType}
             </if>
         </where>
     </select>
@@ -34,7 +34,7 @@
         <include refid="select_eq_reverse_ctrl_info" />
         <where>
             <if test="simId != null and simId != ''">
-                and sim_id = #{simId}
+                and SIM_ID = #{simId}
             </if>
         </where>
     </select>

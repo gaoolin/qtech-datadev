@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 
 @Configuration
 public class S3ClientConfig {
-
     private static final Logger logger = LoggerFactory.getLogger(S3ClientConfig.class);
 
     @Value("${aws.s3.accessKey}")

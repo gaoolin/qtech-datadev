@@ -38,7 +38,7 @@ public class AaListParamsDtoMessageConsumer {
                 }
             }
 
-            AaListParams pojo = JSON.parseObject(value, new TypeReference<AaListParams>() {
+            AaListParamsParsed pojo = JSON.parseObject(value, new TypeReference<AaListParamsParsed>() {
             });
             // 设置接收时间
             pojo.setReceivedTime(timestamp);

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.check.algorithm.AaListParamsComparator;
-import com.qtech.check.pojo.AaListParams;
 import com.qtech.check.pojo.AaListParamsCheckResult;
+import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.pojo.AaListParamsStdModel;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;
@@ -63,10 +63,11 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             // String key = record.key();
             String value = record.value();
-            AaListParams actualObj = objectMapper.readValue(value, new TypeReference<AaListParams>() {
+            AaListParamsParsed actualObj = objectMapper.readValue(value, new TypeReference<AaListParamsParsed>() {
             });
 
-            AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType());
+            String prodType = actualObj.getProdType();
+            AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
             if (modelInfoObj == null) {
                 AaListParamsStdModelInfo stdModelInfoParam = new AaListParamsStdModelInfo();
                 stdModelInfoParam.setProdType(actualObj.getProdType());
@@ -75,7 +76,7 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setSimId(actualObj.getSimId());
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
-                    aaListParamsCheckResult.setCode(0);
+                    aaListParamsCheckResult.setCode(1);
                     // 模版信息表中没有对应机型的模版信息（1.没有标准模版 2.模版明细存在，而模版信息丢失）
                     aaListParamsCheckResult.setDescription("Missing Template Information.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
@@ -92,7 +93,7 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResult.setSimId(actualObj.getSimId());
                 aaListParamsCheckResult.setProdType(actualObj.getProdType());
                 aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
-                aaListParamsCheckResult.setCode(0);
+                aaListParamsCheckResult.setCode(6);
                 // 模版信息表中有对应机型的模版信息，但模版信息处于离线状态
                 aaListParamsCheckResult.setDescription("Template Offline.");
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + actualObj.getProdType(), modelInfoObj);
@@ -113,9 +114,9 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResult.setSimId(actualObj.getSimId());
                     aaListParamsCheckResult.setProdType(actualObj.getProdType());
                     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
-                    aaListParamsCheckResult.setCode(2);
+                    aaListParamsCheckResult.setCode(7);
                     // 模版信息表中有对应机型的信息，但是模版明细表中没有模版的明细。
-                    aaListParamsCheckResult.setDescription("Missing Template.");
+                    aaListParamsCheckResult.setDescription("Missing Template Detail.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResult));
                     logger.warn(">>>>> Can not find standard template for prodType: {}. skip action.", actualObj.getProdType());
 
@@ -136,26 +137,59 @@ public class AaListParamsCheckMessageConsumer {
             // inconsistentProperties、emptyInActual内部数据才是异常信息。emptyInStandard非异常信息仅提示即可
             // inconsistentProperties为实际值和模版值不一致
             // emptyInActual为实际为空，但模版不为空
+            // emptyInStandard为标准为空，但实际不为空
             // 输出不一致的属性
             // 输出空在实际参数对象的属性
             // 输出空在标准参数对象的属性
 
+            aaListParamsCheckResult.setSimId(actualObj.getSimId());
+            aaListParamsCheckResult.setProdType(actualObj.getProdType());
+            aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
+            StringBuilder description = new StringBuilder();
+
             if (inconsistentProperties.isEmpty() && emptyInActual.isEmpty()) {
-                aaListParamsCheckResult.setSimId(actualObj.getSimId());
-                aaListParamsCheckResult.setProdType(actualObj.getProdType());
-                aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
-                aaListParamsCheckResult.setCode(0);
+                // 单独判断emptyInStandard的情况
                 if (!emptyInStandard.isEmpty()) {
-                    StringBuilder description = new StringBuilder();
+                    aaListParamsCheckResult.setCode(4);
+
                     emptyInStandard.forEach((prop, val) -> {
                         description.append(prop).append("+").append(";");
                     });
                     aaListParamsCheckResult.setDescription(description.toString());
                 } else {
+                    aaListParamsCheckResult.setCode(0);
                     aaListParamsCheckResult.setDescription("Ok.");
                 }
+            } else if (inconsistentProperties.isEmpty() && emptyInStandard.isEmpty()) {
+                // 单独判断emptyInActual的情况, 前面已经判断过emptyInActual为空的情况，仅为emptyInActual不为空的情况
+                aaListParamsCheckResult.setCode(2);
+                emptyInActual.forEach((prop, val) -> {
+                    description.append(prop).append("-").append(";");
+                });
+                aaListParamsCheckResult.setDescription(description.toString());
+            } else if (emptyInActual.isEmpty() && emptyInStandard.isEmpty()) {
+                // 单独判断inconsistentProperties的情况
+                aaListParamsCheckResult.setCode(3);
+                inconsistentProperties.forEach((prop, map) -> {
+                    if (map != null) {
+                        Object modelVal = map.getKey();
+                        Object actualVal = map.getValue();
+                        description.append(prop).append(":").append(actualVal).append("!=").append(modelVal).append(";");
+                    }
+                });
+                aaListParamsCheckResult.setDescription(description.toString());
             } else {
-                StringBuilder description = new StringBuilder();
+                aaListParamsCheckResult.setCode(5);
+                if (!emptyInActual.isEmpty()) {
+                    emptyInActual.forEach((prop, val) -> {
+                        description.append(prop).append("-").append(";");
+                    });
+                }
+                if (!emptyInStandard.isEmpty()) {
+                    emptyInStandard.forEach((prop, val) -> {
+                        description.append(prop).append("+").append(";");
+                    });
+                }
                 if (!inconsistentProperties.isEmpty()) {
                     inconsistentProperties.forEach((prop, map) -> {
                         if (map != null) {
@@ -165,25 +199,38 @@ public class AaListParamsCheckMessageConsumer {
                         }
                     });
                 }
-
-                if (!emptyInActual.isEmpty()) {
-                    emptyInActual.forEach((prop, val) -> {
-                        description.append(prop).append("-").append(";");
-                    });
-                }
-
-                if (!emptyInStandard.isEmpty()) {
-                    emptyInStandard.forEach((prop, val) -> {
-                        description.append(prop).append("+").append(";");
-                    });
-                }
-
-                aaListParamsCheckResult.setSimId(actualObj.getSimId());
-                aaListParamsCheckResult.setProdType(actualObj.getProdType());
-                aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
-                aaListParamsCheckResult.setCode(1);
                 aaListParamsCheckResult.setDescription(description.toString());
             }
+            // } else {
+            //     StringBuilder description = new StringBuilder();
+            //     if (!inconsistentProperties.isEmpty()) {
+            //         inconsistentProperties.forEach((prop, map) -> {
+            //             if (map != null) {
+            //                 Object modelVal = map.getKey();
+            //                 Object actualVal = map.getValue();
+            //                 description.append(prop).append(":").append(actualVal).append("!=").append(modelVal).append(";");
+            //             }
+            //         });
+            //     }
+            //
+            //     if (!emptyInActual.isEmpty()) {
+            //         emptyInActual.forEach((prop, val) -> {
+            //             description.append(prop).append("-").append(";");
+            //         });
+            //     }
+            //
+            //     if (!emptyInStandard.isEmpty()) {
+            //         emptyInStandard.forEach((prop, val) -> {
+            //             description.append(prop).append("+").append(";");
+            //         });
+            //     }
+            //
+            //     aaListParamsCheckResult.setSimId(actualObj.getSimId());
+            //     aaListParamsCheckResult.setProdType(actualObj.getProdType());
+            //     aaListParamsCheckResult.setChkDt(DateUtils.getNowDate());
+            //     aaListParamsCheckResult.setCode(1);
+            //     aaListParamsCheckResult.setDescription(description.toString());
+            // }
 
             String jsonString = objectMapper.writeValueAsString(aaListParamsCheckResult);
 

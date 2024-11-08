@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 
 
-class AaListParamsTest {
+class AaListParamsParsedTest {
 
     @Test
     void underscoreToCamelCase() {

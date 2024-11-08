@@ -1,6 +1,6 @@
 package com.qtech.check.algorithm.model;
 
-import com.qtech.check.pojo.AaListParams;
+import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.exception.AaListParseListActionEmptyException;
 
 import java.util.*;
@@ -14,32 +14,32 @@ import java.util.*;
 
 
 public class LineParserProcessor {
-    private final AaListParams aaListParams = new AaListParams();
+    private final AaListParamsParsed aaListParamsParsed = new AaListParamsParsed();
     private final Map<String, String> listMap = new HashMap<>();
     private final Map<String, String> listItemMap = new HashMap<>();
 
-    public AaListParams doAaParamsParse(String msg) {
+    public AaListParamsParsed doAaParamsParse(String msg) {
 /*        StringTokenizer tokenizer = new StringTokenizer(msg, " \t\r\n");
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             if ("LIST".equals(token)) {
-                parseListStart(tokenizer, aaListParams, token, listItemMap);
+                parseListStart(tokenizer, aaListParamsParsed, token, listItemMap);
             } else if ("ITEM".equals(token)) {
-                parseItemStart(tokenizer, aaListParams, token);
+                parseItemStart(tokenizer, aaListParamsParsed, token);
             }
         }*/
         String[] lines = msg.split("\n");
         List<Command> commands = processStringList(lines);
 
         commands.forEach(command -> {
-            // aaListParams.fillWithData(command);
+            // aaListParamsParsed.fillWithData(command);
         });
 
-        System.out.println(aaListParams);
-        return aaListParams;
+        System.out.println(aaListParamsParsed);
+        return aaListParamsParsed;
     }
 
-    public void parseListStart(StringTokenizer tokenizer, AaListParams aaListParams, String token, Map<String, String> listItemMap) {
+    public void parseListStart(StringTokenizer tokenizer, AaListParamsParsed aaListParamsParsed, String token, Map<String, String> listItemMap) {
 
         String num = tokenizer.nextToken(); // Skip the number (1)
         String action = tokenizer.nextToken(); // Get the action (Destroy_Start)
@@ -55,13 +55,13 @@ public class LineParserProcessor {
         aaParamsMap.put(listName, status);
         listItemMap.put(action, num);
 
-        // aaListParams.fillWithData(aaParamsMap);
+        // aaListParamsParsed.fillWithData(aaParamsMap);
 
         System.out.println(listItemMap);
-        System.out.println(aaListParams);
+        System.out.println(aaListParamsParsed);
     }
 
-    public void parseItemStart(StringTokenizer tokenizer, AaListParams aaListParams, String token) {
+    public void parseItemStart(StringTokenizer tokenizer, AaListParamsParsed aaListParamsParsed, String token) {
 
         String num = tokenizer.nextToken();
 
@@ -78,7 +78,7 @@ public class LineParserProcessor {
                     String itemValue = tokenizer.nextToken();
                     HashMap<String, String> aaParamsMap = new HashMap<>();
                     aaParamsMap.put(itemName, itemValue);
-                    // aaListParams.fillWithData(aaParamsMap);
+                    // aaListParamsParsed.fillWithData(aaParamsMap);
                 }
             });
         }

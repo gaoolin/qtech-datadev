@@ -2,7 +2,7 @@ package com.qtech.check.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.qtech.check.pojo.AaListParams;
+import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.processor.MessageProcessor;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -107,19 +107,19 @@ public class AaListParamsParseMessageCommonConsumer {
         String aaListMessageStr = (String) record.value();
         if (aaListMessageStr != null) {
             try {
-                // 处理消息并转换为 AaListParams
-                AaListParams aaListParams = messageProcessor.processMessage(AaListParams.class, aaListMessageStr);
-                aaListParams.setReceivedTime(new Date());
+                // 处理消息并转换为 AaListParamsParsed
+                AaListParamsParsed aaListParamsParsed = messageProcessor.processMessage(AaListParamsParsed.class, aaListMessageStr);
+                aaListParamsParsed.setReceivedTime(new Date());
 
-                // 从 AaListParams 中获取 prodType 和 simId
-                String prodType = aaListParams.getProdType();
-                String simId = aaListParams.getSimId();
+                // 从 AaListParamsParsed 中获取 prodType 和 simId
+                String prodType = aaListParamsParsed.getProdType();
+                String simId = aaListParamsParsed.getSimId();
 
                 // 构建消息的 key
                 String messageKey = prodType + "-" + simId;
 
-                // 将 AaListParams 对象转换为 JSON 字符串
-                String aaListParamsMessageStr = objectMapper.writeValueAsString(aaListParams);
+                // 将 AaListParamsParsed 对象转换为 JSON 字符串
+                String aaListParamsMessageStr = objectMapper.writeValueAsString(aaListParamsParsed);
 
                 // 使用 Kafka 自带的时间戳，省去手动获取时间戳的步骤
                 ProducerRecord<String, String> producerRecord = new ProducerRecord<>(

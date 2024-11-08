@@ -17,11 +17,11 @@ import org.springframework.stereotype.Service;
 public class ImAaListParamsServiceImpl extends ServiceImpl<ImAaListParamsMapper, AaListParams>
         implements IImAaListParamsService {
     @DataSourceSwitch(name = DataSourceNames.SECOND)
+    @Override
     public boolean save(AaListParams entity) {
         return super.save(entity);
     }
 }
-
 
 
 

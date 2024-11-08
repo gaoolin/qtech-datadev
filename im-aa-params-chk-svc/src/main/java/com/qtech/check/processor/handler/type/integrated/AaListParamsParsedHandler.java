@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.qtech.check.constant.ListItemMultiKeyMapConstants;
 import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.pojo.AaListCommand;
-import com.qtech.check.pojo.AaListParams;
+import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
@@ -31,10 +31,10 @@ import static com.qtech.check.utils.AggregateCommandsUtil.aggregateMtfCheckComma
  * desc   :  List、Item 级联解析
  */
 @Component
-public class AaListParamsHandler extends MessageHandler<AaListCommand> {
-    private static final Logger logger = LoggerFactory.getLogger(AaListParamsHandler.class);
+public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedHandler.class);
     private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
-    private static final ThreadLocal<AaListParams> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParams::new);
+    private static final ThreadLocal<AaListParamsParsed> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParamsParsed::new);
     private final Map<String, String> listItemMap = new HashMap<>();
 
     @Autowired
@@ -52,10 +52,10 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         return map;
     }
 
-    private AaListParams getThreadLocalAaListParams() {
-        AaListParams aaListParams = threadLocalAaListParamsMessage.get();
-        aaListParams.reset();
-        return aaListParams;
+    private AaListParamsParsed getThreadLocalAaListParams() {
+        AaListParamsParsed aaListParamsParsed = threadLocalAaListParamsMessage.get();
+        aaListParamsParsed.reset();
+        return aaListParamsParsed;
     }
 
     public AaListCommand parseRowStartWithList(String[] parts) {
@@ -90,8 +90,8 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         }
     }
 
-    public AaListParams doFullParse(String msg) {
-        AaListParams aaListParams = getThreadLocalAaListParams();
+    public AaListParamsParsed doFullParse(String msg) {
+        AaListParamsParsed aaListParamsParsed = getThreadLocalAaListParams();
         HashMap<Integer, String> mapper = getThreadListItemMapper();
 
         // 将每一行数据拆分并转换为 AaListCommand 对象
@@ -132,15 +132,15 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
 
         // 聚合 AaListCommand
         List<AaListCommand> aggregatedCommands = aggregateMtfCheckCommands(aaListCommandList);
-        // 将命令列表填充到 aaListParams 中
-        aaListParams.fillWithData(aggregatedCommands);
-        return aaListParams;
+        // 将命令列表填充到 aaListParamsParsed 中
+        aaListParamsParsed.fillWithData(aggregatedCommands);
+        return aaListParamsParsed;
     }
 
     @Override
     public <R> R handleByType(Class<R> clazz, String msg) throws DecoderException {
-        if (clazz == AaListParams.class) {
-            AaListParams aaListParamsObj = null;
+        if (clazz == AaListParamsParsed.class) {
+            AaListParamsParsed aaListParamsParsedObj = null;
             try {
                 Map<String, Object> jsonObject = objectMapper.readValue(msg, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class));
                 String aaListParamHexStr = (String) jsonObject.get("FactoryName");
@@ -151,10 +151,10 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
                     logger.error(">>>>> Hex解码异常，机型: {}", jsonObject.get("WoCode"));
                     return null;
                 }
-                aaListParamsObj = doFullParse(aaListParamStr);
-                aaListParamsObj.setSimId((String) jsonObject.get("OpCode"));
-                aaListParamsObj.setProdType(((String) jsonObject.get("WoCode")).split("#")[0]);
-                return clazz.cast(aaListParamsObj);
+                aaListParamsParsedObj = doFullParse(aaListParamStr);
+                aaListParamsParsedObj.setSimId((String) jsonObject.get("OpCode"));
+                aaListParamsParsedObj.setProdType(((String) jsonObject.get("WoCode")).split("#")[0]);
+                return clazz.cast(aaListParamsParsedObj);
             } catch (JsonProcessingException e) {
                 logger.error(">>>>> JSON 解析异常", e);
                 return null;
@@ -165,10 +165,10 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
 
     @Override
     public <U> boolean supportsType(Class<U> clazz) {
-        return clazz.equals(AaListParams.class);
+        return clazz.equals(AaListParamsParsed.class);
     }
 
-    public void parseListStart(StringTokenizer tokenizer, AaListParams aaListParams, String token, Map<String, String> listItemMap) {
+    public void parseListStart(StringTokenizer tokenizer, AaListParamsParsed aaListParamsParsed, String token, Map<String, String> listItemMap) {
         String num = tokenizer.nextToken();
         String listName = tokenizer.nextToken();
         String tester = tokenizer.nextToken();
@@ -179,7 +179,7 @@ public class AaListParamsHandler extends MessageHandler<AaListCommand> {
         listParamsMap.put(listName, status);
     }
 
-    public void parseItemStart(StringTokenizer tokenizer, AaListParams aaListParams, String token) {
+    public void parseItemStart(StringTokenizer tokenizer, AaListParamsParsed aaListParamsParsed, String token) {
         String num = tokenizer.nextToken();
         if (listItemMap.isEmpty()) {
             throw new AaListParseListActionEmptyException("List action is empty");

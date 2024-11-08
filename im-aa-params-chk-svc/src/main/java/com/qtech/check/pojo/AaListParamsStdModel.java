@@ -14,7 +14,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AaListParamsStdModel extends AaListParamsBaseEntity {
+public class AaListParamsStdModel extends AaListParams {
 
     private Long id;
     private String prodType;
