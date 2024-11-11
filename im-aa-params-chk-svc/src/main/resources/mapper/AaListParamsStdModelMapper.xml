@@ -63,7 +63,7 @@
             <result property="aa1RoiUr" column="AA1_ROI_UR" jdbcType="VARCHAR"/>
             <result property="aa1RoiLl" column="AA1_ROI_LL" jdbcType="VARCHAR"/>
             <result property="aa1RoiLr" column="AA1_ROI_LR" jdbcType="VARCHAR"/>
-            <result property="aa1FC" column="AA1_FC" jdbcType="VARCHAR"/>
+            <result property="aa1Fc" column="AA1_FC" jdbcType="VARCHAR"/>
             <result property="aa1F1" column="AA1_F1" jdbcType="VARCHAR"/>
             <result property="aa1F2" column="AA1_F2" jdbcType="VARCHAR"/>
             <result property="aa1F3" column="AA1_F3" jdbcType="VARCHAR"/>
@@ -76,7 +76,7 @@
             <result property="aa2RoiUr" column="AA2_ROI_UR" jdbcType="VARCHAR"/>
             <result property="aa2RoiLl" column="AA2_ROI_LL" jdbcType="VARCHAR"/>
             <result property="aa2RoiLr" column="AA2_ROI_LR" jdbcType="VARCHAR"/>
-            <result property="aa2FC" column="AA2_FC" jdbcType="VARCHAR"/>
+            <result property="aa2Fc" column="AA2_FC" jdbcType="VARCHAR"/>
             <result property="aa2F1" column="AA2_F1" jdbcType="VARCHAR"/>
             <result property="aa2F2" column="AA2_F2" jdbcType="VARCHAR"/>
             <result property="aa2F3" column="AA2_F3" jdbcType="VARCHAR"/>
@@ -89,7 +89,7 @@
             <result property="aa3RoiUr" column="AA3_ROI_UR" jdbcType="VARCHAR"/>
             <result property="aa3RoiLl" column="AA3_ROI_LL" jdbcType="VARCHAR"/>
             <result property="aa3RoiLr" column="AA3_ROI_LR" jdbcType="VARCHAR"/>
-            <result property="aa3FC" column="AA3_FC" jdbcType="VARCHAR"/>
+            <result property="aa3Fc" column="AA3_FC" jdbcType="VARCHAR"/>
             <result property="aa3F1" column="AA3_F1" jdbcType="VARCHAR"/>
             <result property="aa3F2" column="AA3_F2" jdbcType="VARCHAR"/>
             <result property="aa3F3" column="AA3_F3" jdbcType="VARCHAR"/>
@@ -97,17 +97,17 @@
             <result property="aa3MtfOffAxisCheck1" column="AA3_MTF_OFF_AXIS_CHECK1" jdbcType="VARCHAR"/>
             <result property="aa3MtfOffAxisCheck2" column="AA3_MTF_OFF_AXIS_CHECK2" jdbcType="VARCHAR"/>
             <result property="aa3MtfOffAxisCheck3" column="AA3_MTF_OFF_AXIS_CHECK3" jdbcType="VARCHAR"/>
-            <result property="mtfCheckFC" column="MTF_CHECK_FC" jdbcType="VARCHAR"/>
+            <result property="mtfCheckFc" column="MTF_CHECK_FC" jdbcType="VARCHAR"/>
             <result property="mtfCheckF1" column="MTF_CHECK_F1" jdbcType="VARCHAR"/>
             <result property="mtfCheckF2" column="MTF_CHECK_F2" jdbcType="VARCHAR"/>
             <result property="mtfCheckF3" column="MTF_CHECK_F3" jdbcType="VARCHAR"/>
             <result property="mtfCheckF4" column="MTF_CHECK_F4" jdbcType="VARCHAR"/>
-            <result property="mtfCheck2FC" column="MTF_CHECK2_FC" jdbcType="VARCHAR"/>
+            <result property="mtfCheck2Fc" column="MTF_CHECK2_FC" jdbcType="VARCHAR"/>
             <result property="mtfCheck2F1" column="MTF_CHECK2_F1" jdbcType="VARCHAR"/>
             <result property="mtfCheck2F2" column="MTF_CHECK2_F2" jdbcType="VARCHAR"/>
             <result property="mtfCheck2F3" column="MTF_CHECK2_F3" jdbcType="VARCHAR"/>
             <result property="mtfCheck2F4" column="MTF_CHECK2_F4" jdbcType="VARCHAR"/>
-            <result property="mtfCheck3FC" column="MTF_CHECK3_FC" jdbcType="VARCHAR"/>
+            <result property="mtfCheck3Fc" column="MTF_CHECK3_FC" jdbcType="VARCHAR"/>
             <result property="mtfCheck3F1" column="MTF_CHECK3_F1" jdbcType="VARCHAR"/>
             <result property="mtfCheck3F2" column="MTF_CHECK3_F2" jdbcType="VARCHAR"/>
             <result property="mtfCheck3F3" column="MTF_CHECK3_F3" jdbcType="VARCHAR"/>

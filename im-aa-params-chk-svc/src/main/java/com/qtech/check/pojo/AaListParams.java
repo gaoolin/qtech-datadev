@@ -85,7 +85,7 @@ public class AaListParams implements Serializable {
     private String aa1RoiUr;
     private String aa1RoiLl;
     private String aa1RoiLr;
-    private String aa1FC;
+    private String aa1Fc;
     private String aa1F1;
     private String aa1F2;
     private String aa1F3;
@@ -108,7 +108,7 @@ public class AaListParams implements Serializable {
     private String aa2RoiUr;
     private String aa2RoiLl;
     private String aa2RoiLr;
-    private String aa2FC;
+    private String aa2Fc;
     private String aa2F1;
     private String aa2F2;
     private String aa2F3;
@@ -131,7 +131,7 @@ public class AaListParams implements Serializable {
     private String aa3RoiUr;
     private String aa3RoiLl;
     private String aa3RoiLr;
-    private String aa3FC;
+    private String aa3Fc;
     private String aa3F1;
     private String aa3F2;
     private String aa3F3;
@@ -150,25 +150,25 @@ public class AaListParams implements Serializable {
     private String aa3GoldenGlueThicknessMax;
 
     // mtfCheck Item 指标
-    private String mtfCheckFC;
+    private String mtfCheckFc;
     private String mtfCheckF1;
     private String mtfCheckF2;
     private String mtfCheckF3;
     private String mtfCheckF4;
 
-    private String mtfCheck1FC;
+    private String mtfCheck1Fc;
     private String mtfCheck1F1;
     private String mtfCheck1F2;
     private String mtfCheck1F3;
     private String mtfCheck1F4;
 
-    private String mtfCheck2FC;
+    private String mtfCheck2Fc;
     private String mtfCheck2F1;
     private String mtfCheck2F2;
     private String mtfCheck2F3;
     private String mtfCheck2F4;
 
-    private String mtfCheck3FC;
+    private String mtfCheck3Fc;
     private String mtfCheck3F1;
     private String mtfCheck3F2;
     private String mtfCheck3F3;
