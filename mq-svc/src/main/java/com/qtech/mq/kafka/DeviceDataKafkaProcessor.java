@@ -71,9 +71,11 @@ public class DeviceDataKafkaProcessor {
             Boolean isExist = stringRedisTemplate.hasKey(redisKey);
             if (Boolean.FALSE.equals(isExist)) {
                 stringRedisTemplate.opsForValue().set(redisKey, message, 180, TimeUnit.SECONDS);
-                String deviceDataString = deviceData.toString();
-                targetKafkaTemplate.send(targetTopic, deviceId, deviceDataString);
-                logger.info(">>>>> Forwarded message to target cluster: " + deviceDataString);
+
+                // 将 DeviceData 对象转换为 JSON 字符串
+                String deviceDataJson = objectMapper.writeValueAsString(deviceData);
+                targetKafkaTemplate.send(targetTopic, deviceId, deviceDataJson);
+                logger.info(">>>>> Forwarded message to target cluster: " + deviceDataJson);
             }
         } catch (JsonProcessingException e) {
             logger.error(">>>>> Error parsing JSON message: " + message, e);
