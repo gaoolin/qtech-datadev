@@ -89,15 +89,6 @@ spring:
           # 定时刷新时间 毫秒
           period: 2000
 
-  kafka:
-    bootstrap-servers:
-      - 10.170.6.24:9092
-      - 10.170.6.25:9092
-      - 10.170.6.26:9092
-    consumer:
-      group-id: im-group
-#      auto-offset-reset: earliest
-
   rabbitmq:
     host: 10.170.6.40
     port: 31131

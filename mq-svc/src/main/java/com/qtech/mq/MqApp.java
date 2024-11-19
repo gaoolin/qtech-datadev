@@ -2,6 +2,7 @@ package com.qtech.mq;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 /**
  * author :  gaozhilin
@@ -13,5 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MqApp {
     public static void main(String[] args) {
-        SpringApplication.run(MqApp.class, args); }
+        SpringApplication.run(MqApp.class, args);
+    }
 }

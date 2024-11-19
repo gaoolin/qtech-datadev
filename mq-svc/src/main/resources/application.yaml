@@ -17,14 +17,26 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  kafka:
+    bootstrap-servers:
+      - 10.170.6.24:9092
+      - 10.170.6.25:9092
+      - 10.170.6.26:9092
+    consumer:
+      group-id: im-group
+    #      auto-offset-reset: earliest
+    streams:
+      application-id: device-data-streams
+
+
 # MyBatis配置
 mybatis:
-    # 搜索指定包别名
-    typeAliasesPackage: com.qtech.mq.domain
-    # 配置mapper的扫描，找到所有的mapper.xml映射文件
-    mapperLocations: classpath*:mapper/**/*Mapper.xml
-    # 加载全局的配置文件
-    configLocation: classpath:mybatis/mybatis-config.xml
+  # 搜索指定包别名
+  typeAliasesPackage: com.qtech.mq.domain
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  # 加载全局的配置文件
+  configLocation: classpath:mybatis/mybatis-config.xml
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
@@ -32,5 +44,13 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+kafka:
+  source:
+    bootstrap-servers: 10.170.6.170:9092,10.170.6.171:9092,10.170.6.172:9092
+    topic: pip_executor_to_druid
+  target:
+    bootstrap-servers: 10.170.6.24:9092,10.170.6.25:9092,10.170.6.26:9092
+    topic: filtered_device_data
 
 

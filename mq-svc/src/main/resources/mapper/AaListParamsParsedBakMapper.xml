@@ -62,7 +62,7 @@
         <result property="aa1RoiUr" column="aa1_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa1RoiLl" column="aa1_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa1RoiLr" column="aa1_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa1FC" column="aa1_fc" jdbcType="VARCHAR"/>
+        <result property="aa1Fc" column="aa1_fc" jdbcType="VARCHAR"/>
         <result property="aa1F1" column="aa1_f1" jdbcType="VARCHAR"/>
         <result property="aa1F2" column="aa1_f2" jdbcType="VARCHAR"/>
         <result property="aa1F3" column="aa1_f3" jdbcType="VARCHAR"/>
@@ -75,7 +75,7 @@
         <result property="aa2RoiUr" column="aa2_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa2RoiLl" column="aa2_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa2RoiLr" column="aa2_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa2FC" column="aa2_fc" jdbcType="VARCHAR"/>
+        <result property="aa2Fc" column="aa2_fc" jdbcType="VARCHAR"/>
         <result property="aa2F1" column="aa2_f1" jdbcType="VARCHAR"/>
         <result property="aa2F2" column="aa2_f2" jdbcType="VARCHAR"/>
         <result property="aa2F3" column="aa2_f3" jdbcType="VARCHAR"/>
@@ -88,7 +88,7 @@
         <result property="aa3RoiUr" column="aa3_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa3RoiLl" column="aa3_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa3RoiLr" column="aa3_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa3FC" column="aa3_fc" jdbcType="VARCHAR"/>
+        <result property="aa3Fc" column="aa3_fc" jdbcType="VARCHAR"/>
         <result property="aa3F1" column="aa3_f1" jdbcType="VARCHAR"/>
         <result property="aa3F2" column="aa3_f2" jdbcType="VARCHAR"/>
         <result property="aa3F3" column="aa3_f3" jdbcType="VARCHAR"/>
@@ -97,22 +97,22 @@
         <result property="aa3MtfOffAxisCheck1" column="aa3_mtf_off_axis_check1" jdbcType="VARCHAR"/>
         <result property="aa3MtfOffAxisCheck2" column="aa3_mtf_off_axis_check2" jdbcType="VARCHAR"/>
         <result property="aa3MtfOffAxisCheck3" column="aa3_mtf_off_axis_check3" jdbcType="VARCHAR"/>
-        <result property="mtfCheckFC" column="mtf_check_fc" jdbcType="VARCHAR"/>
+        <result property="mtfCheckFc" column="mtf_check_fc" jdbcType="VARCHAR"/>
         <result property="mtfCheckF1" column="mtf_check_f1" jdbcType="VARCHAR"/>
         <result property="mtfCheckF2" column="mtf_check_f2" jdbcType="VARCHAR"/>
         <result property="mtfCheckF3" column="mtf_check_f3" jdbcType="VARCHAR"/>
         <result property="mtfCheckF4" column="mtf_check_f4" jdbcType="VARCHAR"/>
-        <result property="mtfCheck1FC" column="mtf_check1_fc" jdbcType="VARCHAR"/>
+        <result property="mtfCheck1Fc" column="mtf_check1_fc" jdbcType="VARCHAR"/>
         <result property="mtfCheck1F1" column="mtf_check1_f1" jdbcType="VARCHAR"/>
         <result property="mtfCheck1F2" column="mtf_check1_f2" jdbcType="VARCHAR"/>
         <result property="mtfCheck1F3" column="mtf_check1_f3" jdbcType="VARCHAR"/>
         <result property="mtfCheck1F4" column="mtf_check1_f4" jdbcType="VARCHAR"/>
-        <result property="mtfCheck2FC" column="mtf_check2_fc" jdbcType="VARCHAR"/>
+        <result property="mtfCheck2Fc" column="mtf_check2_fc" jdbcType="VARCHAR"/>
         <result property="mtfCheck2F1" column="mtf_check2_f1" jdbcType="VARCHAR"/>
         <result property="mtfCheck2F2" column="mtf_check2_f2" jdbcType="VARCHAR"/>
         <result property="mtfCheck2F3" column="mtf_check2_f3" jdbcType="VARCHAR"/>
         <result property="mtfCheck2F4" column="mtf_check2_f4" jdbcType="VARCHAR"/>
-        <result property="mtfCheck3FC" column="mtf_check3_fc" jdbcType="VARCHAR"/>
+        <result property="mtfCheck3Fc" column="mtf_check3_fc" jdbcType="VARCHAR"/>
         <result property="mtfCheck3F1" column="mtf_check3_f1" jdbcType="VARCHAR"/>
         <result property="mtfCheck3F2" column="mtf_check3_f2" jdbcType="VARCHAR"/>
         <result property="mtfCheck3F3" column="mtf_check3_f3" jdbcType="VARCHAR"/>
@@ -352,24 +352,24 @@
                 #{vcmTop}, #{vcmTopHall}, #{vcmZ},
                 #{vcmZHall}, #{yLevel},
                 #{aa1RoiCc}, #{aa1RoiUl}, #{aa1RoiUr},
-                #{aa1RoiLl}, #{aa1RoiLr}, #{aa1FC},
+                #{aa1RoiLl}, #{aa1RoiLr}, #{aa1Fc},
                 #{aa1F1}, #{aa1F2}, #{aa1F3},
                 #{aa1F4}, #{aa1MtfOffAxisCheck1}, #{aa1MtfOffAxisCheck2},
                 #{aa1MtfOffAxisCheck3},
                 #{aa2RoiCc}, #{aa2RoiUl}, #{aa2RoiUr},
-                #{aa2RoiLl}, #{aa2RoiLr}, #{aa2FC},
+                #{aa2RoiLl}, #{aa2RoiLr}, #{aa2Fc},
                 #{aa2F1}, #{aa2F2}, #{aa2F3},
                 #{aa2F4}, #{aa2MtfOffAxisCheck1}, #{aa2MtfOffAxisCheck2},
                 #{aa2MtfOffAxisCheck3},
                 #{aa3RoiCc}, #{aa3RoiUl}, #{aa3RoiUr},
-                #{aa3RoiLl}, #{aa3RoiLr}, #{aa3FC},
+                #{aa3RoiLl}, #{aa3RoiLr}, #{aa3Fc},
                 #{aa3F1}, #{aa3F2}, #{aa3F3},
                 #{aa3F4}, #{aa3MtfOffAxisCheck1}, #{aa3MtfOffAxisCheck2},
                 #{aa3MtfOffAxisCheck3},
-                #{mtfCheckFC}, #{mtfCheckF1}, #{mtfCheckF2}, #{mtfCheckF3}, #{mtfCheckF4},
-                #{mtfCheck1FC}, #{mtfCheck1F1}, #{mtfCheck1F2}, #{mtfCheck1F3}, #{mtfCheck1F4},
-                #{mtfCheck2FC}, #{mtfCheck2F1}, #{mtfCheck2F2}, #{mtfCheck2F3}, #{mtfCheck2F4},
-                #{mtfCheck3FC}, #{mtfCheck3F1}, #{mtfCheck3F2}, #{mtfCheck3F3}, #{mtfCheck3F4},
+                #{mtfCheckFc}, #{mtfCheckF1}, #{mtfCheckF2}, #{mtfCheckF3}, #{mtfCheckF4},
+                #{mtfCheck1Fc}, #{mtfCheck1F1}, #{mtfCheck1F2}, #{mtfCheck1F3}, #{mtfCheck1F4},
+                #{mtfCheck2Fc}, #{mtfCheck2F1}, #{mtfCheck2F2}, #{mtfCheck2F3}, #{mtfCheck2F4},
+                #{mtfCheck3Fc}, #{mtfCheck3F1}, #{mtfCheck3F2}, #{mtfCheck3F3}, #{mtfCheck3F4},
                 #{chartAlignmentXResMin}, #{chartAlignmentXResMax}, #{chartAlignmentYResMin}, #{chartAlignmentYResMax},
                 #{chartAlignment1XResMin}, #{chartAlignment1XResMax}, #{chartAlignment1YResMin}, #{chartAlignment1YResMax},
                 #{chartAlignment2XResMin}, #{chartAlignment2XResMax}, #{chartAlignment2YResMin}, #{chartAlignment2YResMax},
