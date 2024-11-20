@@ -1,5 +1,6 @@
 package com.qtech.mq.domain;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,12 +20,16 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceData {
     @JsonProperty("receive_date")
+    @JsonAlias("receiveDate")
     private String receiveDate;
     @JsonProperty("device_id")
+    @JsonAlias("deviceId")
     private String deviceId;
     @JsonProperty("device_type")
+    @JsonAlias("deviceType")
     private String deviceType;
     @JsonProperty("Remote_control")
+    @JsonAlias("remoteControl")
     private String remoteControl;
 
     private String status; // ONLINE / OFFLINE

@@ -1,4 +1,4 @@
-package com.qtech.mq.kafka;
+package com.qtech.mq.kafka.olp;
 
 /**
  * author :  gaozhilin

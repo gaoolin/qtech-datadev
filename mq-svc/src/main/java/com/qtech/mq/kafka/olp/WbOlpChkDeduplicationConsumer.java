@@ -1,4 +1,4 @@
-package com.qtech.mq.kafka;
+package com.qtech.mq.kafka.olp;
 
 import com.qtech.mq.domain.EqReverseCtrlInfo;
 import com.qtech.mq.serializer.Record;

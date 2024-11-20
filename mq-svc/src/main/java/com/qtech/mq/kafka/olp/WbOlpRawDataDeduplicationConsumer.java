@@ -1,4 +1,4 @@
-package com.qtech.mq.kafka;
+package com.qtech.mq.kafka.olp;
 
 import com.qtech.mq.domain.WbOlpRawData;
 import com.qtech.mq.serializer.WbOlpRawDataRecord;

@@ -1,4 +1,4 @@
-package com.qtech.mq.kafka;
+package com.qtech.mq.kafka.eqn;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

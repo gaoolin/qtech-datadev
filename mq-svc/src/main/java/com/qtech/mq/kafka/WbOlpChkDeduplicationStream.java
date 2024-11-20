@@ -1,5 +1,6 @@
 package com.qtech.mq.kafka;
 
+import com.qtech.mq.kafka.olp.WbOlpChkDeduplicationTransformer;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
