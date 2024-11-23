@@ -52,5 +52,3 @@ kafka:
   target:
     bootstrap-servers: 10.170.6.24:9092,10.170.6.25:9092,10.170.6.26:9092
     topic: filtered_device_data
-
-

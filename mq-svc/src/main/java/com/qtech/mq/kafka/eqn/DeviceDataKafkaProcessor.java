@@ -35,14 +35,15 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DeviceDataKafkaProcessor {
     private static final String REDIS_KEY_PREFIX = "qtech:im:device_status:";
-    private static final int REDIS_EXPIRE_SECONDS = 180;
+    private static final int REDIS_EXPIRE_SECONDS = 60;
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceDataKafkaProcessor.class);
 
-    private static final Set<String> VALID_DEVICE_TYPES = new HashSet<>(Arrays.asList("DB", "WB", "HM", "AA"));
-    private static final Set<String> VALID_DEVICE_TYPES_A = new HashSet<>(Arrays.asList("DB", "HM", "AA"));
+    // DB的设备类型名称种包含Linda字样
+    // private static final Set<String> VALID_DEVICE_TYPES = new HashSet<>(Arrays.asList("LINDA", "WB", "HM", "AA"));
+    // private static final Set<String> VALID_DEVICE_TYPES_A = new HashSet<>(Arrays.asList("DB", "HM", "AA"));
 
-    private static final Set<String> SPECIAL_DEVICE_TYPES = new HashSet<>(Arrays.asList("LINUXRSAA"));
+    // private static final Set<String> SPECIAL_DEVICE_TYPES = new HashSet<>(Arrays.asList("LINUXRSAA"));
 
     private static final ObjectMapper objectMapper = configureObjectMapper();
 
@@ -74,17 +75,17 @@ public class DeviceDataKafkaProcessor {
         try {
             logger.debug(">>>>> Received message with ID: {}", message);
             DeviceData deviceData = parseMessage(message);
-            String deviceType = deviceData.getDeviceType().toUpperCase();
+            // String deviceType = deviceData.getDeviceType().toUpperCase();
             String deviceId = deviceData.getDeviceId();
 
-            if (!VALID_DEVICE_TYPES.contains(deviceType)) {
-                logger.info(">>>>> Invalid device type: " + deviceType);
-                return;
-            }
+            // if (!VALID_DEVICE_TYPES.contains(deviceType)) {
+            //     logger.info(">>>>> Invalid device type: " + deviceType);
+            //     return;
+            // }
 
             String remoteControlEq = deviceData.getRemoteControl();
 
-            updateDeviceStatus(deviceData, deviceType, remoteControlEq);
+            updateDeviceStatus(deviceData, remoteControlEq);
 
             handleRedisAndKafka(deviceData, deviceId);
         } catch (JsonProcessingException e) {
@@ -102,23 +103,12 @@ public class DeviceDataKafkaProcessor {
         return objectMapper.readValue(message, DeviceData.class);
     }
 
-    private void updateDeviceStatus(DeviceData deviceData, String deviceType, String remoteControlEq) {
-        if (SPECIAL_DEVICE_TYPES.contains(deviceType) && remoteControlEq == null) {
-            logger.info(">>>>> Device type " + deviceType + " does not support remote control.");
-            deviceData.setStatus("ONLINE");
-            deviceData.setRemoteControl("2");
-        } else if (remoteControlEq == null) {
-            deviceData.setStatus("ONLINE");
+    private void updateDeviceStatus(DeviceData deviceData, String remoteControlEq) {
+        deviceData.setStatus("1");
+        if (remoteControlEq == null) {
             deviceData.setRemoteControl("999");
-        } else {
-            if ((VALID_DEVICE_TYPES_A.contains(deviceType) && "2".equals(remoteControlEq)) || ("WB".equals(deviceType) && "5".equals(remoteControlEq))) {
-                deviceData.setStatus("ONLINE");
-            } else {
-                deviceData.setStatus("OFFLINE");
-            }
         }
     }
-
 
     private void handleRedisAndKafka(DeviceData deviceData, String deviceId) {
         String redisKey = REDIS_KEY_PREFIX + deviceId;
