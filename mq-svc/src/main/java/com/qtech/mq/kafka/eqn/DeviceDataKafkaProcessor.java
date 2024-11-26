@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.mq.domain.DeviceData;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,15 +37,15 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DeviceDataKafkaProcessor {
     private static final String REDIS_KEY_PREFIX = "qtech:im:device_status:";
-    private static final int REDIS_EXPIRE_SECONDS = 60;
+    private static final int REDIS_EXPIRE_SECONDS = 180;
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceDataKafkaProcessor.class);
 
-    // DB的设备类型名称种包含Linda字样
-    // private static final Set<String> VALID_DEVICE_TYPES = new HashSet<>(Arrays.asList("LINDA", "WB", "HM", "AA"));
+    // private static final Set<String> VALID_DEVICE_TYPES = new HashSet<>(Arrays.asList("DB", "WB", "HM", "AA"));
     // private static final Set<String> VALID_DEVICE_TYPES_A = new HashSet<>(Arrays.asList("DB", "HM", "AA"));
 
-    // private static final Set<String> SPECIAL_DEVICE_TYPES = new HashSet<>(Arrays.asList("LINUXRSAA"));
+    private static final Set<String> SPECIAL_DEVICE_TYPES_AA = new HashSet<>(Arrays.asList("LINUXRSAA"));
+    private static final Set<String> SPECIAL_DEVICE_TYPES_DB_HM_WB = new HashSet<>(Arrays.asList("xx", "yy"));
 
     private static final ObjectMapper objectMapper = configureObjectMapper();
 
@@ -56,27 +58,24 @@ public class DeviceDataKafkaProcessor {
     @Autowired
     private RedisTemplate<String, String> stringRedisTemplate;
 
-    private static ObjectMapper configureObjectMapper() {
-        return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-                .enable(MapperFeature.AUTO_DETECT_GETTERS)
-                .enable(MapperFeature.AUTO_DETECT_IS_GETTERS)
-                .enable(MapperFeature.AUTO_DETECT_SETTERS)
-                .enable(MapperFeature.AUTO_DETECT_FIELDS)
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    public static ObjectMapper configureObjectMapper() {
+        return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).enable(MapperFeature.AUTO_DETECT_FIELDS);
     }
 
-    @KafkaListener(
-            topics = "${kafka.source.topic}",
-            containerFactory = "sourceKafkaListenerContainerFactory"
-    )
+
+    @KafkaListener(topics = "${kafka.source.topic}", containerFactory = "sourceKafkaListenerContainerFactory")
     public void consumeAndForward(String message) {
         try {
-            logger.debug(">>>>> Received message with ID: {}", message);
             DeviceData deviceData = parseMessage(message);
-            // String deviceType = deviceData.getDeviceType().toUpperCase();
+            String deviceType = deviceData.getDeviceType().toUpperCase();
             String deviceId = deviceData.getDeviceId();
+
+            // if ("6841".equals(deviceId)) {
+            //     logger.info(">>>>> Received message with ID: {}", deviceId);
+            //     return;
+            // }
+
+            logger.info(">>>>> Received message with ID: {}", deviceId);
 
             // if (!VALID_DEVICE_TYPES.contains(deviceType)) {
             //     logger.info(">>>>> Invalid device type: " + deviceType);
@@ -85,7 +84,7 @@ public class DeviceDataKafkaProcessor {
 
             String remoteControlEq = deviceData.getRemoteControl();
 
-            updateDeviceStatus(deviceData, remoteControlEq);
+            updateDeviceStatus(deviceData, deviceType, remoteControlEq);
 
             handleRedisAndKafka(deviceData, deviceId);
         } catch (JsonProcessingException e) {
@@ -103,12 +102,19 @@ public class DeviceDataKafkaProcessor {
         return objectMapper.readValue(message, DeviceData.class);
     }
 
-    private void updateDeviceStatus(DeviceData deviceData, String remoteControlEq) {
-        deviceData.setStatus("1");
-        if (remoteControlEq == null) {
+    private void updateDeviceStatus(DeviceData deviceData, String deviceType, String remoteControlEq) {
+        if (SPECIAL_DEVICE_TYPES_AA.contains(deviceType) && remoteControlEq == null) {
+            logger.info(">>>>> Device type " + deviceType + " does not support remote control.");
+            deviceData.setRemoteControl("2");
+        } else if (remoteControlEq == null) {
             deviceData.setRemoteControl("999");
         }
+
+        if (StringUtils.isEmpty(deviceData.getStatus())) {
+            deviceData.setStatus("999");
+        }
     }
+
 
     private void handleRedisAndKafka(DeviceData deviceData, String deviceId) {
         String redisKey = REDIS_KEY_PREFIX + deviceId;
