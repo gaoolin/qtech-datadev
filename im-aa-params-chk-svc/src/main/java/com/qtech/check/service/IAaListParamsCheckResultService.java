@@ -1,8 +1,6 @@
 package com.qtech.check.service;
 
-import com.qtech.check.pojo.AaListParamsCheckResult;
-
-import java.util.List;
+import com.qtech.check.pojo.EqReverseCtrlInfo;
 
 /**
  * author :  gaozhilin
@@ -12,6 +10,6 @@ import java.util.List;
  */
 
 
-public interface IAaListParamsCheckResultService {
-    public int save(AaListParamsCheckResult aaListParamsCheckResult);
+public interface IAaListParamsCheckResultService<T extends EqReverseCtrlInfo> {
+    public boolean save(T entity);
 }

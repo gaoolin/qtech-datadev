@@ -1,8 +1,9 @@
-package com.qtech.check.pojo;
+package com.qtech.share.aa.pojo;
 
-import com.qtech.check.utils.ToCamelCaseConverter;
+import com.qtech.share.aa.util.ToCamelCaseConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +16,16 @@ import java.util.stream.Collectors;
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/06/06 09:03:13
- * desc   :
+ * date   :  2024/11/27 15:41:48
+ * desc   :  AA List参数
  */
 @Data
 @Accessors(chain = true) // 表示启用链式调用
 @EqualsAndHashCode(callSuper = false)
-public class AaListParams implements Serializable {
+@ToString(callSuper = true)
+public class ImAaListParams implements Serializable {
     private static final long serialVersionUID = 529L;
-    private static final Logger logger = LoggerFactory.getLogger(AaListParams.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImAaListParams.class);
     private String aa1;
     private String aa2;
     private String aa3;
@@ -85,11 +87,6 @@ public class AaListParams implements Serializable {
     private String aa1RoiUr;
     private String aa1RoiLl;
     private String aa1RoiLr;
-    private String aa1Fc;
-    private String aa1F1;
-    private String aa1F2;
-    private String aa1F3;
-    private String aa1F4;
     private String aa1MtfOffAxisCheck1;
     private String aa1MtfOffAxisCheck2;
     private String aa1MtfOffAxisCheck3;
@@ -108,11 +105,6 @@ public class AaListParams implements Serializable {
     private String aa2RoiUr;
     private String aa2RoiLl;
     private String aa2RoiLr;
-    private String aa2Fc;
-    private String aa2F1;
-    private String aa2F2;
-    private String aa2F3;
-    private String aa2F4;
     private String aa2MtfOffAxisCheck1;
     private String aa2MtfOffAxisCheck2;
     private String aa2MtfOffAxisCheck3;
@@ -131,11 +123,6 @@ public class AaListParams implements Serializable {
     private String aa3RoiUr;
     private String aa3RoiLl;
     private String aa3RoiLr;
-    private String aa3Fc;
-    private String aa3F1;
-    private String aa3F2;
-    private String aa3F3;
-    private String aa3F4;
     private String aa3MtfOffAxisCheck1;
     private String aa3MtfOffAxisCheck2;
     private String aa3MtfOffAxisCheck3;
@@ -239,21 +226,21 @@ public class AaListParams implements Serializable {
         resetFields(clazz.getSuperclass());  // 递归处理父类
     }
 
-    public void fillWithData(List<AaListCommand> aaListCommands) {
-        if (aaListCommands.isEmpty()) {
-            logger.warn(">>>>> aaListCommands is empty, No data to fill");
+    public void fillWithData(List<ImAaListCommand> imAaListCommands) {
+        if (imAaListCommands.isEmpty()) {
+            logger.warn(">>>>> imAaListCommands is empty, No data to fill");
             return;
         }
 
-        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(AaListCommand::nonNull).map(aaListCommand -> {
+        List<Map<String, String>> camelCaseData = imAaListCommands.stream().filter(ImAaListCommand::nonNull).map(imAaListCommand -> {
             Map<String, String> map = new HashMap<>();
-            Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
-                String cmdObjVal = aaListCommand.getValue();
+            Optional.ofNullable(imAaListCommand.getIntegration()).ifPresent(integration -> {
+                String cmdObjVal = imAaListCommand.getValue();
                 if (cmdObjVal == null) {
                     String metricsMin = String.join("", ToCamelCaseConverter.doConvert(integration), "Min");
                     String metricsMax = String.join("", ToCamelCaseConverter.doConvert(integration), "Max");
-                    map.put(metricsMin, aaListCommand.getRange().getMin());
-                    map.put(metricsMax, aaListCommand.getRange().getMax());
+                    map.put(metricsMin, imAaListCommand.getRange().getMin());
+                    map.put(metricsMax, imAaListCommand.getRange().getMax());
                 } else {
                     map.put(ToCamelCaseConverter.doConvert(integration), cmdObjVal);
                 }

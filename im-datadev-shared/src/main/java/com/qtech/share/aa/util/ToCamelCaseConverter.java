@@ -1,4 +1,4 @@
-package com.qtech.check.utils;
+package com.qtech.share.aa.util;
 
 /**
  * author :  gaozhilin
@@ -7,7 +7,7 @@ package com.qtech.check.utils;
  * desc   :  将AA List中的参数名称字符串转换为驼峰式命名
  */
 
-import static com.qtech.check.constant.CamelCaseConverterConstant.*;
+import static com.qtech.share.aa.constant.CamelCaseConverterConstant.*;
 
 public class ToCamelCaseConverter {
     public static String doConvert(String input) {

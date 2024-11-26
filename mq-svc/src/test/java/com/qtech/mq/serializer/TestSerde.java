@@ -26,5 +26,13 @@ public class TestSerde {
 
         String json = objectMapper.writeValueAsString(deviceData);
         System.out.println(json);
+
+
+        String a = "{\"Status\":\"1\",\"lastUpdated\":null,\"receive_date\":\"2024-11-26 11:14:22\",\"device_id\":\"17\",\"device_type\":\"4GLinuxAA\",\"Remote_control\":\"1\"}";
+        DeviceData deviceData1 = objectMapper.readValue(a, DeviceData.class);
+        System.out.println(deviceData1);
+        String s = objectMapper.writeValueAsString(deviceData1);
+        System.out.println(s);
+
     }
 }

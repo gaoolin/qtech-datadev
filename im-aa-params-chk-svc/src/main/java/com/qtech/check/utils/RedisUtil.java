@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.pojo.AaListParamsStdModel;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @Component
 public class RedisUtil {
+    private static final Logger logger = LoggerFactory.getLogger(RedisUtil.class);
 
     // 假设你有一个Map<String, AaListParamsParsed>，其中key是对象的唯一标识
     Map<String, AaListParamsParsed> messages = new HashMap<>();
@@ -30,7 +33,7 @@ public class RedisUtil {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
-    private  ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     // 将AaListParamsMessage对象存入哈希
     public void saveMessagesToHash(Map<String, AaListParamsParsed> messages, String hashKey) {
@@ -40,7 +43,7 @@ public class RedisUtil {
             try {
                 redisTemplate.opsForHash().put(hashKey, messageId, objectMapper.writeValueAsString(message));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                logger.error(">>>>> JSON解析失败, msg: {}", message, e);
             }
         }
     }
@@ -52,7 +55,7 @@ public class RedisUtil {
             try {
                 return objectMapper.readValue(jsonString, AaListParamsParsed.class);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }
         }
         return null;
@@ -68,7 +71,7 @@ public class RedisUtil {
             try {
                 messages.put(messageId, objectMapper.readValue(jsonString, AaListParamsParsed.class));
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }
         }
         return messages;
@@ -79,7 +82,7 @@ public class RedisUtil {
         try {
             stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            logger.error(">>>>> JSON解析失败, msg: {}", message, e);
         }
     }
 
@@ -87,7 +90,7 @@ public class RedisUtil {
         try {
             stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            logger.error(">>>>> JSON解析失败, msg: {}", message, e);
         }
     }
 
@@ -98,7 +101,7 @@ public class RedisUtil {
             try {
                 return objectMapper.readValue(jsonString, AaListParamsStdModel.class);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }
         }
         return null;
@@ -110,7 +113,7 @@ public class RedisUtil {
             try {
                 return objectMapper.readValue(jsonString, AaListParamsStdModelInfo.class);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }
         }
         return null;

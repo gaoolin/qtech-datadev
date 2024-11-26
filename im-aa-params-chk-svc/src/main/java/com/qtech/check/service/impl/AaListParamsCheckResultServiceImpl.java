@@ -1,9 +1,8 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.config.dynamic.DataSourceNames;
-import com.qtech.check.config.dynamic.DataSourceSwitch;
-import com.qtech.check.mapper.AaListParamsCheckResultMapper;
-import com.qtech.check.pojo.AaListParamsCheckResult;
+import com.qtech.check.pojo.EqReverseCtrlInfo;
+import com.qtech.check.service.IAaListParamsCheckResultDetailService;
+import com.qtech.check.service.IAaListParamsCheckResultLatestService;
 import com.qtech.check.service.IAaListParamsCheckResultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,24 +17,28 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckResultService {
+public class AaListParamsCheckResultServiceImpl implements IAaListParamsCheckResultService<EqReverseCtrlInfo> {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckResultServiceImpl.class);
 
     @Autowired
-    private AaListParamsCheckResultMapper aaListParamsCheckResultMapper;
+    private IAaListParamsCheckResultDetailService aaListParamsCheckResultDetailService;
+    @Autowired
+    private IAaListParamsCheckResultLatestService aaListParamsCheckResultLatestService;
 
-    @DataSourceSwitch(name = DataSourceNames.SECOND)
+
+    /**
+     * @param entity
+     * @return
+     */
     @Override
-    public int save(AaListParamsCheckResult aaListParamsCheckResult) {
-        int i = 0;
-        int j = 0;
+    public boolean save(EqReverseCtrlInfo entity) {
         try {
-            i = aaListParamsCheckResultMapper.insertAaListParamsLatestCheckResult(aaListParamsCheckResult);
-            j = aaListParamsCheckResultMapper.insertAaListParamsCheckResult(aaListParamsCheckResult);
-            logger.info(">>>>> save aaListParamsCheckResult success:{}", aaListParamsCheckResult);
+            boolean a = aaListParamsCheckResultDetailService.save(entity);
+            boolean b = aaListParamsCheckResultLatestService.save(entity);
+            return a && b;
         } catch (Exception e) {
-            logger.error(">>>>> save aaListParamsCheckResult error:{}", e.getMessage());
+            logger.error(">>>>> save AaListParamsCheckResult error:{}", e.getMessage());
+            throw new RuntimeException("保存数据时发生异常，请联系系统负责人！");
         }
-        return i & j;
     }
 }

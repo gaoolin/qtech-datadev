@@ -1,11 +1,13 @@
 package com.qtech.check.processor.handler.type.item;
 
 import com.qtech.check.algorithm.model.ItemUtXyzMoveParser;
-import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 /**
  * author :  gaozhilin
@@ -15,15 +17,16 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class RecordPositionHandler extends AaListCommandHandler<AaListCommand> {
+public class RecordPositionHandler extends AaListCommandHandler<ImAaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(RecordPositionHandler.class);
 
     @Override
-    public AaListCommand handle(String[] parts, String prefixCommand) {
+    public ImAaListCommand handle(String[] parts, String prefixCmd) {
         try {
-            return ItemUtXyzMoveParser.apply(parts, prefixCommand);
+            return ItemUtXyzMoveParser.apply(parts, prefixCmd);
         } catch (Exception e) {
-            logger.error(">>>>> RecordPositionHandler handle error: " + e.getMessage());
+            logger.error(">>>>> {} handle error for parts: {}, prefixCommand: {}. Error: {}",
+                    this.getClass().getName(), Arrays.toString(parts), prefixCmd, e.getMessage(), e);
         }
         return null;
     }

@@ -1,7 +1,9 @@
-package com.qtech.check.pojo;
+package com.qtech.share.aa.pojo;
 
-import com.qtech.check.algorithm.Range;
 import com.qtech.common.utils.StringUtils;
+import com.qtech.share.aa.model.Range;
+
+import java.io.Serializable;
 
 /**
  * author :  gaozhilin
@@ -10,8 +12,8 @@ import com.qtech.common.utils.StringUtils;
  * desc   :
  */
 
-
-public class AaListCommand {
+public class ImAaListCommand implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private String integration;
     private Integer num;
@@ -22,7 +24,7 @@ public class AaListCommand {
 
     private Range<String> range;
 
-    public AaListCommand(String integration, Integer num, String prefixCommand, String command, String subsystem, String value, Range<String> range) {
+    public ImAaListCommand(String integration, Integer num, String prefixCommand, String command, String subsystem, String value, Range<String> range) {
         this.integration = integration;
         this.num = num;
         this.prefixCommand = prefixCommand;
@@ -33,8 +35,8 @@ public class AaListCommand {
     }
 
     // 定义静态方法 nonNull
-    public static boolean nonNull(AaListCommand aaListCommand) {
-        return aaListCommand != null;
+    public static boolean nonNull(ImAaListCommand imAaListCommand) {
+        return imAaListCommand != null;
     }
 
     public String getIntegration() {

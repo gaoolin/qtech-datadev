@@ -1,16 +1,5 @@
 package com.qtech.check.kafka;
 
-import com.qtech.check.pojo.AaListParamsCheckResult;
-import com.qtech.check.service.IAaListParamsCheckResultService;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -45,7 +34,7 @@ public class AaListParamsResultDtoMessageListener {
             String value = record.value();
 
             // value是一个JSON字符串，将其转换为一个对象
-            AaListParamsCheckResult pojo = JSON.parseObject(value, new TypeReference<AaListParamsCheckResult>() {
+            AaListParamsCheckResultDetail pojo = JSON.parseObject(value, new TypeReference<AaListParamsCheckResultDetail>() {
             });
 
             int i = aaListParamsCheckResultService.save(pojo);

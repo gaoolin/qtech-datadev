@@ -1,9 +1,8 @@
 package com.qtech.check.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 /**
  * author :  gaozhilin
@@ -13,6 +12,5 @@ import java.util.List;
  */
 
 @Mapper
-public interface AaListParamsStdModelInfoMapper {
-    public List<AaListParamsStdModelInfo> selectAaListParamsStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo);
+public interface AaListParamsStdModelInfoMapper extends BaseMapper<AaListParamsStdModelInfo> {
 }

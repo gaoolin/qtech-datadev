@@ -1,7 +1,9 @@
 package com.qtech.check.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.qtech.check.utils.ToCamelCaseConverter;
+import com.qtech.share.aa.pojo.ImAaListCommand;
+import com.qtech.share.aa.pojo.ImAaListParams;
+import com.qtech.share.aa.util.ToCamelCaseConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -21,7 +23,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)  // 注解用于启用链式调用风格，这意味着在调用 setter 方法时，可以返回当前对象，从而使得多个 setter 方法可以链式调用。
-public class AaListParamsParsed extends AaListParams {
+public class AaListParamsParsed extends ImAaListParams {
 
     private String simId;
     private String prodType;
@@ -38,12 +40,12 @@ public class AaListParamsParsed extends AaListParams {
     }
 
     @Override
-    public void fillWithData(List<AaListCommand> aaListCommands) {
+    public void fillWithData(List<ImAaListCommand> aaListCommands) {
         if (aaListCommands.isEmpty()) {
             return;
         }
 
-        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(AaListCommand::nonNull).map(aaListCommand -> {
+        List<Map<String, String>> camelCaseData = aaListCommands.stream().filter(ImAaListCommand::nonNull).map(aaListCommand -> {
             Map<String, String> map = new HashMap<>();
             Optional.ofNullable(aaListCommand.getIntegration()).ifPresent(integration -> {
                 String cmdObjVal = aaListCommand.getValue();

@@ -1,8 +1,10 @@
 package com.qtech.check.config.mybatis;
 
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.qtech.check.config.dynamic.DynamicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -33,15 +35,23 @@ public class MyBatisConfig {
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DynamicDataSource dynamicDataSource) throws Exception {
-        SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+        // SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+        // 改造点：mybatis-plus, 使用自定义的MybatisSqlSessionFactoryBean
+        final MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
         factory.setDataSource(dynamicDataSource);
 
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        // 乐观锁
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        // 分页插件
+        // interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.getDbType(dataSource.toString())));
+
         // 设置Mapper XML文件的位置
-        factory.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:mapper/**/*.xml")); // 根据实际情况调整路径
+        // factory.setMapperLocations(new PathMatchingResourcePatternResolver()
+        //         .getResources("classpath:mapper/**/*.xml")); // 根据实际情况调整路径
 
         // 如果有配置文件，也可以在这里设置
-         factory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
+        factory.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
 
         // 硬编码类型别名的包
         factory.setTypeAliasesPackage("com.qtech.check.pojo"); // 替换为你的实际包路径

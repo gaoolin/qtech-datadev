@@ -1,10 +1,12 @@
 package com.qtech.check.processor.handler.type.item;
 
 import com.qtech.check.algorithm.model.ItemCcParser;
-import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * author :  gaozhilin
@@ -24,15 +26,16 @@ import org.slf4j.LoggerFactory;
 
 // FIXME: 待完善
 // @Component
-public class VcmRunHandler extends AaListCommandHandler<AaListCommand> {
+public class VcmRunHandler extends AaListCommandHandler<ImAaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(VcmRunHandler.class);
 
     @Override
-    public AaListCommand handle(String[] parts, String prefixCommand) {
+    public ImAaListCommand handle(String[] parts, String prefixCmd) {
         try {
-            return ItemCcParser.apply(parts, prefixCommand);
+            return ItemCcParser.apply(parts, prefixCmd);
         } catch (Exception e) {
-            logger.error(">>>>> VcmRunHandler: Error parsing VcmRun command: " + e.getMessage());
+            logger.error(">>>>> {} handle error for parts: {}, prefixCommand: {}. Error: {}",
+                    this.getClass().getName(), Arrays.toString(parts), prefixCmd, e.getMessage(), e);
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package com.qtech.check.algorithm;
 
 import com.google.common.collect.Maps;
+import com.qtech.share.aa.model.Range;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

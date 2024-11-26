@@ -65,12 +65,7 @@ public class AaListParamsParseMessageCommonConsumer {
     private int threadPoolSize;
 
     @Autowired
-    public AaListParamsParseMessageCommonConsumer(MessageProcessor messageProcessor,
-                                                  KafkaTemplate<String, String> kafkaTemplate,
-                                                  RabbitTemplate rabbitTemplate,
-                                                  ObjectMapper objectMapper,
-                                                  @Qualifier("aaListParamsCommonKafkaConsumer") Consumer<String, Object> consumer
-    ) {
+    public AaListParamsParseMessageCommonConsumer(MessageProcessor messageProcessor, KafkaTemplate<String, String> kafkaTemplate, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper, @Qualifier("aaListParamsCommonKafkaConsumer") Consumer<String, Object> consumer) {
         this.messageProcessor = messageProcessor;
         this.kafkaTemplate = kafkaTemplate;
         this.rabbitTemplate = rabbitTemplate;
@@ -83,8 +78,7 @@ public class AaListParamsParseMessageCommonConsumer {
     public void startConsumer() {
         consumer.subscribe(Collections.singletonList("qtech_im_aa_list_topic"));
         executorService.scheduleWithFixedDelay(this::pollAndProcessRecords, 0, 1, TimeUnit.SECONDS);
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
 
     private void pollAndProcessRecords() {
@@ -122,9 +116,7 @@ public class AaListParamsParseMessageCommonConsumer {
                 String aaListParamsMessageStr = objectMapper.writeValueAsString(aaListParamsParsed);
 
                 // 使用 Kafka 自带的时间戳，省去手动获取时间戳的步骤
-                ProducerRecord<String, String> producerRecord = new ProducerRecord<>(
-                        "qtech_im_aa_list_parsed_topic", messageKey, aaListParamsMessageStr
-                );
+                ProducerRecord<String, String> producerRecord = new ProducerRecord<>("qtech_im_aa_list_parsed_topic", messageKey, aaListParamsMessageStr);
 
                 // 将解析后的消息发送到 Kafka
                 kafkaTemplate.send(producerRecord);

@@ -1,6 +1,8 @@
 package com.qtech.check.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -11,7 +13,9 @@ import lombok.experimental.Accessors;
  */
 
 @Data
+@ToString
 @Accessors(chain = true)
+@TableName("IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
 public class AaListParamsStdModelInfo {
     private Long id;
     private String prodType;

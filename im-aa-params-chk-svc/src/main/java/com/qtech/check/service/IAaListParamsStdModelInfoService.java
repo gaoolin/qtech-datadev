@@ -1,5 +1,7 @@
 package com.qtech.check.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.qtech.check.pojo.AaListParamsStdModel;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 
 import java.util.List;
@@ -12,8 +14,5 @@ import java.util.List;
  */
 
 
-public interface IAaListParamsStdModelInfoService {
-    public List<AaListParamsStdModelInfo> selectAaListParamsStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo);
-
-    public AaListParamsStdModelInfo selectOneAaListParamsStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo);
+public interface IAaListParamsStdModelInfoService extends IService<AaListParamsStdModelInfo> {
 }

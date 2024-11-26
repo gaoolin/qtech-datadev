@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.qtech.check.constant.ListItemMultiKeyMapConstants;
 import com.qtech.check.exception.AaListParseListActionEmptyException;
-import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import com.qtech.common.utils.StringUtils;
+import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import static com.qtech.check.utils.AggregateCommandsUtil.aggregateMtfCheckComma
  * desc   :  List、Item 级联解析
  */
 @Component
-public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
+public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedHandler.class);
     private static final ThreadLocal<HashMap<Integer, String>> listItemMapper = ThreadLocal.withInitial(HashMap::new);
     private static final ThreadLocal<AaListParamsParsed> threadLocalAaListParamsMessage = ThreadLocal.withInitial(AaListParamsParsed::new);
@@ -58,10 +58,10 @@ public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
         return aaListParamsParsed;
     }
 
-    public AaListCommand parseRowStartWithList(String[] parts) {
+    public ImAaListCommand parseRowStartWithList(String[] parts) {
         try {
             // 获取处理器
-            AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler("List");
+            AaListCommandHandler<ImAaListCommand> handler = commandProcessor.getCommandHandler("List");
             // 使用处理器处理命令
             return handler.handle(parts);
         } catch (RuntimeException e) {
@@ -72,11 +72,11 @@ public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
     }
 
     // FIXME : 优化 根据mapper 获取对应的commandHandler
-    public AaListCommand parseRowStartWithItem(String[] parts, String handlerName, String command) {
+    public ImAaListCommand parseRowStartWithItem(String[] parts, String handlerName, String command) {
         if (handlerName != null) {
             try {
                 // 获取处理器
-                AaListCommandHandler<AaListCommand> handler = commandProcessor.getCommandHandler(handlerName);
+                AaListCommandHandler<ImAaListCommand> handler = commandProcessor.getCommandHandler(handlerName);
                 // 使用处理器处理命令
                 return handler.handle(parts, command);
             } catch (RuntimeException e) {
@@ -95,7 +95,7 @@ public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
         HashMap<Integer, String> mapper = getThreadListItemMapper();
 
         // 将每一行数据拆分并转换为 AaListCommand 对象
-        List<AaListCommand> aaListCommandList = Arrays.stream(msg.split("\n"))
+        List<ImAaListCommand> aaListCommandList = Arrays.stream(msg.split("\n"))
                 .map(String::trim)  // 去除每行的空白字符
                 .filter(line -> !line.isEmpty())  // 跳过空行
                 .map(line -> line.split("\\s+"))  // 按空格分割每一行
@@ -130,8 +130,8 @@ public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
                 .filter(Objects::nonNull)  // 过滤掉 null 的结果
                 .collect(Collectors.toList());  // 收集到列表中
 
-        // 聚合 AaListCommand
-        List<AaListCommand> aggregatedCommands = aggregateMtfCheckCommands(aaListCommandList);
+        // 聚合 AaListCommand，并返回聚合后的列表， 聚合 MTF_CHECK 命令的解析结果
+        List<ImAaListCommand> aggregatedCommands = aggregateMtfCheckCommands(aaListCommandList);
         // 将命令列表填充到 aaListParamsParsed 中
         aaListParamsParsed.fillWithData(aggregatedCommands);
         return aaListParamsParsed;
@@ -143,6 +143,13 @@ public class AaListParamsParsedHandler extends MessageHandler<AaListCommand> {
             AaListParamsParsed aaListParamsParsedObj = null;
             try {
                 Map<String, Object> jsonObject = objectMapper.readValue(msg, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class));
+
+                // 用于调试
+                String s = ((String) jsonObject.get("WoCode")).split("#")[0];
+                if (s.equals("C3DF08")) {
+                    logger.info(">>>>> 检测到WoCode机型: {}", jsonObject.get("WoCode"));
+                }
+
                 String aaListParamHexStr = (String) jsonObject.get("FactoryName");
                 String aaListParamStr = null;
                 try {

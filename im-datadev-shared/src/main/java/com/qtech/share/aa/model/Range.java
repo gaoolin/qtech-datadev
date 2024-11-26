@@ -1,4 +1,4 @@
-package com.qtech.check.algorithm;
+package com.qtech.share.aa.model;
 
 /**
  * author :  gaozhilin

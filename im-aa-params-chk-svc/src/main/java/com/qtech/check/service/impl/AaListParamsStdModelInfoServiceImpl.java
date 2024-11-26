@@ -1,19 +1,15 @@
 package com.qtech.check.service.impl;
 
-import com.qtech.check.exception.DataAccessException;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qtech.check.mapper.AaListParamsStdModelInfoMapper;
 import com.qtech.check.pojo.AaListParamsStdModelInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;
-import com.qtech.common.utils.StringUtils;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * author :  gaozhilin
@@ -23,48 +19,34 @@ import java.util.Objects;
  */
 
 @Service
-public class AaListParamsStdModelInfoServiceImpl implements IAaListParamsStdModelInfoService {
+public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdModelInfo> implements IAaListParamsStdModelInfoService {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsStdModelInfoServiceImpl.class);
 
-    @Autowired
-    private AaListParamsStdModelInfoMapper aaListParamsStdModelInfoMapper;
-
+    /**
+     * @param queryWrapper
+     * @return
+     */
     @Override
-    public List<AaListParamsStdModelInfo> selectAaListParamsStdModelInfoList(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
+    public List<AaListParamsStdModelInfo> list(Wrapper<AaListParamsStdModelInfo> queryWrapper) {
         try {
-            return aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfo);
+            return super.list(queryWrapper);
         } catch (Exception e) {
-            logger.error("selectAaListParamsStdModelInfoList error", e);
+            logger.error(e.getMessage());
+            throw new RuntimeException("查询数据时发生异常，请联系系统管理员！");
         }
-        return null;
     }
 
+    /**
+     * @param queryWrapper
+     * @return
+     */
     @Override
-    public AaListParamsStdModelInfo selectOneAaListParamsStdModelInfo(AaListParamsStdModelInfo aaListParamsStdModelInfo) {
-        Objects.requireNonNull(aaListParamsStdModelInfo, ">>>>> 标准模版信息不能为空！");
-
-        String prodType = aaListParamsStdModelInfo.getProdType();
-        if (StringUtils.isBlank(prodType)) {
-            logger.error(">>>>> 机型信息不能为空！");
-            return null;
-        }
-
+    public AaListParamsStdModelInfo getOne(Wrapper<AaListParamsStdModelInfo> queryWrapper) {
         try {
-            List<AaListParamsStdModelInfo> list = aaListParamsStdModelInfoMapper.selectAaListParamsStdModelInfoList(aaListParamsStdModelInfo);
-            if (CollectionUtils.isNotEmpty(list)) {
-                int size = list.size();
-                if (size > 1) {
-                    logger.error("Expected one result (or null) to be returned by selectOne(), but found: {}", size);
-                    throw new TooManyResultsException(String.format("Expected one result (or null) to be returned by selectOne(), but found: %s", size));
-                }
-                return list.get(0);
-            }
+            return super.getOne(queryWrapper);
         } catch (Exception e) {
-            logger.error("selectOneAaListParamsStdModelInfo error for prodType: {}", prodType, e);
-            throw new DataAccessException("Error occurred while selecting AaListParamsStdModelInfo", e);
+            logger.error(e.getMessage());
+            throw new RuntimeException("查询数据时发生异常，请联系系统管理员！");
         }
-
-        return null;
     }
-
 }

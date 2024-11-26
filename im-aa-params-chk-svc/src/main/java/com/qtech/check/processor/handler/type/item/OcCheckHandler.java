@@ -1,10 +1,12 @@
 package com.qtech.check.processor.handler.type.item;
 
 import com.qtech.check.algorithm.model.ItemXyOffsetParser;
-import com.qtech.check.pojo.AaListCommand;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
+import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 /**
  * author :  gaozhilin
@@ -14,15 +16,16 @@ import org.slf4j.LoggerFactory;
  */
 
 
-public class OcCheckHandler extends AaListCommandHandler<AaListCommand> {
+public class OcCheckHandler extends AaListCommandHandler<ImAaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(OcCheckHandler.class);
 
     @Override
-    public AaListCommand handle(String[] parts, String prefixCmd) {
+    public ImAaListCommand handle(String[] parts, String prefixCmd) {
         try {
             return ItemXyOffsetParser.apply(parts, prefixCmd);
         } catch (Exception e) {
-            logger.error(">>>>> OcCheckHandler handle error: " + e.getMessage());
+            logger.error(">>>>> {} handle error for parts: {}, prefixCommand: {}. Error: {}",
+                    this.getClass().getName(), Arrays.toString(parts), prefixCmd, e.getMessage(), e);
         }
         return null;
     }

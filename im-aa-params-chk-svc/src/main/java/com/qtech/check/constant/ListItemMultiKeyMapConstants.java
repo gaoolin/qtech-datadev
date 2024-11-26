@@ -30,10 +30,11 @@ public class ListItemMultiKeyMapConstants {
         */
 
         // 可以继续添加其他映射
+        // 需要和 ComparisonConstants 类中的CONTROL_LIST_SET 进行匹配
         keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
         keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment", "ChartAlignment1", "ChartAlignment2")));
         keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
-        keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check2", "MTF_Check3")));
+        keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check1", "MTF_Check2", "MTF_Check3")));
         keyMap.put("RecordPosition", new HashSet<>(Collections.singletonList("RecordPosition")));
         keyMap.put("SaveMtf", new HashSet<>(Arrays.asList("Save_MTF", "SaveMTF")));
         keyMap.put("VcmHall", new HashSet<>(Arrays.asList("VCM_Hall", "VCM_Hall2", "VCM_Run", "VCMPowerOffCheck")));
