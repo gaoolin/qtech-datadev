@@ -101,6 +101,7 @@ public class RedisUtil {
             try {
                 return objectMapper.readValue(jsonString, AaListParamsStdModel.class);
             } catch (JsonProcessingException e) {
+                stringRedisTemplate.delete(name);
                 logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }
         }

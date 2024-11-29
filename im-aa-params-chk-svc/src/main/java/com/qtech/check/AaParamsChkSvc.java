@@ -2,6 +2,7 @@ package com.qtech.check;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * author :  gaozhilin
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@ComponentScan(basePackages = {"com.qtech.check", "com.qtech.share.aa.constant"})
 public class AaParamsChkSvc {
     public static void main(String[] args) {
         SpringApplication.run(AaParamsChkSvc.class, args);

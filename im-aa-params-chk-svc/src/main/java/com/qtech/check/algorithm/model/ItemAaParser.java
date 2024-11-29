@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class ItemAaParser {
     private static final Logger logger = LoggerFactory.getLogger(ItemAaParser.class);
-    private static final Pattern PATTERN = Pattern.compile("\\[(\\S+)\\]");
+    private static final Pattern PATTERN = Pattern.compile("([A-Za-z]+)");
     private static final String COMMAND_ROI = "ROI";
     private static final String COMMAND_MTF_OFF_AXIS_CHECK = "MTF_OFF_AXIS_CHECK";
     private static final String COMMAND_TARGET = "TARGET";
@@ -88,7 +88,6 @@ public class ItemAaParser {
         }
 
         String subSystem = null;
-
         Matcher matcher = PATTERN.matcher(parts[3]);
 
         if (matcher.find()) {

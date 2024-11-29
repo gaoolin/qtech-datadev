@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import static com.qtech.check.constant.ComparisonConstants.*;
+import static com.qtech.share.aa.constant.ComparisonConstants.*;
 
 /**
  * author :  gaozhilin

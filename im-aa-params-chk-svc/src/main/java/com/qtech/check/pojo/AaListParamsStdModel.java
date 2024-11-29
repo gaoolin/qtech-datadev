@@ -5,8 +5,6 @@ import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * author :  gaozhilin

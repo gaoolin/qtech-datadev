@@ -3,13 +3,13 @@ package com.qtech.check.processor.handler.type.integrated;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.qtech.check.constant.ListItemMultiKeyMapConstants;
 import com.qtech.check.exception.AaListParseListActionEmptyException;
 import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.processor.CommandProcessor;
 import com.qtech.check.processor.handler.MessageHandler;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import com.qtech.common.utils.StringUtils;
+import com.qtech.share.aa.constant.ListItemMultiKeyMapConstants;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.qtech.check.constant.ComparisonConstants.CONTROL_LIST_SET;
 import static com.qtech.check.utils.AggregateCommandsUtil.aggregateMtfCheckCommands;
+import static com.qtech.share.aa.constant.ComparisonConstants.CONTROL_LIST_SET;
 
 /**
  * author :  gaozhilin

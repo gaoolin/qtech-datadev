@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.qtech.share.aa.constant.ComparisonConstants.AGG_MTF_CHECK_COMMANDS;
+import static com.qtech.share.aa.constant.ComparisonConstants.AGG_MTF_CHECK_SUB_SYSTEM;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -74,7 +77,7 @@ public class AggregateCommandsUtil {
                 // 创建新的AaListCommand并添加到聚合列表
                 ImAaListCommand aggregatedCommand;
                 if (allSubsystemsInRange) {
-                    aggregatedCommand = createAggregatedCommand(aggregatedGroup, "C"); // subSystem设置为"C"
+                    aggregatedCommand = createAggregatedCommand(aggregatedGroup, AGG_MTF_CHECK_SUB_SYSTEM); // subSystem设置为"c"
                 } else {
                     aggregatedCommand = createAggregatedCommand(aggregatedGroup, String.valueOf(commandCounter)); // 使用计数器
                     commandCounter++; // 增加计数器
@@ -105,7 +108,7 @@ public class AggregateCommandsUtil {
                 tempAgg.remove(command2);
 
                 ImAaListCommand mergedCommand = new ImAaListCommand(null, command1.getNum() + command2.getNum(), // 数量
-                        command1.getPrefixCommand(), "F", // 使用固定的字符 "F"
+                        command1.getPrefixCommand(), AGG_MTF_CHECK_COMMANDS, // 使用固定的字符 "F"
                         "1", // subSystem设置为"1"
                         command1.getValue(), null);
 
@@ -113,7 +116,7 @@ public class AggregateCommandsUtil {
 
                 // 其他对象的value减1
                 for (ImAaListCommand command : tempAgg) {
-                    if (!command.getSubsystem().equals("C") && Integer.parseInt(command.getSubsystem()) > 1) {
+                    if (!command.getSubsystem().equals(AGG_MTF_CHECK_SUB_SYSTEM) && Integer.parseInt(command.getSubsystem()) > 1) {
                         command.setSubsystem(String.valueOf(Integer.parseInt(command.getSubsystem()) - 1));
                     }
                 }
