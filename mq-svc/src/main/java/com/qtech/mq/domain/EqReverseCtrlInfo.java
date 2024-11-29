@@ -1,5 +1,9 @@
 package com.qtech.mq.domain;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -8,7 +12,9 @@ import java.io.Serializable;
  * date   :  2024/06/21 08:30:15
  * desc   :
  */
-
+@Data
+@EqualsAndHashCode
+@ToString
 public class EqReverseCtrlInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
@@ -19,82 +25,4 @@ public class EqReverseCtrlInfo implements Serializable {
     private Integer code;
     private String description;
     transient private int version;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSimId() {
-        return simId;
-    }
-
-    public void setSimId(String simId) {
-        this.simId = simId;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getProdType() {
-        return prodType;
-    }
-
-    public void setProdType(String prodType) {
-        this.prodType = prodType;
-    }
-
-    public String getChkDt() {
-        return chkDt;
-    }
-
-    public void setChkDt(String chkDt) {
-        this.chkDt = chkDt;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    @Override
-    public String toString() {
-        return "EqReverseCtrlInfo{" +
-                "id=" + id +
-                ", simId='" + simId + '\'' +
-                ", source='" + source + '\'' +
-                ", prodType='" + prodType + '\'' +
-                ", chkDt='" + chkDt + '\'' +
-                ", code=" + code +
-                ", description='" + description + '\'' +
-                ", version=" + version +
-                '}';
-    }
 }

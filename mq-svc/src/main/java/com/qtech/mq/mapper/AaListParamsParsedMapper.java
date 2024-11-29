@@ -1,6 +1,8 @@
 package com.qtech.mq.mapper;
 
-import com.qtech.mq.domain.AaListParams;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qtech.mq.domain.AaListParamsParsed;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,6 +13,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 
 @Mapper
-public interface AaListParamsParsedMapper {
-    int save(AaListParams aaListParams);
+public interface AaListParamsParsedMapper extends BaseMapper<AaListParamsParsed> {
 }

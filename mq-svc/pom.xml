@@ -61,6 +61,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.qtech.share</groupId>
+            <artifactId>im-datadev-shared</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>

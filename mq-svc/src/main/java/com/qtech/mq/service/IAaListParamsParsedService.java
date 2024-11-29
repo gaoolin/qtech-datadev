@@ -1,6 +1,7 @@
 package com.qtech.mq.service;
 
-import com.qtech.mq.domain.AaListParams;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.qtech.mq.domain.AaListParamsParsed;
 
 /**
  * author :  gaozhilin
@@ -10,6 +11,5 @@ import com.qtech.mq.domain.AaListParams;
  */
 
 
-public interface IAaListParamsParsedService {
-    int save(AaListParams aaListParams);
+public interface IAaListParamsParsedService extends IService<AaListParamsParsed> {
 }

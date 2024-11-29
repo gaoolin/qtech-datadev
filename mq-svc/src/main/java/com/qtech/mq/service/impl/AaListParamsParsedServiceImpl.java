@@ -1,10 +1,13 @@
 package com.qtech.mq.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qtech.mq.common.dynamic.DataSourceNames;
 import com.qtech.mq.common.dynamic.DataSourceSwitch;
-import com.qtech.mq.domain.AaListParams;
+import com.qtech.mq.domain.AaListParamsParsed;
 import com.qtech.mq.mapper.AaListParamsParsedMapper;
 import com.qtech.mq.service.IAaListParamsParsedService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,17 +18,17 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class AaListParamsParsedServiceImpl implements IAaListParamsParsedService {
-
-    private final AaListParamsParsedMapper aaListParamsParsedMapper;
-
-    public AaListParamsParsedServiceImpl(AaListParamsParsedMapper aaListParamsParsedMapper) {
-        this.aaListParamsParsedMapper = aaListParamsParsedMapper;
-    }
+public class AaListParamsParsedServiceImpl extends ServiceImpl<AaListParamsParsedMapper, AaListParamsParsed> implements IAaListParamsParsedService {
+    private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedServiceImpl.class);
 
     @DataSourceSwitch(name = DataSourceNames.SECOND)
     @Override
-    public int save(AaListParams aaListParams) {
-        return aaListParamsParsedMapper.save(aaListParams);
+    public boolean save(AaListParamsParsed aaListParams) {
+        try {
+            return super.save(aaListParams);
+        } catch (Exception e) {
+            logger.error(">>>>> save aaListParamsParsed error:{}", e.getMessage());
+            throw new RuntimeException("保存数据时发生异常，请联系系统管理员！");
+        }
     }
 }

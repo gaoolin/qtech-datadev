@@ -1,7 +1,7 @@
 package com.qtech.mq.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qtech.mq.domain.AaListParams;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 // 如果使用了MapperScanner，则无需加此注解
 @Mapper
-public interface ImAaListParamsMapper extends BaseMapper<AaListParams> {
+public interface ImAaListParamsMapper extends BaseMapper<ImAaListParams> {
 }
 
 

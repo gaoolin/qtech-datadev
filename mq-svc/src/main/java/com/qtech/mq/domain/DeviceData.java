@@ -34,8 +34,8 @@ public class DeviceData {
     @JsonProperty("Remote_control")
     private String remoteControl;
 
-    @JsonProperty("Status")
-    // @JsonDeserialize(using = DeviceDataStatusDeserializer.class)
+
+    @JsonDeserialize(using = DeviceDataStatusDeserializer.class)
     @JsonSerialize(using = DeviceDataStatusSerializer.class)
     private String status;
 

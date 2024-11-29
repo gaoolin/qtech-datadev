@@ -5,9 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.qtech.mq.domain.AaListParams;
+import com.qtech.mq.domain.AaListParamsParsed;
 import com.qtech.mq.service.IAaListParamsParsedService;
-import com.qtech.mq.service.IImAaListParamsService;
 import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +31,9 @@ public class AaListParamsParsedQueueConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedQueueConsumer.class);
     private final ObjectMapper objectMapper;
     private final IAaListParamsParsedService aaListParamsParsedService;
-    private final IImAaListParamsService imAaListParamsService;
+    private final IAaListParamsParsedService imAaListParamsService;
 
-    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService aaListParamsParsedService, IImAaListParamsService imAaListParamsService, ObjectMapper objectMapper) {
+    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService aaListParamsParsedService, IAaListParamsParsedService imAaListParamsService, ObjectMapper objectMapper) {
         this.aaListParamsParsedService = aaListParamsParsedService;
         this.imAaListParamsService = imAaListParamsService;
         this.objectMapper = objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -44,7 +43,7 @@ public class AaListParamsParsedQueueConsumer {
     public void receive(String msg, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) throws Exception {
         logger.info(">>>>> receive aaListParamsParsedQueue message: {}", msg);
         try {
-            AaListParams singleMessage = validateAndParseMessage(msg, channel, deliveryTag);
+            AaListParamsParsed singleMessage = validateAndParseMessage(msg, channel, deliveryTag);
             // int cnt = aaListParamsParsedService.save(singleMessage);
             imAaListParamsService.save(singleMessage);
             channel.basicAck(deliveryTag, false);
@@ -54,16 +53,16 @@ public class AaListParamsParsedQueueConsumer {
         }
     }
 
-    private AaListParams validateAndParseMessage(String msg, Channel channel, long deliveryTag) throws JsonProcessingException {
+    private AaListParamsParsed validateAndParseMessage(String msg, Channel channel, long deliveryTag) throws JsonProcessingException {
         try {
-            AaListParams singleMessage = null;
+            AaListParamsParsed singleMessage = null;
             // 增加JSON解析异常处理，适应Fastjson2
             try {
                 // 如果不是数组，则解析为单个对象
-                singleMessage = objectMapper.readValue(msg, AaListParams.class);
+                singleMessage = objectMapper.readValue(msg, AaListParamsParsed.class);
             } catch (JsonMappingException e) {
                 // 尝试直接解析为列表
-                objectMapper.readValue(msg, new TypeReference<List<AaListParams>>() {
+                objectMapper.readValue(msg, new TypeReference<List<AaListParamsParsed>>() {
                 });
                 logger.error(">>>>> 解析结果为列表, msg: {}", msg);
             } catch (IOException e) {

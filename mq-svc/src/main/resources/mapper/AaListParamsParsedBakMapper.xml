@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qtech.mq.mapper.AaListParamsParsedMapper">
-    <resultMap id="AaListParamsMessageResult" type="AaListParams">
+    <resultMap id="AaListParamsMessageResult" type="AaListParamsParsed">
         <result property="simId" column="sim_id" jdbcType="VARCHAR"/>
         <result property="prodType" column="prod_type" jdbcType="VARCHAR"/>
         <result property="receivedTime" column="received_time" jdbcType="DATE"/>
@@ -62,11 +62,7 @@
         <result property="aa1RoiUr" column="aa1_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa1RoiLl" column="aa1_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa1RoiLr" column="aa1_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa1Fc" column="aa1_fc" jdbcType="VARCHAR"/>
-        <result property="aa1F1" column="aa1_f1" jdbcType="VARCHAR"/>
-        <result property="aa1F2" column="aa1_f2" jdbcType="VARCHAR"/>
-        <result property="aa1F3" column="aa1_f3" jdbcType="VARCHAR"/>
-        <result property="aa1F4" column="aa1_f4" jdbcType="VARCHAR"/>
+
         <result property="aa1MtfOffAxisCheck1" column="aa1_mtf_off_axis_check1" jdbcType="VARCHAR"/>
         <result property="aa1MtfOffAxisCheck2" column="aa1_mtf_off_axis_check2" jdbcType="VARCHAR"/>
         <result property="aa1MtfOffAxisCheck3" column="aa1_mtf_off_axis_check3" jdbcType="VARCHAR"/>
@@ -75,11 +71,7 @@
         <result property="aa2RoiUr" column="aa2_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa2RoiLl" column="aa2_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa2RoiLr" column="aa2_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa2Fc" column="aa2_fc" jdbcType="VARCHAR"/>
-        <result property="aa2F1" column="aa2_f1" jdbcType="VARCHAR"/>
-        <result property="aa2F2" column="aa2_f2" jdbcType="VARCHAR"/>
-        <result property="aa2F3" column="aa2_f3" jdbcType="VARCHAR"/>
-        <result property="aa2F4" column="aa2_f4" jdbcType="VARCHAR"/>
+
         <result property="aa2MtfOffAxisCheck1" column="aa2_mtf_off_axis_check1" jdbcType="VARCHAR"/>
         <result property="aa2MtfOffAxisCheck2" column="aa2_mtf_off_axis_check2" jdbcType="VARCHAR"/>
         <result property="aa2MtfOffAxisCheck3" column="aa2_mtf_off_axis_check3" jdbcType="VARCHAR"/>
@@ -88,12 +80,7 @@
         <result property="aa3RoiUr" column="aa3_roi_ur" jdbcType="VARCHAR"/>
         <result property="aa3RoiLl" column="aa3_roi_ll" jdbcType="VARCHAR"/>
         <result property="aa3RoiLr" column="aa3_roi_lr" jdbcType="VARCHAR"/>
-        <result property="aa3Fc" column="aa3_fc" jdbcType="VARCHAR"/>
-        <result property="aa3F1" column="aa3_f1" jdbcType="VARCHAR"/>
-        <result property="aa3F2" column="aa3_f2" jdbcType="VARCHAR"/>
-        <result property="aa3F3" column="aa3_f3" jdbcType="VARCHAR"/>
-        <result property="aa3F3" column="aa3_f3" jdbcType="VARCHAR"/>
-        <result property="aa3F4" column="aa3_f4" jdbcType="VARCHAR"/>
+
         <result property="aa3MtfOffAxisCheck1" column="aa3_mtf_off_axis_check1" jdbcType="VARCHAR"/>
         <result property="aa3MtfOffAxisCheck2" column="aa3_mtf_off_axis_check2" jdbcType="VARCHAR"/>
         <result property="aa3MtfOffAxisCheck3" column="aa3_mtf_off_axis_check3" jdbcType="VARCHAR"/>
@@ -269,7 +256,7 @@
         FROM qtech_eq_dwd.im_aa_list_parsed_detail
     </sql>
 
-    <insert id="save" parameterType="AaListParams">
+    <insert id="save" parameterType="AaListParamsParsed">
         INSERT INTO qtech_eq_dwd.im_aa_list_parsed_detail
         (sim_id, prod_type, received_time,
          aa1, aa2, aa3,
