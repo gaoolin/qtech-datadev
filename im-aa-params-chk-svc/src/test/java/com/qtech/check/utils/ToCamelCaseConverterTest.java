@@ -1,8 +1,7 @@
 package com.qtech.check.utils;
 
+import com.qtech.share.aa.util.ToCamelCaseConverter;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * author :  gaozhilin

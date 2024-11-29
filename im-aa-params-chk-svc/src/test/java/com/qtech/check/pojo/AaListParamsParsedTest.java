@@ -1,6 +1,7 @@
 package com.qtech.check.pojo;
 
 import com.google.common.collect.Maps;
+import com.qtech.share.aa.util.ToCamelCaseConverter;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
