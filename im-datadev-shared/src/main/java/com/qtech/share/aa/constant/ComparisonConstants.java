@@ -104,9 +104,9 @@ public class ComparisonConstants {
      * 上面的 CONTROL_LIST_SET 数组发生了增减，下面的数组也要对应的增减相关command或者subCommand
      */
     public static final List<String> PROPERTIES_TO_COMPUTE = Arrays.asList(
-            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr",  "aa1MtfOffAxisCheck1", "aa1MtfOffAxisCheck2", "aa1MtfOffAxisCheck3",
-            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr",  "aa2MtfOffAxisCheck1", "aa2MtfOffAxisCheck2", "aa2MtfOffAxisCheck3",
-            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr",  "aa3MtfOffAxisCheck1", "aa3MtfOffAxisCheck2", "aa3MtfOffAxisCheck3",
+            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr",
+            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr",
+            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr",
             "mtfCheckFc", "mtfCheckF1", "mtfCheckF2", "mtfCheckF3", "mtfCheckF4",
             "mtfCheck1Fc", "mtfCheck1F1", "mtfCheck1F2", "mtfCheck1F3", "mtfCheck1F4",
             "mtfCheck2Fc", "mtfCheck2F1", "mtfCheck2F2", "mtfCheck2F3", "mtfCheck2F4",
@@ -125,4 +125,7 @@ public class ComparisonConstants {
     // redis key prefix
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:im:aa:list:model:";
     public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:im:aa:list:model:info:";
+    // 聚合mtfCheck 命令，需和实体类属性的命名一致
+    public static final String AGG_MTF_CHECK_COMMANDS = "F";
+    public static final String AGG_MTF_CHECK_SUB_SYSTEM = "c";
 }

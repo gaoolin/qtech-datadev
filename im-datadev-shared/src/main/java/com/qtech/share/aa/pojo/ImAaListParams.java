@@ -87,9 +87,7 @@ public class ImAaListParams implements Serializable {
     private String aa1RoiUr;
     private String aa1RoiLl;
     private String aa1RoiLr;
-    private String aa1MtfOffAxisCheck1;
-    private String aa1MtfOffAxisCheck2;
-    private String aa1MtfOffAxisCheck3;
+
     // 新增 2024-10-28
     private String aa1Target;
     private String aa1CcToCornerLimit;
@@ -105,9 +103,7 @@ public class ImAaListParams implements Serializable {
     private String aa2RoiUr;
     private String aa2RoiLl;
     private String aa2RoiLr;
-    private String aa2MtfOffAxisCheck1;
-    private String aa2MtfOffAxisCheck2;
-    private String aa2MtfOffAxisCheck3;
+
     // 新增 2024-10-28
     private String aa2Target;
     private String aa2CcToCornerLimit;
@@ -123,9 +119,7 @@ public class ImAaListParams implements Serializable {
     private String aa3RoiUr;
     private String aa3RoiLl;
     private String aa3RoiLr;
-    private String aa3MtfOffAxisCheck1;
-    private String aa3MtfOffAxisCheck2;
-    private String aa3MtfOffAxisCheck3;
+
     // 新增 2024-10-28
     private String aa3Target;
     private String aa3CcToCornerLimit;

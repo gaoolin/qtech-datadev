@@ -17,6 +17,7 @@
         <module name="mq-svc" />
         <module name="pulsar-api" />
         <module name="im-aa-params-chk-svc" />
+        <module name="im-datadev-shared" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -28,6 +29,7 @@
       <module name="ceph-api" options="-parameters" />
       <module name="common-api" options="-parameters" />
       <module name="im-aa-params-chk-svc" options="-parameters" />
+      <module name="im-datadev-shared" options="-parameters" />
       <module name="im-service-api" options="-parameters" />
       <module name="message-api" options="-parameters" />
       <module name="mq-svc" options="-parameters" />

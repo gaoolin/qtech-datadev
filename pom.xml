@@ -36,6 +36,7 @@
         <module>im-aa-params-chk-svc</module>
         <module>message-api</module>
         <module>im-service-api</module>
+        <module>im-datadev-shared</module>
     </modules>
 
     <properties>
