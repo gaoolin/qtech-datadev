@@ -108,6 +108,8 @@ public class DeviceDataKafkaProcessor {
             deviceData.setRemoteControl("2");
         } else if (remoteControlEq == null) {
             deviceData.setRemoteControl("999");
+        } else if ("WB".equals(deviceType) && StringUtils.startsWith(remoteControlEq, "WB_V")) {
+            deviceData.setRemoteControl("5");
         }
 
         if (StringUtils.isEmpty(deviceData.getStatus())) {

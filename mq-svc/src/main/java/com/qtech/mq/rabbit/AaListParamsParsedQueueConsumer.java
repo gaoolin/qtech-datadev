@@ -30,11 +30,9 @@ import java.util.List;
 public class AaListParamsParsedQueueConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsParsedQueueConsumer.class);
     private final ObjectMapper objectMapper;
-    private final IAaListParamsParsedService aaListParamsParsedService;
     private final IAaListParamsParsedService imAaListParamsService;
 
-    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService aaListParamsParsedService, IAaListParamsParsedService imAaListParamsService, ObjectMapper objectMapper) {
-        this.aaListParamsParsedService = aaListParamsParsedService;
+    public AaListParamsParsedQueueConsumer(IAaListParamsParsedService imAaListParamsService, ObjectMapper objectMapper) {
         this.imAaListParamsService = imAaListParamsService;
         this.objectMapper = objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }
@@ -44,7 +42,6 @@ public class AaListParamsParsedQueueConsumer {
         logger.info(">>>>> receive aaListParamsParsedQueue message: {}", msg);
         try {
             AaListParamsParsed singleMessage = validateAndParseMessage(msg, channel, deliveryTag);
-            // int cnt = aaListParamsParsedService.save(singleMessage);
             imAaListParamsService.save(singleMessage);
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
