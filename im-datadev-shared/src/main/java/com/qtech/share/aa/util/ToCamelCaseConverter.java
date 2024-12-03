@@ -54,4 +54,11 @@ public class ToCamelCaseConverter {
     private static String capitalizeFirstOthersNoChange(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
+
+    public static void main(String[] args) {
+        String input = "MTF_check1";
+        String convert = doConvert(input);
+        System.out.println(input);
+        System.out.println(convert);
+    }
 }

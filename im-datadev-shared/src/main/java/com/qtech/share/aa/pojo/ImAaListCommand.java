@@ -1,7 +1,7 @@
 package com.qtech.share.aa.pojo;
 
-import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.model.Range;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
