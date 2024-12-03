@@ -6,44 +6,86 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.check.pojo.AaListParamsParsed;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
 
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/10 13:50:27
  * desc   :
+ *
+ * 在某些场景下，仍然需要通过配置类来补充和定制化 Redis 配置
+ * 1. 扩展性和细粒度控制
+ * 2. 默认 Bean 的覆盖
+ * 3. 多环境支持
  */
 
 @Configuration
 public class RedisConfig {
-    /**
-     * retemplate相关配置，配置自定义序列化规则为jackson
-     */
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisClusterConfiguration clusterConfig = new RedisClusterConfiguration();
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.24", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.25", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.26", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.141", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.6.142", 6379));
+        clusterConfig.addClusterNode(new RedisNode("10.170.1.68", 6379));
+        clusterConfig.setPassword("im@2024"); // 添加密码
+        clusterConfig.setMaxRedirects(3);
+
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(clusterConfig);
+        factory.afterPropertiesSet();
+        return factory;
+    }
+
     @Bean
     public RedisTemplate<String, AaListParamsParsed> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, AaListParamsParsed> template = new RedisTemplate<>();
-        // 配置连接工厂
         template.setConnectionFactory(factory);
-        // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值（默认使用JDK的序列化方式）
+
         Jackson2JsonRedisSerializer<AaListParamsParsed> jacksonSeial = new Jackson2JsonRedisSerializer<>(AaListParamsParsed.class);
         ObjectMapper om = new ObjectMapper();
-        // 指定要序列化的域，field,get和set,以及修饰符范围，ANY是都有包括private和public
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        // 指定序列化输入的类型，类必须是非final修饰的，final修饰的类，比如String,Integer等会跑出异常
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        om.activateDefaultTyping(om.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         jacksonSeial.setObjectMapper(om);
-        // 值采用json序列化
+
         template.setValueSerializer(jacksonSeial);
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
         template.setKeySerializer(new StringRedisSerializer());
-        // 设置hash key 和value序列化模式
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(jacksonSeial);
         template.afterPropertiesSet();
+        return template;
+    }
+
+    @Bean(name = "genericRedisTemplate")
+    public RedisTemplate<String, Object> genericRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+
+    @Bean(name = "stringRedisTemplate")
+    public RedisTemplate<String, String> stringRedisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
         return template;
     }
 }

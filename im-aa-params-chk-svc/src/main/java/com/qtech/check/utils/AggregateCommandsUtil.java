@@ -3,10 +3,7 @@ package com.qtech.check.utils;
 import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.qtech.share.aa.constant.ComparisonConstants.AGG_MTF_CHECK_COMMANDS;
@@ -23,7 +20,11 @@ public class AggregateCommandsUtil {
     public static List<ImAaListCommand> aggregateMtfCheckCommands(List<ImAaListCommand> commands) {
         // 过滤符合条件的命令
         // FIXME 只需要聚合mtfCheck的AAListCommand即可，AA命令中不允许挂载mtfCheck
-        List<ImAaListCommand> filteredCommands = commands.stream().filter(command -> (command != null && command.getPrefixCommand() != null) && (command.getPrefixCommand().startsWith("MTF_Check") || ((command.getPrefixCommand().startsWith("AA")) && "ROI".equals(command.getCommand()) && !StringUtils.containsAny(command.getSubsystem(), "CC", "UL", "UR", "LL", "LR")))).collect(Collectors.toList());
+        // List<ImAaListCommand> filteredCommands = commands.stream().filter(command -> (command != null && command.getPrefixCommand() != null) && (command.getPrefixCommand().startsWith("MTF_Check") || ((command.getPrefixCommand().startsWith("AA")) && "ROI".equals(command.getCommand()) && !StringUtils.containsAny(command.getSubsystem(), "CC", "UL", "UR", "LL", "LR")))).collect(Collectors.toList());
+
+        List<ImAaListCommand> filteredCommands = commands.stream()
+                .filter(AggregateCommandsUtil::isValidCommand)
+                .collect(Collectors.toList());
 
         // 获取剩余未通过过滤的命令
         List<ImAaListCommand> remainingCommands = new ArrayList<>(commands);
@@ -129,5 +130,16 @@ public class AggregateCommandsUtil {
         return new ImAaListCommand(null, commands.size(), firstCommand.getPrefixCommand(), "F", // 使用固定的字符 "F"
                 subSystemValue, // 设置为传入的subSystem值
                 firstCommand.getValue(), null);
+    }
+
+    private static boolean isValidCommand(ImAaListCommand command) {
+        if (command == null || command.getPrefixCommand() == null) {
+            return false;
+        }
+        boolean containsAny = StringUtils.containsAny(command.getSubsystem(), "CC", "UL", "UR", "LL", "LR");
+        return command.getPrefixCommand().startsWith("MTF_Check")
+                || (command.getPrefixCommand().startsWith("AA")
+                && Objects.equals(command.getCommand(), "ROI")
+                && !containsAny);
     }
 }

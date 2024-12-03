@@ -14,6 +14,10 @@ spring:
     name: aa-params-chk-service
     version: 1.0.0
 
+#  主要是stringRedisTemplate的bean的覆盖
+  main:
+    allow-bean-definition-overriding: true
+
   profiles:
     active: prod
 

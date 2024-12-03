@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.qtech.check", "com.qtech.share.aa.constant"})
+@ComponentScan(basePackages = {"com.qtech.check.*", "com.qtech.share.aa.constant"})
 public class AaParamsChkSvc {
     public static void main(String[] args) {
         SpringApplication.run(AaParamsChkSvc.class, args);

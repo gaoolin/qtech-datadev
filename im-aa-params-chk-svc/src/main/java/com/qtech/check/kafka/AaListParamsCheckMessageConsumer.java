@@ -62,7 +62,14 @@ public class AaListParamsCheckMessageConsumer {
         aaListParamsCheckResultDetail.setSource("aa-list");
         for (ConsumerRecord<String, String> record : records) {
             // 解析和处理消息
-            // String key = record.key();
+
+            // 用于调试
+            String key = record.key();
+            String[] split = key.split("-");
+            if (split[1].equals("865012064235079")) {
+                logger.info(">>>>> Received aaList message: {}", record.value());
+            }
+
             String value = record.value();
             AaListParamsParsed actualObj = objectMapper.readValue(value, new TypeReference<AaListParamsParsed>() {
             });
@@ -130,9 +137,9 @@ public class AaListParamsCheckMessageConsumer {
             }
 
             // 用于调试
-            if (prodType.equals("C3DF08")) {
-                logger.info(">>>>> 机型: {}", prodType);
-            }
+            // if (prodType.equals("C3DF08")) {
+            //     logger.info(">>>>> 机型: {}", prodType);
+            // }
 
             Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result =
                     AaListParamsComparator.compareObjectsWithStandardAndActual(modelObj, actualObj, PROPERTIES_TO_COMPARE, PROPERTIES_TO_COMPUTE);

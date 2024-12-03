@@ -28,9 +28,9 @@ public class CamelCaseToSnakeCase {
         return snakeCase.toString();
     }
 
-/*    public static void main(String[] args) {
-        String camelCase = "destroyStart";
+    public static void main(String[] args) {
+        String camelCase = "mtfCheck1";
         String snakeCase = doConvert(camelCase);
         System.out.println(snakeCase);
-    }*/
+    }
 }

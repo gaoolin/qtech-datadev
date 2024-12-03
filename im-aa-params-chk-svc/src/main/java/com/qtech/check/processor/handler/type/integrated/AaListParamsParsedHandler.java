@@ -99,7 +99,7 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
                 .map(String::trim)  // 去除每行的空白字符
                 .filter(line -> !line.isEmpty())  // 跳过空行
                 .map(line -> line.split("\\s+"))  // 按空格分割每一行
-                .filter(parts -> parts.length > 0)  // 过滤掉空的行
+                .filter(parts -> parts.length > 3)  // 过滤掉空的行
                 .map(parts -> {
                     String startWithStr = parts[0];
                     try {
@@ -146,7 +146,7 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
 
                 // 用于调试
                 String s = ((String) jsonObject.get("WoCode")).split("#")[0];
-                if (s.equals("C3DF08")) {
+                if (s.equals("C3PA81-A")) {
                     logger.info(">>>>> 检测到WoCode机型: {}", jsonObject.get("WoCode"));
                 }
 
@@ -159,8 +159,10 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
                     return null;
                 }
                 aaListParamsParsedObj = doFullParse(aaListParamStr);
-                aaListParamsParsedObj.setSimId((String) jsonObject.get("OpCode"));
-                aaListParamsParsedObj.setProdType(((String) jsonObject.get("WoCode")).split("#")[0]);
+                String simId = jsonObject.get("OpCode").toString();
+                aaListParamsParsedObj.setSimId(simId);
+                String prodType = StringUtils.trim(jsonObject.get("WoCode").toString().split("#")[0]);
+                aaListParamsParsedObj.setProdType(prodType);
                 return clazz.cast(aaListParamsParsedObj);
             } catch (JsonProcessingException e) {
                 logger.error(">>>>> JSON 解析异常", e);
