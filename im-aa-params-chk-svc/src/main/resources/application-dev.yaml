@@ -59,3 +59,10 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+
+logging:
+  level:
+    org.apache.ibatis: DEBUG
+
+  file:
+    path: E:\log\mq

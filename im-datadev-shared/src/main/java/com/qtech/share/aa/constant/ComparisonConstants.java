@@ -125,6 +125,7 @@ public class ComparisonConstants {
     // redis key prefix
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:im:aa:list:model:";
     public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:im:aa:list:model:info:";
+    public static final String EQ_REVERSE_IGNORE_SIM_PREFIX = "qtech:im:chk:ignored:";
     // 聚合mtfCheck 命令，需和实体类属性的命名一致
     public static final String AGG_MTF_CHECK_COMMANDS = "F";
     public static final String AGG_MTF_CHECK_SUB_SYSTEM = "c";
