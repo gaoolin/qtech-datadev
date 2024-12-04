@@ -97,7 +97,9 @@ spring:
 
 logging:
   level:
-    root: info
+#    root: WARN
 #    org.mybatis.spring: DEBUG
-#    org.apache.ibatis: DEBUG
-    com.qtech.mq.mapper: DEBUG
+    org.apache.ibatis: DEBUG
+#    com.qtech.mq.mapper: DEBUG
+  file:
+    path: E:\log\mq

@@ -41,11 +41,7 @@ public class DeviceDataKafkaProcessor {
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceDataKafkaProcessor.class);
 
-    // private static final Set<String> VALID_DEVICE_TYPES = new HashSet<>(Arrays.asList("DB", "WB", "HM", "AA"));
-    // private static final Set<String> VALID_DEVICE_TYPES_A = new HashSet<>(Arrays.asList("DB", "HM", "AA"));
-
     private static final Set<String> SPECIAL_DEVICE_TYPES_AA = new HashSet<>(Arrays.asList("LINUXRSAA"));
-    private static final Set<String> SPECIAL_DEVICE_TYPES_DB_HM_WB = new HashSet<>(Arrays.asList("xx", "yy"));
 
     private static final ObjectMapper objectMapper = configureObjectMapper();
 
@@ -61,7 +57,6 @@ public class DeviceDataKafkaProcessor {
     public static ObjectMapper configureObjectMapper() {
         return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).enable(MapperFeature.AUTO_DETECT_FIELDS);
     }
-
 
     @KafkaListener(topics = "${kafka.source.topic}", containerFactory = "sourceKafkaListenerContainerFactory")
     public void consumeAndForward(String message) {

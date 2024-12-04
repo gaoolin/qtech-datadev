@@ -10,7 +10,9 @@
     <contextName>logback</contextName>
 
     <!-- name的值是变量的名称，value的值是变量定义的值。通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 -->
-    <property name="log.path" value="/home/qtech/logs"/>
+    <!-- 从 application.yml 中读取日志路径 -->
+    <property name="log.path" value="${logging.file.path}"/>
+    <property name="LOG_LEVEL" value="INFO"/>
 
     <!-- 彩色日志(IDE下载插件才可以生效) -->
     <!-- 彩色日志依赖的渲染类 -->
@@ -28,7 +30,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>info</level>
+            <level>debug</level>
         </filter>
         <encoder>
             <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
@@ -159,6 +161,7 @@
     -->
     <!--<logger name="org.springframework.web" level="info"/>-->
     <!--<logger name="org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor" level="INFO"/>-->
+
     <!--
         使用mybatis的时候，sql语句是debug下才会打印，而这里我们只配置了info，所以想要查看sql语句的话，有以下两种操作：
         第一种把<root level="info">改成<root level="DEBUG">这样就会打印sql，不过这样日志那边会出现很多其他消息
@@ -173,14 +176,8 @@
         可以包含零个或多个元素，标识这个appender将会添加到这个logger。
     -->
 
-    <!--开发环境:打印控制台-->
-    <springProfile name="dev">
-        <logger name="com.qtech.mq.mapper" level="debug"/>
-        <!-- 设置 MyBatis 的日志级别 -->
-        <logger name="org.apache.ibatis" level="DEBUG"/>
-    </springProfile>
-
-    <root level="info">
+    <!--全局的 <root> 配置通常用于默认设置，当没有特定环境配置时生效-->
+    <root level="WARN">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DEBUG_FILE"/>
         <appender-ref ref="INFO_FILE"/>
@@ -188,11 +185,25 @@
         <appender-ref ref="ERROR_FILE"/>
     </root>
 
+    <!--开发环境:打印控制台-->
+     <springProfile name="dev">
+         <root level="${LOG_LEVEL}">
+            <appender-ref ref="CONSOLE"/>
+            <!--<appender-ref ref="DEBUG_FILE"/>-->
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+         </root>
+         <logger name="com.qtech.mq.mapper" level="${LOG_LEVEL}"/>
+         <!-- 设置 MyBatis 的日志级别 -->
+         <logger name="org.apache.ibatis" level="${LOG_LEVEL}"/>
+     </springProfile>
+
     <!--生产环境:输出到文件-->
     <springProfile name="prod">
         <root level="info">
             <appender-ref ref="CONSOLE"/>
-            <appender-ref ref="DEBUG_FILE"/>
+            <!--<appender-ref ref="DEBUG_FILE"/>-->
             <appender-ref ref="INFO_FILE"/>
             <appender-ref ref="ERROR_FILE"/>
             <appender-ref ref="WARN_FILE"/>
