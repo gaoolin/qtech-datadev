@@ -131,29 +131,13 @@ public class ImAaListParams implements Serializable {
     private String aa3GoldenGlueThicknessMax;
 
     // mtfCheck Item 指标
-    private String mtfCheckFc;
-    private String mtfCheckF1;
-    private String mtfCheckF2;
-    private String mtfCheckF3;
-    private String mtfCheckF4;
+    private String mtfCheckF;
 
-    private String mtfCheck1Fc;
-    private String mtfCheck1F1;
-    private String mtfCheck1F2;
-    private String mtfCheck1F3;
-    private String mtfCheck1F4;
+    private String mtfCheck1F;
 
-    private String mtfCheck2Fc;
-    private String mtfCheck2F1;
-    private String mtfCheck2F2;
-    private String mtfCheck2F3;
-    private String mtfCheck2F4;
+    private String mtfCheck2F;
 
-    private String mtfCheck3Fc;
-    private String mtfCheck3F1;
-    private String mtfCheck3F2;
-    private String mtfCheck3F3;
-    private String mtfCheck3F4;
+    private String mtfCheck3F;
 
     // chartAlignment Item 指标
     private String chartAlignmentXResMin;
