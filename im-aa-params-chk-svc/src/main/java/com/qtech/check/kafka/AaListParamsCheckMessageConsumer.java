@@ -14,7 +14,6 @@ import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import com.qtech.check.service.IAaListParamsStdModelService;
 import com.qtech.check.utils.RedisUtil;
 import com.qtech.common.utils.DateUtils;
-import com.qtech.common.utils.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -41,9 +40,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.*;
 @Component
 public class AaListParamsCheckMessageConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckMessageConsumer.class);
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    private final ObjectMapper objectMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -65,10 +62,10 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             String messageKey = record.key();
             // 用于调试
-            // String[] split = messageKey.split("-");
-            // if (split[1].equals("865012064235079")) {
-            //     logger.info(">>>>> Received aaList message: {}", record.value());
-            // }
+            String[] split = messageKey.split("-");
+            if (split[1].equals("861394058751681")) {
+                logger.info(">>>>> Received aaList message: {}", record.value());
+            }
 
             String value = record.value();
             AaListParamsParsed actualObj = objectMapper.readValue(value, new TypeReference<AaListParamsParsed>() {
@@ -135,8 +132,7 @@ public class AaListParamsCheckMessageConsumer {
             //     logger.info(">>>>> 机型: {}", prodType);
             // }
 
-            Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result =
-                    AaListParamsComparator.compareObjectsWithStandardAndActual(modelObj, actualObj, PROPERTIES_TO_COMPARE, PROPERTIES_TO_COMPUTE);
+            Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result = AaListParamsComparator.compareObjectsWithStandardAndActual(modelObj, actualObj, PROPERTIES_TO_COMPARE, PROPERTIES_TO_COMPUTE);
 
             Map<String, Map.Entry<Object, Object>> inconsistentProperties = result.getLeft();
             Map<String, Object> emptyInActual = result.getMiddle();

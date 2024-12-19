@@ -62,11 +62,16 @@ public class AaListParamsComparator {
                 Field modelField = getFieldFromClassHierarchy(standardObj.getClass(), propertyName);
                 Field actualField = getFieldFromClassHierarchy(actualObj.getClass(), propertyName);
 
+                // 获取字段的类型
+                Class<?> fieldType = modelField.getType();
+                String modelTypeName = fieldType.getName();
+
                 modelField.setAccessible(true);
                 actualField.setAccessible(true);
 
-                Object modelVal = modelField.get(standardObj);
-                Object actualVal = actualField.get(actualObj);
+                // 获取字段的值并进行类型转换
+                Object modelVal = fieldType.cast(modelField.get(standardObj));
+                Object actualVal = fieldType.cast(actualField.get(actualObj));
 
                 // 用于调试
                 // if ("mtfCheckF".equals(propertyName) && modelVal != null) {
@@ -75,8 +80,28 @@ public class AaListParamsComparator {
 
                 if (propertiesToCompute != null && propertiesToCompute.contains(propertyName)) {
                     // 特殊处理 mtfCheck 属性
-                    if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F") && modelVal != null) {
-                        compareJsonMaps(modelVal.toString(), actualVal.toString(), propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                    if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F")) {
+                        if (modelTypeName.equals("java.lang.String")) {
+                            int isModelNull = modelVal == null ? 1 : 0;
+                            int isActualNull = actualVal == null ? 1 : 0;
+
+                            if (isModelNull + isActualNull == 0) {
+                                // modelVal 和 actualVal 都不为空
+                                String modelValJsonString = null;
+                                String actualValJsonString = null;
+                                modelValJsonString = modelVal.toString();
+                                actualValJsonString = actualVal.toString();
+                                compareJsonMaps(modelValJsonString, actualValJsonString, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                            } else if (isModelNull + isActualNull == 1) {
+                                // modelVal 或 actualVal 不为空
+                                addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                            } else {
+                                // modelVal 为空，actualVal 为空
+                                logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
+                            }
+                        } else {
+                            logger.error(">>>>> Unsupported data type for mtfCheck: {}", modelTypeName);
+                        }
                     } else {
                         // 对于 propertiesToCompute 需要特别处理字符串数值
                         if (!compareStringNumbers(modelVal, actualVal)) {
@@ -88,6 +113,8 @@ public class AaListParamsComparator {
                         addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
                     }
                 }
+
+                // 其他类型的处理可以在这里添加
             } catch (NoSuchFieldException e) {
                 logger.error(">>>>> Field not found in actualVal: {}", propertyName);
             } catch (IllegalAccessException e) {
@@ -170,10 +197,7 @@ public class AaListParamsComparator {
      * @param emptyInActual          实际对象为空的属性集合
      * @param emptyInStandard        标准对象为空的属性集合
      */
-    private static void compareJsonMaps(String modelJson, String actualJson, String propertyName,
-                                        Map<String, Map.Entry<Object, Object>> inconsistentProperties,
-                                        Map<String, Object> emptyInActual,
-                                        Map<String, Object> emptyInStandard) {
+    private static void compareJsonMaps(String modelJson, String actualJson, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
         try {
             // 读取 JSON 字符串并转换为 Map<String, Double>
             Map<String, Double> tempModelMap = objectMapper.readValue(modelJson, new TypeReference<Map<String, Double>>() {

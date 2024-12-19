@@ -75,7 +75,6 @@ public class ConvertMtfCheckCommandItemsUtil {
         return resultCommands;
     }
 
-    // FIXME : 以后需要把内置AA命令的mtfCheck去除
     private static boolean isValidCommand(ImAaListCommand command) {
         if (command == null || command.getPrefixCommand() == null) {
             return false;
