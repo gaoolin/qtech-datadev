@@ -26,7 +26,7 @@ public class ListHandler extends AaListCommandHandler<ImAaListCommand> {
     public ImAaListCommand handle(String[] parts) {
         String command = parts[2];
         String enable = parts[parts.length - 1];
-        logger.info(">>>>> ListHandler: Command: {}, status: {}", command, enable);
+        logger.debug(">>>>> ListHandler: Command: {}, status: {}", command, enable);
         return new ImAaListCommand(null, null, null, command, null, enable, null);
     }
 }

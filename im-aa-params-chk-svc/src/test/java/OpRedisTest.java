@@ -8,6 +8,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Set;
+
+import static com.qtech.share.aa.constant.ComparisonConstants.EQ_REVERSE_IGNORE_SIM_PREFIX;
+
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
@@ -25,7 +29,12 @@ public class OpRedisTest {
     @Test
     public void testGetValuesByPattern() {
         // 定义通配符模式
+        // String pattern = "qtech:im:chk:ignored:*";
+
         String pattern = "qtech:im:aa:list:model:*";
+
+        // Set<String> keys = stringRedisTemplate.keys(EQ_REVERSE_IGNORE_SIM_PREFIX + "865012064237919");
+        // System.out.println(keys);
 
         // 使用 ScanOptions 来设置通配符模式
         ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
@@ -41,6 +50,7 @@ public class OpRedisTest {
 
                     // 获取对应的值
                     String value = stringRedisTemplate.opsForValue().get(key);
+                    stringRedisTemplate.delete(key);
                     System.out.println("Key: " + key + ", Value: " + value);
                 }
             }

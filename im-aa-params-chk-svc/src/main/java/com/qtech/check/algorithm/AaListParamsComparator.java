@@ -1,6 +1,10 @@
 package com.qtech.check.algorithm;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.model.Range;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
@@ -22,6 +26,7 @@ Objects.equals()会返回true，否则如果它们不相等（包括一个为nul
 */
 public class AaListParamsComparator {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsComparator.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 比较两个对象的指定属性并返回不一致的属性及其值。
@@ -63,10 +68,20 @@ public class AaListParamsComparator {
                 Object modelVal = modelField.get(standardObj);
                 Object actualVal = actualField.get(actualObj);
 
+                // 用于调试
+                // if ("mtfCheckF".equals(propertyName) && modelVal != null) {
+                //     logger.info(">>>>> 检测到属性: {}", propertyName);
+                // }
+
                 if (propertiesToCompute != null && propertiesToCompute.contains(propertyName)) {
-                    // 对于propertiesToCompute需要特别处理字符串数值
-                    if (!compareStringNumbers(modelVal, actualVal)) {
-                        addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                    // 特殊处理 mtfCheck 属性
+                    if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F") && modelVal != null) {
+                        compareJsonMaps(modelVal.toString(), actualVal.toString(), propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                    } else {
+                        // 对于 propertiesToCompute 需要特别处理字符串数值
+                        if (!compareStringNumbers(modelVal, actualVal)) {
+                            addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                        }
                     }
                 } else {
                     if (!Objects.equals(modelVal, actualVal)) {
@@ -145,7 +160,60 @@ public class AaListParamsComparator {
         }
     }
 
-    // 原有的compareObjectsWithRanges方法保持不变
+    /**
+     * 比较两个 JSON 字符串表示的 Map<Integer, Double>
+     *
+     * @param modelJson              标准 JSON 字符串
+     * @param actualJson             实际 JSON 字符串
+     * @param propertyName           属性名称
+     * @param inconsistentProperties 不一致的属性集合
+     * @param emptyInActual          实际对象为空的属性集合
+     * @param emptyInStandard        标准对象为空的属性集合
+     */
+    private static void compareJsonMaps(String modelJson, String actualJson, String propertyName,
+                                        Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                        Map<String, Object> emptyInActual,
+                                        Map<String, Object> emptyInStandard) {
+        try {
+            // 读取 JSON 字符串并转换为 Map<String, Double>
+            Map<String, Double> tempModelMap = objectMapper.readValue(modelJson, new TypeReference<Map<String, Double>>() {
+            });
+            Map<String, Double> tempActualMap = objectMapper.readValue(actualJson, new TypeReference<Map<String, Double>>() {
+            });
+
+            // 创建一个新的 Map<Integer, Double>
+            Map<Integer, Double> modelMap = new HashMap<>();
+            Map<Integer, Double> actualMap = new HashMap<>();
+
+            // 将 tempMap 的键和值转换为数值类型并放入 intKeyMap
+            for (Map.Entry<String, Double> entry : tempModelMap.entrySet()) {
+                modelMap.put(Integer.parseInt(entry.getKey()), entry.getValue());
+            }
+            for (Map.Entry<String, Double> entry : tempActualMap.entrySet()) {
+                actualMap.put(Integer.parseInt(entry.getKey()), entry.getValue());
+            }
+
+            // 比较两个 Map<Integer, Double> 中的每个键值对
+            Set<Integer> allKeys = new HashSet<>(modelMap.keySet());
+            allKeys.addAll(actualMap.keySet());
+
+            for (Integer key : allKeys) {
+                Double modelValue = modelMap.get(key);
+                Double actualValue = actualMap.get(key);
+
+                if (!Objects.equals(modelValue, actualValue)) {
+                    addToResult(modelValue, actualValue, StringUtils.joinWith("_", propertyName, key), inconsistentProperties, emptyInActual, emptyInStandard);
+                }
+            }
+        } catch (JsonProcessingException e) {
+            logger.error("JSON解析失败, msg: {}, {}", modelJson, e.getMessage());
+        } catch (NumberFormatException e) {
+            logger.error("键转换为整数失败, msg: {}, {}", modelJson, e.getMessage());
+        }
+    }
+
+
+    // 原有的 compareObjectsWithRanges 方法保持不变
     private static boolean compareObjectsWithRanges(Object obj1, Object obj2, List<String> propertiesToCompare, Map<String, Range<Integer>> propertiesWithRanges) {
         if (obj1 == obj2) return true;
         if (obj1 == null || obj2 == null) return false;

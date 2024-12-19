@@ -30,7 +30,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisClusterConfiguration clusterConfig = new RedisClusterConfiguration();

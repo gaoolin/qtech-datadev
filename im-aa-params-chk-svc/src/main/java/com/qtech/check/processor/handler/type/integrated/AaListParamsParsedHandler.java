@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.qtech.check.utils.AggregateCommandsUtil.aggregateMtfCheckCommands;
+import static com.qtech.check.utils.ConvertMtfCheckCommandItemsUtil.convert;
 import static com.qtech.share.aa.constant.ComparisonConstants.CONTROL_LIST_SET;
 
 /**
@@ -131,7 +131,7 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
                 .collect(Collectors.toList());  // 收集到列表中
 
         // 聚合 AaListCommand，并返回聚合后的列表， 聚合 MTF_CHECK 命令的解析结果
-        List<ImAaListCommand> aggregatedCommands = aggregateMtfCheckCommands(aaListCommandList);
+        List<ImAaListCommand> aggregatedCommands = convert(aaListCommandList);
         // 将命令列表填充到 aaListParamsParsed 中
         aaListParamsParsed.fillWithData(aggregatedCommands);
         return aaListParamsParsed;
@@ -145,10 +145,10 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
                 Map<String, Object> jsonObject = objectMapper.readValue(msg, TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Object.class));
 
                 // 用于调试
-                String s = ((String) jsonObject.get("WoCode")).split("#")[0];
-                if (s.equals("C3PA81-A")) {
-                    logger.info(">>>>> 检测到WoCode机型: {}", jsonObject.get("WoCode"));
-                }
+                // String s = ((String) jsonObject.get("WoCode")).split("#")[0];
+                // if (s.equals("C3PA81-A")) {
+                //     logger.info(">>>>> 检测到WoCode机型: {}", jsonObject.get("WoCode"));
+                // }
 
                 String aaListParamHexStr = (String) jsonObject.get("FactoryName");
                 String aaListParamStr = null;

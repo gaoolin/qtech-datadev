@@ -15,7 +15,6 @@ import java.util.Arrays;
  * desc   :  处理List名为OC_Check Save_OC 的命令
  */
 
-
 public class OcCheckHandler extends AaListCommandHandler<ImAaListCommand> {
     private static final Logger logger = LoggerFactory.getLogger(OcCheckHandler.class);
 

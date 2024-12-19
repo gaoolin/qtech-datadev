@@ -1,7 +1,6 @@
 package com.qtech.check.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import com.qtech.share.aa.pojo.ImAaListParams;
 import com.qtech.share.aa.util.ToCamelCaseConverter;

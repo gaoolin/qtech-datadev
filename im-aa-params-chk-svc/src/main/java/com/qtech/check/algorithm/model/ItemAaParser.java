@@ -94,7 +94,7 @@ public class ItemAaParser {
             subSystem = matcher.group(1);
             if (isValidSubSystem(subSystem)) {
                 String val = parts[5];
-                logInfo(prefixCommand, "ROI: subSystem: " + subSystem + ", " + val);
+                logDebug(prefixCommand, "ROI: subSystem: " + subSystem + ", " + val);
                 return new ImAaListCommand(null, num, prefixCommand, COMMAND_ROI, subSystem, val, null);
             } else {
                 logError(prefixCommand, "Invalid subsystem: " + subSystem);
@@ -108,55 +108,55 @@ public class ItemAaParser {
 
     private static ImAaListCommand parseMtfOffAxisCheck(String[] parts, String prefixCommand, int num) {
         String val = parts[3];
-        logInfo(prefixCommand, "MTF_OFF_AXIS_CHECK: " + val);
+        logDebug(prefixCommand, "MTF_OFF_AXIS_CHECK: " + val);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_MTF_OFF_AXIS_CHECK, null, val, null);
     }
 
     private static ImAaListCommand parseTarget(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_TARGET + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_TARGET + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_TARGET, null, value, null);
     }
 
     private static ImAaListCommand parseCcToCornerLimit(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_CC_TO_CORNER_LIMIT + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_CC_TO_CORNER_LIMIT + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_CC_TO_CORNER_LIMIT, null, value, null);
     }
 
     private static ImAaListCommand parseCcToCornerLimitMin(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_CC_TO_CORNER_LIMIT_MIN + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_CC_TO_CORNER_LIMIT_MIN + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_CC_TO_CORNER_LIMIT_MIN, null, value, null);
     }
 
     private static ImAaListCommand parseCornerScoreDifferenceRejectValue(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_CORNER_SCORE_DIFFERENCE_REJECT_VALUE + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_CORNER_SCORE_DIFFERENCE_REJECT_VALUE + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_CORNER_SCORE_DIFFERENCE_REJECT_VALUE, null, value, null);
     }
 
     private static ImAaListCommand parseZRef(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_Z_REF + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_Z_REF + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_Z_REF, null, value, null);
     }
 
     private static ImAaListCommand parseSrchStep(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_SRCH_STEP + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_SRCH_STEP + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_SRCH_STEP, null, value, null);
     }
 
     private static ImAaListCommand parseGoldenGlueThicknessMin(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MIN + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MIN + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MIN, null, value, null);
     }
 
     private static ImAaListCommand parseGoldenGlueThicknessMax(String[] parts, String prefixCommand, int num) {
         String value = parts[3];
-        logInfo(prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MAX + ": value: " + value);
+        logDebug(prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MAX + ": value: " + value);
         return new ImAaListCommand(null, num, prefixCommand, COMMAND_GOLDEN_GLUE_THICKNESS_MAX, null, value, null);
     }
 
@@ -175,4 +175,6 @@ public class ItemAaParser {
     private static void logInfo(String prefixCommand, String message) {
         logger.info(">>>>> {}-ItemAaParser: {}", prefixCommand, message);
     }
+
+    private static void logDebug(String prefixCommand, String message) { logger.debug(">>>>> {}-ItemAaParser: {}", prefixCommand, message);}
 }

@@ -8,13 +8,13 @@ COPY ./pom.xml /usr/src/app/pom.xml
 COPY ./settings.xml /usr/src/app/settings.xml
 
 # 下载依赖
-RUN mvn dependency:go-offline -s /usr/src/app/settings.xml
+RUN mvn dependency:go-offline -s /usr/src/app/settings.xml || (echo "Qtech-Im dependency download failed" && exit 1)
 
 # 复制源代码
 COPY ./src /usr/src/app/src
 
 # 编译打包
-RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests -s /usr/src/app/settings.xml dependency:resolve && \
+RUN mvn -f /usr/src/app/pom.xml clean package -DskipTests -s /usr/src/app/settings.xml dependency:resolve || (echo "Qtech-Im build failed" && exit 1) && \
     rm -rf /root/.m2/repository
 
 # 运行阶段
@@ -35,7 +35,7 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENV JAVA_OPTS="-Dloader.path=/home/libs/ -Dfile.encoding=utf8 -Djava.security.egd=file:/dev/./urandom -Dlogging.file.path=${LOG_PATH}"
 
 # 创建日志目录
-RUN mkdir -p ${LOG_PATH} && chown -R 1000:1000 ${LOG_PATH}
+RUN mkdir -p ${LOG_PATH} && chmod -R 777 ${LOG_PATH}
 
 EXPOSE 8080
 

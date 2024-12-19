@@ -24,7 +24,7 @@ public class ItemXyResParser {
             String max = parts[3];
             String min = parts[4];
             Range<String> chartAlignmentRange = new Range<>(min, max);
-            logger.info(">>>>> {}-ItemXyResParser: Command: {}, min: {}, max: {}", prefixCommand, command, min, max);
+            logger.debug(">>>>> {}-ItemXyResParser: Command: {}, min: {}, max: {}", prefixCommand, command, min, max);
             return new ImAaListCommand(null, num, prefixCommand, command, null, null, chartAlignmentRange);
         }
         return null;

@@ -65,4 +65,4 @@ logging:
     org.apache.ibatis: DEBUG
 
   file:
-    path: E:\log\mq
+    path: E:\\log\\mq

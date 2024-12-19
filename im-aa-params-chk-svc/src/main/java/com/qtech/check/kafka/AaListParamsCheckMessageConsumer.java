@@ -14,6 +14,7 @@ import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import com.qtech.check.service.IAaListParamsStdModelService;
 import com.qtech.check.utils.RedisUtil;
 import com.qtech.common.utils.DateUtils;
+import com.qtech.common.utils.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -62,13 +63,12 @@ public class AaListParamsCheckMessageConsumer {
         aaListParamsCheckResultDetail.setSource("aa-list");
         for (ConsumerRecord<String, String> record : records) {
             // 解析和处理消息
-
+            String messageKey = record.key();
             // 用于调试
-            String key = record.key();
-            String[] split = key.split("-");
-            if (split[1].equals("865012064235079")) {
-                logger.info(">>>>> Received aaList message: {}", record.value());
-            }
+            // String[] split = messageKey.split("-");
+            // if (split[1].equals("865012064235079")) {
+            //     logger.info(">>>>> Received aaList message: {}", record.value());
+            // }
 
             String value = record.value();
             AaListParamsParsed actualObj = objectMapper.readValue(value, new TypeReference<AaListParamsParsed>() {
@@ -88,10 +88,8 @@ public class AaListParamsCheckMessageConsumer {
                     // 模版信息表中没有对应机型的模版信息（1.没有标准模版 2.模版明细存在，而模版信息丢失）
                     aaListParamsCheckResultDetail.setDescription("Missing Template Information.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                    logger.warn(">>>>> Missing template info for prodType: {}. skip action.", prodType);
-
                     rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                    logger.info(">>>>> AA list Result sent to RabbitMQ!");
+                    logger.warn(">>>>> key: {} missing template info for . skip action.", messageKey);
                     continue;
                 }
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, modelInfoObj);
@@ -106,10 +104,8 @@ public class AaListParamsCheckMessageConsumer {
                 aaListParamsCheckResultDetail.setDescription("Template Offline.");
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, modelInfoObj);
                 kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                logger.warn(">>>>> Missing template info for prodType: {}. skip action.", prodType);
-
                 rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                logger.info(">>>>> AA list Result sent to RabbitMQ!");
+                logger.warn(">>>>> key: {} missing template info for . skip action.", messageKey);
                 continue;
             }
 
@@ -127,10 +123,8 @@ public class AaListParamsCheckMessageConsumer {
                     // 模版信息表中有对应机型的信息，但是模版明细表中没有模版的明细。
                     aaListParamsCheckResultDetail.setDescription("Missing Template Detail.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                    logger.warn(">>>>> Can not find standard template for prodType: {}. skip action.", prodType);
-
                     rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                    logger.info(">>>>> AA list Result sent to RabbitMQ!");
+                    logger.warn(">>>>> Can not find standard template for key: {}. skip action.", messageKey);
                     continue;
                 }
                 redisUtil.saveAaListParamsStdModel(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType, modelObj);
@@ -218,12 +212,10 @@ public class AaListParamsCheckMessageConsumer {
 
             String jsonString = objectMapper.writeValueAsString(aaListParamsCheckResultDetail);
 
+            // 发送结果到 kafka RabbitMQ
             kafkaTemplate.send("qtech_im_aa_list_checked_topic", jsonString);
-            logger.info(">>>>> Check message complete!");
-
-            // 发送结果到 RabbitMQ
             rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", jsonString);
-            logger.info(">>>>> AA list Result sent to RabbitMQ!");
+            logger.info(">>>>> key: {} check message completed, result sent to rabbitmq and kafka topic!", messageKey);
         }
     }
 }

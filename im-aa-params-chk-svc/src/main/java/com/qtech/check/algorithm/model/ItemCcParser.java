@@ -30,7 +30,7 @@ public class ItemCcParser {
     public static ImAaListCommand apply(String[] parts, String prefixCommand) {
         if (parts.length < 7) {
             logger.warn(">>>>> ItemCcParser: Input array length is insufficient. Expected at least 7 elements, but got {}", parts.length);
-            logger.warn(">>>>> Input array: " + String.join(",", parts));
+            logger.warn(">>>>> Invalid Input array: " + String.join(",", parts));
             return null;
         }
 
@@ -49,7 +49,7 @@ public class ItemCcParser {
                     return null;
                 }
                 String val = parts[6];
-                logger.info(">>>>> {}-ItemCcParser: Command: {}, subSystem: {}, val: {}", prefixCommand, command, subSystem, val);
+                logger.debug(">>>>> {}-ItemCcParser: Command: {}, subSystem: {}, val: {}", prefixCommand, command, subSystem, val);
                 return new ImAaListCommand(null, num, prefixCommand, command, subSystem, val, null);
             } catch (NumberFormatException e) {
                 logger.error(">>>>> ItemCcParser: Invalid number format in parts[1]: {}", parts[1], e);

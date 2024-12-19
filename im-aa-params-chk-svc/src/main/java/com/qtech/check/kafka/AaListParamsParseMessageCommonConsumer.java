@@ -120,11 +120,11 @@ public class AaListParamsParseMessageCommonConsumer {
 
                 // 将解析后的消息发送到 Kafka
                 kafkaTemplate.send(producerRecord);
-                logger.info(">>>>> Parsed message successfully with key {}: {}", messageKey, aaListParamsMessageStr);
+                logger.debug(">>>>> Parsed message successfully with key {}: {}", messageKey, aaListParamsMessageStr);
 
                 // 发送结果到 RabbitMQ 持久化
                 rabbitTemplate.convertAndSend("qtechImExchange", "aaListParamsParsedQueue", aaListParamsMessageStr);
-                logger.info(">>>>> Parsed AA list sent to RabbitMQ!");
+                logger.info(">>>>> key: {} parsed, result sent to rabbitmq topic!", messageKey);
 
             } catch (Exception e) {
                 // 记录处理消息时出现的异常
