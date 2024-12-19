@@ -107,10 +107,7 @@ public class ComparisonConstants {
             "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr",
             "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr",
             "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr",
-            "mtfCheckFc", "mtfCheckF1", "mtfCheckF2", "mtfCheckF3", "mtfCheckF4",
-            "mtfCheck1Fc", "mtfCheck1F1", "mtfCheck1F2", "mtfCheck1F3", "mtfCheck1F4",
-            "mtfCheck2Fc", "mtfCheck2F1", "mtfCheck2F2", "mtfCheck2F3", "mtfCheck2F4",
-            "mtfCheck3Fc", "mtfCheck3F1", "mtfCheck3F2", "mtfCheck3F3", "mtfCheck3F4",
+            "mtfCheckF", "mtfCheck1F", "mtfCheck2F", "mtfCheck3F",
             "chartAlignmentXResMin", "chartAlignmentXResMax", "chartAlignmentYResMin", "chartAlignmentYResMax",
             "chartAlignment1XResMin", "chartAlignment1XResMax", "chartAlignment1YResMin", "chartAlignment1YResMax",
             "chartAlignment2XResMin", "chartAlignment2XResMax", "chartAlignment2YResMin", "chartAlignment2YResMax",
@@ -126,7 +123,8 @@ public class ComparisonConstants {
     public static final String REDIS_COMPARISON_MODEL_KEY_PREFIX = "qtech:im:aa:list:model:";
     public static final String REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX = "qtech:im:aa:list:model:info:";
     public static final String EQ_REVERSE_IGNORE_SIM_PREFIX = "qtech:im:chk:ignored:";
+
     // 聚合mtfCheck 命令，需和实体类属性的命名一致
-    public static final String AGG_MTF_CHECK_COMMANDS = "F";
-    public static final String AGG_MTF_CHECK_SUB_SYSTEM = "c";
+    public static final String AGG_MTF_CHECK_ITEMS_FILTER_PREFIX = "MTF_Check";
+    public static final String AGG_MTF_CHECK_ITEMS_RESULT_SUFFIX = "F";
 }
