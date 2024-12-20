@@ -70,7 +70,7 @@ public class DeviceDataKafkaProcessor {
             //     return;
             // }
 
-            logger.info(">>>>> Received message with ID: {}", deviceId);
+            logger.debug(">>>>> Received message with ID: {}", deviceId);
 
             // if (!VALID_DEVICE_TYPES.contains(deviceType)) {
             //     logger.info(">>>>> Invalid device type: " + deviceType);
@@ -99,7 +99,7 @@ public class DeviceDataKafkaProcessor {
 
     private void updateDeviceStatus(DeviceData deviceData, String deviceType, String remoteControlEq) {
         if (SPECIAL_DEVICE_TYPES_AA.contains(deviceType) && remoteControlEq == null) {
-            logger.info(">>>>> Device type " + deviceType + " does not support remote control.");
+            logger.debug(">>>>> Device type " + deviceType + " does not support remote control.");
             deviceData.setRemoteControl("2");
         } else if (remoteControlEq == null) {
             deviceData.setRemoteControl("999");
@@ -130,7 +130,7 @@ public class DeviceDataKafkaProcessor {
             String deviceDataJson = objectMapper.writeValueAsString(deviceData);
             stringRedisTemplate.opsForValue().set(redisKey, deviceDataJson, REDIS_EXPIRE_SECONDS, TimeUnit.SECONDS);
             targetKafkaTemplate.send(targetTopic, deviceId, deviceDataJson);
-            logger.info(">>>>> Forwarded message to target cluster: " + deviceDataJson);
+            logger.debug(">>>>> Forwarded message to target cluster: " + deviceDataJson);
         } catch (JsonProcessingException e) {
             logger.error(">>>>> Error converting DeviceData to JSON: " + deviceData, e);
         }
@@ -147,7 +147,7 @@ public class DeviceDataKafkaProcessor {
             if (!remoteControlRedis.equals(deviceData.getRemoteControl())) {
                 forwardToDeviceCluster(deviceData, deviceId, redisKey);
             } else {
-                logger.info(">>>>> Device already exists in Redis, skipping...");
+                logger.debug(">>>>> Device already exists in Redis, skipping...");
             }
         } catch (JsonProcessingException e) {
             logger.error(">>>>> Error parsing Redis value: " + redisVal, e);
