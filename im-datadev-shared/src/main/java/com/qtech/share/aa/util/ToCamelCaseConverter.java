@@ -56,7 +56,7 @@ public class ToCamelCaseConverter {
     }
 
     public static void main(String[] args) {
-        String input = "MTF_check1";
+        String input = "UVOFF";
         String convert = doConvert(input);
         System.out.println(input);
         System.out.println(convert);
