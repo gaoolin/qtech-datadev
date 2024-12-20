@@ -20,8 +20,9 @@ public class ItemEpoxyInspectionParser {
         if ("EpoxyInspection".equals(command)) {
             Integer num = Integer.parseInt(parts[1]);
             String val = parts[3];
-            logger.info(">>>>> {}-ItemEpoxyInspectionParser: EpoxyInspection: {}", prefixCommand, val);
-            return new ImAaListCommand(null, num, prefixCommand, command, null, val, null);
+            logger.info(">>>>> {}-ItemEpoxyInspectionParser: command: {}, val: {}", prefixCommand, command, val);
+            // 胶检频率使用自定义 command 和 subsystem 名称
+            return new ImAaListCommand(null, num, null, "EpoxyInspection", "Interval", val, null);
         }
         return null;
     }
