@@ -11,6 +11,20 @@ import org.slf4j.LoggerFactory;
  * email  :  gaoolin@gmail.com
  * date   :  2024/10/08 10:48:37
  * desc   :
+ * 处理形如以下格式的字符
+ * ITEM	7	X_RES		5.00	-5.00	1
+ * ITEM	7	Y_RES		5.00	-5.00	1
+ * <p>
+ * 用到此解析器的List 命令包括：
+ * ChartAlignment, ChartAlignment1, ChartAlignment2
+ * 以下List中包含次参数，但未要求解析和管控
+ * AA1, AA2, AA3,
+ * <p>
+ * 数据库中对应字段：
+ * chart_alignment_x_res_min, chart_alignment_x_res_max
+ * <p>
+ * 实例中的属性：
+ * chartAlignmentXResMin, chartAlignmentXResMax
  */
 
 

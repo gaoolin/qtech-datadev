@@ -31,7 +31,7 @@ public class OpRedisTest {
         // 定义通配符模式
         // String pattern = "qtech:im:chk:ignored:*";
 
-        String pattern = "qtech:im:aa:list:model:C3PA60";
+        String pattern = "qtech:im:aa:list:model:C38F12";
 
         // Set<String> keys = stringRedisTemplate.keys(EQ_REVERSE_IGNORE_SIM_PREFIX + "865012064237919");
         // System.out.println(keys);
@@ -50,7 +50,7 @@ public class OpRedisTest {
 
                     // 获取对应的值
                     String value = stringRedisTemplate.opsForValue().get(key);
-                    stringRedisTemplate.delete(key);
+                    // stringRedisTemplate.delete(key);
                     System.out.println("Key: " + key + ", Value: " + value);
                 }
             }

@@ -22,6 +22,9 @@ import java.util.regex.Pattern;
  * <p>
  * 用到此解析器的List 命令包括：
  * mtfCheck
+ * <p>
+ * 数据库中的字段：
+ * mtfCheckF
  */
 
 public class ItemLensFieldOfViewTestParser {

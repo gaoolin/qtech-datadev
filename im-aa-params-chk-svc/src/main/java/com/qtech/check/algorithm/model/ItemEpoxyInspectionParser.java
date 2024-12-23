@@ -9,6 +9,14 @@ import org.slf4j.LoggerFactory;
  * email  :  gaoolin@gmail.com
  * date   :  2024/10/08 10:52:49
  * desc   :
+ * 处理形如以下格式的字符
+ * ITEM	17	EpoxyInspection  30
+ * <p>
+ * 数据库中字段：
+ * epoxy_inspection_interval
+ * <p>
+ * 实例中属性：
+ * epoxyInspectionInterval
  */
 
 

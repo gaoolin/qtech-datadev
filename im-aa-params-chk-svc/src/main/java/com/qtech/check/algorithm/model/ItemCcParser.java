@@ -4,7 +4,6 @@ import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

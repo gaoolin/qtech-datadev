@@ -11,6 +11,18 @@ import org.slf4j.LoggerFactory;
  * email  :  gaoolin@gmail.com
  * date   :  2024/10/08 11:00:04
  * desc   :
+ * 处理形如以下格式的字符
+ * ITEM	24	RESULT		X_Offset	Check	90.00	-20.00	Log	100.00	100.00	100.00	100.00	1.00	1.00	1.00	1.00	NoCompare		0.00	0.00
+ * ITEM	24	RESULT		Y_Offset	Check	60.00	-80.00	Log	100.00	100.00	100.00	100.00	1.00	1.00	1.00	1.00	NoCompare		0.00	0.00
+ * <p>
+ * 用到此解析器的List 命令包括：
+ * Save_OC, Save_MTF, OC_Check
+ * <p>
+ * 数据库中对应字段：
+ * xx_x_offset_min, xx_x_offset_max, xx_y_offset_min, xx_y_offset_max
+ * <p>
+ * 实例中的属性：
+ * xxXOffsetMax, xxXOffsetMin
  */
 
 

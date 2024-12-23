@@ -19,7 +19,7 @@ spring:
     allow-bean-definition-overriding: true
 
   profiles:
-    active: prod
+    active: dev
 
   mvc:
     pathmatch:

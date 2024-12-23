@@ -10,6 +10,18 @@ import org.slf4j.LoggerFactory;
  * email  :  gaoolin@gmail.com
  * date   :  2024/10/08 11:02:29
  * desc   :
+ * 处理形如以下格式的字符
+ * ITEM	14	UTXYZMove #X #Y  -10
+ * ITEM	14	GetPositionWithFinalOffset
+ * <p>
+ * 用到此解析器的List 命令包括：
+ * RecordPosition
+ * <p>
+ * 数据库中对应字段：
+ * record_position_ut_xyz_move
+ * <p>
+ * 实例中的属性：
+ * recordPositionUtXyzMove
  */
 
 
@@ -22,7 +34,8 @@ public class ItemUtXyzMoveParser {
         if (StringUtils.upperCase("UTXYZMove").equals(StringUtils.upperCase(command))) {
             String val = parts[5];
             logger.info(">>>>> {}-ItemUtXyzMoveParser: UTXYZMove: {}", prefixCommand, val);
-            return new ImAaListCommand(null, num, prefixCommand, command, null, val, null);
+            // 采集数据中的参数名称为 UTXYZMove，不具备驼峰规则，需手动转换
+            return new ImAaListCommand(null, num, prefixCommand, "UtXyzMove", null, val, null);
         }
         return null;
     }

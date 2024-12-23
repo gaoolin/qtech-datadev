@@ -86,7 +86,7 @@ public class AaListParamsCheckMessageConsumer {
                     aaListParamsCheckResultDetail.setDescription("Missing Template Information.");
                     kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
                     rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                    logger.warn(">>>>> key: {} missing template info for . skip action.", messageKey);
+                    logger.warn(">>>>> key: {} missing template info skip action.", messageKey);
                     continue;
                 }
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, modelInfoObj);
@@ -102,7 +102,7 @@ public class AaListParamsCheckMessageConsumer {
                 redisUtil.saveAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType, modelInfoObj);
                 kafkaTemplate.send("qtech_im_aa_list_checked_topic", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
                 rabbitTemplate.convertAndSend("qtechImExchange", "eqReverseCtrlInfoQueue", objectMapper.writeValueAsString(aaListParamsCheckResultDetail));
-                logger.warn(">>>>> key: {} missing template info for . skip action.", messageKey);
+                logger.warn(">>>>> key: {} template offline. skip action.", messageKey);
                 continue;
             }
 
