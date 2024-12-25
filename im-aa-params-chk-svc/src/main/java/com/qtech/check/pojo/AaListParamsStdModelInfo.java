@@ -1,6 +1,8 @@
 package com.qtech.check.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -16,6 +18,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Accessors(chain = true)
 @TableName("IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AaListParamsStdModelInfo {
     private Long id;
     private String prodType;

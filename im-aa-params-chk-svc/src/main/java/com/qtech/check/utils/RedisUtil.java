@@ -31,6 +31,8 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, AaListParamsParsed> redisTemplate;
     @Autowired
+    private RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate;
+    @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
     private ObjectMapper objectMapper;
@@ -79,11 +81,7 @@ public class RedisUtil {
 
     // 假设你有一个AaListParamsMessage对象，其名字为name
     public void saveAaListParamsStdModel(String name, AaListParamsStdModel message) {
-        try {
-            stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
-        } catch (JsonProcessingException e) {
-            logger.error(">>>>> JSON解析失败, msg: {}", message, e);
-        }
+        aaListParamsStdModelRedisTemplate.opsForValue().set(name, message);
     }
 
     public void saveAaListParamsStdModelInfo(String name, AaListParamsStdModelInfo message) {
@@ -96,16 +94,7 @@ public class RedisUtil {
 
     // 根据名字获取AaListParamsStdModel对象
     public AaListParamsStdModel getAaListParamsStdModel(String name) {
-        String jsonString = stringRedisTemplate.opsForValue().get(name);
-        if (jsonString != null) {
-            try {
-                return objectMapper.readValue(jsonString, AaListParamsStdModel.class);
-            } catch (JsonProcessingException e) {
-                stringRedisTemplate.delete(name);
-                logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
-            }
-        }
-        return null;
+        return aaListParamsStdModelRedisTemplate.opsForValue().get(name);
     }
 
     public AaListParamsStdModelInfo getAaListParamsStdModelInfo(String name) {

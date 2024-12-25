@@ -1,16 +1,15 @@
 package com.qtech.check.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.qtech.share.aa.pojo.ImAaListCommand;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.pojo.ImAaListParams;
-import com.qtech.share.aa.util.ToCamelCaseConverter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * author :  gaozhilin
@@ -23,6 +22,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @TableName("IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
+@JsonIgnoreProperties(ignoreUnknown = true) // 忽略未知属性
 public class AaListParamsStdModel extends ImAaListParams {
 
     private Long id;

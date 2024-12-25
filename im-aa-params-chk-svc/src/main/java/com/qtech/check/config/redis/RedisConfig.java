@@ -3,7 +3,10 @@ package com.qtech.check.config.redis;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.qtech.check.pojo.AaListParamsParsed;
+import com.qtech.check.pojo.AaListParamsStdModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
@@ -85,6 +88,29 @@ public class RedisConfig {
         template.setValueSerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(new StringRedisSerializer());
+        return template;
+    }
+
+        @Bean
+    public RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, AaListParamsStdModel> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+
+        // 设置 Key 的序列化方式
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+
+        // 设置 Value 的序列化方式
+        Jackson2JsonRedisSerializer<AaListParamsStdModel> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdModel.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        serializer.setObjectMapper(objectMapper);
+
+        template.setValueSerializer(serializer);
+        template.setHashValueSerializer(serializer);
+
+        template.afterPropertiesSet();
         return template;
     }
 }
