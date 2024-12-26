@@ -4,7 +4,7 @@ package com.qtech.service.utils.chk;
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/06/26 11:34:46
- * desc   :  
+ * desc   :
  */
 
 
