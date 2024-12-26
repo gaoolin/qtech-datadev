@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 控制设备反向控制信息的控制器。
  */
+// 单个接口允许跨域：
+// @CrossOrigin(origins = "http://localhost:8080")
 @ApiModel(value = "控制模式设置控制器", description = "控制模式设置控制器")
 @RestController
 @RequestMapping(value = "/im/aa/control-mode")
