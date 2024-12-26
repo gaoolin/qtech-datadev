@@ -3,8 +3,8 @@ package com.qtech.check.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.check.pojo.AaListParamsParsed;
-import com.qtech.check.pojo.AaListParamsStdModel;
-import com.qtech.check.pojo.AaListParamsStdModelInfo;
+import com.qtech.check.pojo.AaListParamsStdTemplate;
+import com.qtech.check.pojo.AaListParamsStdTemplateInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, AaListParamsParsed> redisTemplate;
     @Autowired
-    private RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate;
+    private RedisTemplate<String, AaListParamsStdTemplate> aaListParamsStdModelRedisTemplate;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -80,11 +80,11 @@ public class RedisUtil {
     }
 
     // 假设你有一个AaListParamsMessage对象，其名字为name
-    public void saveAaListParamsStdModel(String name, AaListParamsStdModel message) {
+    public void saveAaListParamsStdModel(String name, AaListParamsStdTemplate message) {
         aaListParamsStdModelRedisTemplate.opsForValue().set(name, message);
     }
 
-    public void saveAaListParamsStdModelInfo(String name, AaListParamsStdModelInfo message) {
+    public void saveAaListParamsStdModelInfo(String name, AaListParamsStdTemplateInfo message) {
         try {
             stringRedisTemplate.opsForValue().set(name, objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
@@ -93,15 +93,15 @@ public class RedisUtil {
     }
 
     // 根据名字获取AaListParamsStdModel对象
-    public AaListParamsStdModel getAaListParamsStdModel(String name) {
+    public AaListParamsStdTemplate getAaListParamsStdModel(String name) {
         return aaListParamsStdModelRedisTemplate.opsForValue().get(name);
     }
 
-    public AaListParamsStdModelInfo getAaListParamsStdModelInfo(String name) {
+    public AaListParamsStdTemplateInfo getAaListParamsStdModelInfo(String name) {
         String jsonString = stringRedisTemplate.opsForValue().get(name);
         if (jsonString != null) {
             try {
-                return objectMapper.readValue(jsonString, AaListParamsStdModelInfo.class);
+                return objectMapper.readValue(jsonString, AaListParamsStdTemplateInfo.class);
             } catch (JsonProcessingException e) {
                 logger.error(">>>>> JSON解析失败, msg: {}", jsonString, e);
             }

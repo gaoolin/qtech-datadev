@@ -113,7 +113,6 @@ public class AaListParamsComparator {
                         addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
                     }
                 }
-
                 // 其他类型的处理可以在这里添加
             } catch (NoSuchFieldException e) {
                 logger.error(">>>>> Field not found in actualVal: {}", propertyName);

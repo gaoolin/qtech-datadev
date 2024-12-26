@@ -2,7 +2,7 @@ package com.qtech.check.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qtech.check.mapper.AaListParamsStdModelMapper;
-import com.qtech.check.pojo.AaListParamsStdModel;
+import com.qtech.check.pojo.AaListParamsStdTemplate;
 import com.qtech.check.service.IAaListParamsStdModelService;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStdModelMapper, AaListParamsStdModel> implements IAaListParamsStdModelService {
+public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStdModelMapper, AaListParamsStdTemplate> implements IAaListParamsStdModelService {
 
 
     /**
@@ -22,7 +22,7 @@ public class AaListParamsStdModelServiceImpl extends ServiceImpl<AaListParamsStd
      * @return
      */
     @Override
-    public boolean save(AaListParamsStdModel entity) {
+    public boolean save(AaListParamsStdTemplate entity) {
         return super.save(entity);
     }
 }

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.check.algorithm.AaListParamsComparator;
 import com.qtech.check.pojo.AaListParamsParsed;
-import com.qtech.check.pojo.AaListParamsStdModel;
-import com.qtech.check.pojo.AaListParamsStdModelInfo;
+import com.qtech.check.pojo.AaListParamsStdTemplate;
+import com.qtech.check.pojo.AaListParamsStdTemplateInfo;
 import com.qtech.check.pojo.EqReverseCtrlInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import com.qtech.check.service.IAaListParamsStdModelService;
@@ -55,7 +55,7 @@ public class AaListParamsCheckMessageConsumer {
 
     @KafkaListener(topics = "qtech_im_aa_list_parsed_topic", groupId = "aaList-do-check-group", containerFactory = "kafkaListenerContainerFactory")
     public void listenBatchMessages(List<ConsumerRecord<String, String>> records) throws JsonProcessingException {
-        AaListParamsStdModel modelObj = null;
+        AaListParamsStdTemplate modelObj = null;
         EqReverseCtrlInfo aaListParamsCheckResultDetail = new EqReverseCtrlInfo();
         aaListParamsCheckResultDetail.setSource("aa-list");
         for (ConsumerRecord<String, String> record : records) {
@@ -72,10 +72,10 @@ public class AaListParamsCheckMessageConsumer {
             });
 
             String prodType = actualObj.getProdType();
-            AaListParamsStdModelInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
+            AaListParamsStdTemplateInfo modelInfoObj = redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
             if (modelInfoObj == null) {
-                LambdaQueryWrapper<AaListParamsStdModelInfo> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(AaListParamsStdModelInfo::getProdType, prodType);
+                LambdaQueryWrapper<AaListParamsStdTemplateInfo> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(AaListParamsStdTemplateInfo::getProdType, prodType);
                 modelInfoObj = aaListParamsStdModelInfoService.getOne(wrapper);
                 if (modelInfoObj == null) {
                     aaListParamsCheckResultDetail.setSimId(actualObj.getSimId());
@@ -108,8 +108,8 @@ public class AaListParamsCheckMessageConsumer {
 
             modelObj = redisUtil.getAaListParamsStdModel(REDIS_COMPARISON_MODEL_KEY_PREFIX + prodType);
             if (modelObj == null) {
-                LambdaQueryWrapper<AaListParamsStdModel> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(AaListParamsStdModel::getProdType, prodType);
+                LambdaQueryWrapper<AaListParamsStdTemplate> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(AaListParamsStdTemplate::getProdType, prodType);
                 modelObj = aaListParamsStdModelService.getOne(wrapper);
 
                 if (modelObj == null) {

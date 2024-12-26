@@ -176,5 +176,7 @@ public class ItemAaParser {
         logger.info(">>>>> {}-ItemAaParser: {}", prefixCommand, message);
     }
 
-    private static void logDebug(String prefixCommand, String message) { logger.debug(">>>>> {}-ItemAaParser: {}", prefixCommand, message);}
+    private static void logDebug(String prefixCommand, String message) {
+        logger.debug(">>>>> {}-ItemAaParser: {}", prefixCommand, message);
+    }
 }

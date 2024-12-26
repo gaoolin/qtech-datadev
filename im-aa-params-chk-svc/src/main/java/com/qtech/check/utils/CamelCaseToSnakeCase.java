@@ -29,7 +29,7 @@ public class CamelCaseToSnakeCase {
     }
 
     public static void main(String[] args) {
-        String camelCase = "mtfCheck1";
+        String camelCase = "recordPositionUtXyzMove";
         String snakeCase = doConvert(camelCase);
         System.out.println(snakeCase);
     }

@@ -1,7 +1,6 @@
 package com.qtech.check.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.pojo.ImAaListParams;
 import lombok.Data;
@@ -23,7 +22,7 @@ import java.util.*;
 @ToString(callSuper = true)
 @TableName("IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
 @JsonIgnoreProperties(ignoreUnknown = true) // 忽略未知属性
-public class AaListParamsStdModel extends ImAaListParams {
+public class AaListParamsStdTemplate extends ImAaListParams {
 
     private Long id;
     private String prodType;
@@ -50,14 +49,5 @@ public class AaListParamsStdModel extends ImAaListParams {
             }
             clazz = clazz.getSuperclass();
         }
-    }
-
-    private List<Field> getAllFields(Class<?> clazz) {
-        List<Field> fields = new ArrayList<>();
-        while (clazz != null) {
-            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-            clazz = clazz.getSuperclass();
-        }
-        return fields;
     }
 }

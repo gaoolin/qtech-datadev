@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.qtech.check.pojo.AaListParamsParsed;
-import com.qtech.check.pojo.AaListParamsStdModel;
+import com.qtech.check.pojo.AaListParamsStdTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
@@ -24,7 +24,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/10 13:50:27
  * desc   :
- *
+ * <p>
  * 在某些场景下，仍然需要通过配置类来补充和定制化 Redis 配置
  * 1. 扩展性和细粒度控制
  * 2. 默认 Bean 的覆盖
@@ -91,9 +91,9 @@ public class RedisConfig {
         return template;
     }
 
-        @Bean
-    public RedisTemplate<String, AaListParamsStdModel> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, AaListParamsStdModel> template = new RedisTemplate<>();
+    @Bean
+    public RedisTemplate<String, AaListParamsStdTemplate> aaListParamsStdModelRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, AaListParamsStdTemplate> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         // 设置 Key 的序列化方式
@@ -101,7 +101,7 @@ public class RedisConfig {
         template.setHashKeySerializer(new StringRedisSerializer());
 
         // 设置 Value 的序列化方式
-        Jackson2JsonRedisSerializer<AaListParamsStdModel> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdModel.class);
+        Jackson2JsonRedisSerializer<AaListParamsStdTemplate> serializer = new Jackson2JsonRedisSerializer<>(AaListParamsStdTemplate.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);

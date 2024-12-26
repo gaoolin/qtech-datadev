@@ -4,7 +4,6 @@ import org.apache.kafka.clients.consumer.Consumer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.HashMap;
@@ -21,18 +20,6 @@ import java.util.Map;
 public class AaListParamsKafkaConsumerConfig {
 
     /**
-     * 创建 消费者对象
-     *
-     * @param
-     * @return
-     */
-    @Bean
-    @Qualifier("aaListParamsCommonKafkaConsumer")
-    public Consumer<?, ?> consumer() {
-        return new DefaultKafkaConsumerFactory<>(buildConsumerProperties()).createConsumer();
-    }
-
-    /**
      * 构建消费者配置
      *
      * @return
@@ -47,5 +34,17 @@ public class AaListParamsKafkaConsumerConfig {
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         return properties;
+    }
+
+    /**
+     * 创建 消费者对象
+     *
+     * @param
+     * @return
+     */
+    @Bean
+    @Qualifier("aaListParamsCommonKafkaConsumer")
+    public Consumer<?, ?> consumer() {
+        return new DefaultKafkaConsumerFactory<>(buildConsumerProperties()).createConsumer();
     }
 }

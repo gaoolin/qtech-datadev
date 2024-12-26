@@ -3,7 +3,7 @@ package com.qtech.check.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qtech.check.mapper.AaListParamsStdModelInfoMapper;
-import com.qtech.check.pojo.AaListParamsStdModelInfo;
+import com.qtech.check.pojo.AaListParamsStdTemplateInfo;
 import com.qtech.check.service.IAaListParamsStdModelInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 
 @Service
-public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdModelInfo> implements IAaListParamsStdModelInfoService {
+public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParamsStdModelInfoMapper, AaListParamsStdTemplateInfo> implements IAaListParamsStdModelInfoService {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsStdModelInfoServiceImpl.class);
 
     /**
@@ -27,7 +27,7 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
      * @return
      */
     @Override
-    public List<AaListParamsStdModelInfo> list(Wrapper<AaListParamsStdModelInfo> queryWrapper) {
+    public List<AaListParamsStdTemplateInfo> list(Wrapper<AaListParamsStdTemplateInfo> queryWrapper) {
         try {
             return super.list(queryWrapper);
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class AaListParamsStdModelInfoServiceImpl extends ServiceImpl<AaListParam
      * @return
      */
     @Override
-    public AaListParamsStdModelInfo getOne(Wrapper<AaListParamsStdModelInfo> queryWrapper) {
+    public AaListParamsStdTemplateInfo getOne(Wrapper<AaListParamsStdTemplateInfo> queryWrapper) {
         try {
             return super.getOne(queryWrapper);
         } catch (Exception e) {
