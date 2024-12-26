@@ -56,7 +56,7 @@ public class ToCamelCaseConverter {
     }
 
     public static void main(String[] args) {
-        String input = "UVOFF";
+        String input = "RecordPosition";
         String convert = doConvert(input);
         System.out.println(input);
         System.out.println(convert);

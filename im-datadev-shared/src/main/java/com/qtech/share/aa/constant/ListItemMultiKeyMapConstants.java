@@ -31,8 +31,10 @@ public class ListItemMultiKeyMapConstants {
         keyMap.put("Aa", new HashSet<>(Arrays.asList("AA1", "AA2", "AA3")));
         keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check1", "MTF_Check2", "MTF_Check3")));
         keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment", "ChartAlignment1", "ChartAlignment2")));
-        keyMap.put("SaveMtf", new HashSet<>(Collections.singletonList("Save_MTF")));
         keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
+        keyMap.put("RecordPosition", new HashSet<>(Collections.singletonList("RecordPosition")));
+        keyMap.put("SaveMtf", new HashSet<>(Collections.singletonList("Save_MTF")));
+
 
         KEY_MAP = Collections.unmodifiableMap(keyMap); // Make it immutable
     }

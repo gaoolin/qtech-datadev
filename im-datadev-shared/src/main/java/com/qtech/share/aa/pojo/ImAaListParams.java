@@ -1,9 +1,7 @@
 package com.qtech.share.aa.pojo;
 
 import com.qtech.share.aa.util.ToCamelCaseConverter;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,7 +179,6 @@ public class ImAaListParams implements Serializable {
     private String saveMtfCcMax;
 
     // Vcm Run 指标
-
 
     public void reset() {
         resetFields(this.getClass());
