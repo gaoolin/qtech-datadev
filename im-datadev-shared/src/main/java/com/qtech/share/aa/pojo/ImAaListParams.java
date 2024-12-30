@@ -1,7 +1,10 @@
 package com.qtech.share.aa.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.util.ToCamelCaseConverter;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +24,11 @@ import java.util.stream.Collectors;
 @Accessors(chain = true) // 表示启用链式调用
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ImAaListParams implements Serializable {
     private static final long serialVersionUID = 529L;
     private static final Logger logger = LoggerFactory.getLogger(ImAaListParams.class);
+    private String prodType;
     private String aa1;
     private String aa2;
     private String aa3;
