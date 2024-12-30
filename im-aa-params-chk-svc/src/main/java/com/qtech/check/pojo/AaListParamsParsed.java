@@ -1,6 +1,7 @@
 package com.qtech.check.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import com.qtech.share.aa.pojo.ImAaListParams;
 import com.qtech.share.aa.util.ToCamelCaseConverter;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Accessors(chain = true)  // 注解用于启用链式调用风格，这意味着在调用 setter 方法时，可以返回当前对象，从而使得多个 setter 方法可以链式调用。
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AaListParamsParsed extends ImAaListParams {
 
     private String simId;
-    private String prodType;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date receivedTime;
@@ -34,7 +35,6 @@ public class AaListParamsParsed extends ImAaListParams {
     @Override
     public void reset() {
         this.simId = null;
-        this.prodType = null;
         this.receivedTime = null;
         super.reset();  // 调用父类的 reset 方法，重置父类的字段
     }

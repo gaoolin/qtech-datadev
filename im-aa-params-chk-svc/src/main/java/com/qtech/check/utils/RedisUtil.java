@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.pojo.AaListParamsStdTemplate;
 import com.qtech.check.pojo.AaListParamsStdTemplateInfo;
+import com.qtech.share.aa.pojo.ImAaListParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -31,7 +33,7 @@ public class RedisUtil {
     @Autowired
     private RedisTemplate<String, AaListParamsParsed> redisTemplate;
     @Autowired
-    private RedisTemplate<String, AaListParamsStdTemplate> aaListParamsStdModelRedisTemplate;
+    private RedisTemplate<String, ImAaListParams> aaListParamsStdModelRedisTemplate;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
@@ -94,7 +96,13 @@ public class RedisUtil {
 
     // 根据名字获取AaListParamsStdModel对象
     public AaListParamsStdTemplate getAaListParamsStdModel(String name) {
-        return aaListParamsStdModelRedisTemplate.opsForValue().get(name);
+        ImAaListParams imAaListParams = aaListParamsStdModelRedisTemplate.opsForValue().get(name);
+        if (imAaListParams != null) {
+            AaListParamsStdTemplate aaListParamsStdTemplate = new AaListParamsStdTemplate();
+            BeanUtils.copyProperties(imAaListParams, aaListParamsStdTemplate);
+            return aaListParamsStdTemplate;
+        }
+        return null;
     }
 
     public AaListParamsStdTemplateInfo getAaListParamsStdModelInfo(String name) {

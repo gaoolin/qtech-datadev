@@ -8,7 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * author :  gaozhilin
@@ -18,19 +19,16 @@ import java.util.*;
  */
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @TableName("IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL")
 @JsonIgnoreProperties(ignoreUnknown = true) // 忽略未知属性
 public class AaListParamsStdTemplate extends ImAaListParams {
 
     private Long id;
-    private String prodType;
 
     @Override
     public void reset() {
         this.id = null;
-        this.prodType = null;
         super.reset();
     }
 
@@ -49,5 +47,15 @@ public class AaListParamsStdTemplate extends ImAaListParams {
             }
             clazz = clazz.getSuperclass();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

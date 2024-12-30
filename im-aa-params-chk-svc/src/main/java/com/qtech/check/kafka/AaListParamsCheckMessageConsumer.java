@@ -62,10 +62,10 @@ public class AaListParamsCheckMessageConsumer {
             // 解析和处理消息
             String messageKey = record.key();
             // 用于调试
-            String[] split = messageKey.split("-");
-            if (split[1].equals("861394058751681")) {
-                logger.info(">>>>> Received aaList message: {}", record.value());
-            }
+            // String[] split = messageKey.split("-");
+            // if (split[1].equals("861394058751681")) {
+            //     logger.info(">>>>> Received aaList message: {}", record.value());
+            // }
 
             String value = record.value();
             AaListParamsParsed actualObj = objectMapper.readValue(value, new TypeReference<AaListParamsParsed>() {
