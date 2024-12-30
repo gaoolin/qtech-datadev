@@ -84,13 +84,4 @@ public class AaListParamsParsed extends ImAaListParams {
             clazz = clazz.getSuperclass();
         }
     }
-
-    private List<Field> getAllFields(Class<?> clazz) {
-        List<Field> fields = new ArrayList<>();
-        while (clazz != null) {
-            fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-            clazz = clazz.getSuperclass();
-        }
-        return fields;
-    }
 }

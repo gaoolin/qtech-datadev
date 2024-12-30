@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qtech.share.aa.pojo.ImAaListStdTemplateInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -20,6 +21,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @TableName(value = "IMBIZ.IM_AA_LIST_PARAMS_STD_MODEL_INFO")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor // json反序列化时，需要无参构造函数实例化对象，否则会报错
 public class AaListParamsStdTemplateInfo extends ImAaListStdTemplateInfo {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
