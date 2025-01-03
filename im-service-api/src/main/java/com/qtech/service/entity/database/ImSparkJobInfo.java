@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class ImSparkJobInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     private String jobName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime jobDt;
     private Integer statusCode;
     private String remark;
