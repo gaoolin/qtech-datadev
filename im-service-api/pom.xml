@@ -81,8 +81,9 @@
             <version>8.0.29</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
+            <groupId>com.qtech.oracle</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>8</version>
         </dependency>
 
         <dependency>

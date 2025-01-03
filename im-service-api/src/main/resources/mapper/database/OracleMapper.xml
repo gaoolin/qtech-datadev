@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qtech.service.mapper.database.OracleMapper">
+    <resultMap id="sparkJobInfoResult" type="com.qtech.service.entity.database.ImSparkJobInfo">
+        <result property="jobName" column="job_name" />
+        <result property="jobDt" column="job_dt" />
+        <result property="statusCode" column="status_code" />
+        <result property="remark" column="remark" />
+    </resultMap>
+    <update id="updateSparkJobInfo">
+        UPDATE IMBIZ.IM_SPARK_JOB_INFO
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jobDt != null">
+                job_dt = #{jobDt},
+            </if>
+            <if test="statusCode != null">
+                status_code = #{statusCode},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+        </trim>
+        WHERE job_name = #{jobName}
+    </update>
+
+    <select id="getSparkJobInfo" resultMap="sparkJobInfoResult">
+        SELECT job_name, job_dt, status_code, remark
+        FROM IMBIZ.IM_SPARK_JOB_INFO
+        WHERE job_name = #{jobName}
+    </select>
+</mapper>
