@@ -36,4 +36,13 @@ public class OracleServiceImpl implements IOracleService {
     public boolean updateSparkJobInfo(ImSparkJobInfo imSparkJobInfo) {
         return oracleMapper.updateSparkJobInfo(imSparkJobInfo) > 0;
     }
+
+    /**
+     * @param jobName
+     * @return
+     */
+    @Override
+    public String getSparkJobSql(String jobName) {
+        return oracleMapper.getSparkJobSql(jobName);
+    }
 }

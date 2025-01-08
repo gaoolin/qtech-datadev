@@ -14,4 +14,6 @@ public interface IOracleService {
     public ImSparkJobInfo getSparkJobInfo(String jobName);
 
     public boolean updateSparkJobInfo(ImSparkJobInfo imSparkJobInfo);
+
+    public String getSparkJobSql(String jobName);
 }

@@ -27,9 +27,15 @@ public class OracleController {
         return ApiResponse.success("success", sparkJobInfo);
     }
 
-    @PostMapping("/sparkJobInfo")
-    public ApiResponse<Boolean> getSparkJobInfo(@RequestBody ImSparkJobInfo imSparkJobInfo) {
-        boolean affected = oracleService.updateSparkJobInfo(imSparkJobInfo);
-        return ApiResponse.success("success", affected);
+    @PutMapping("/sparkJobInfo/{jobName}")
+    public ApiResponse<Boolean> updateSparkJobInfo(@PathVariable String jobName, @RequestBody ImSparkJobInfo imSparkJobInfo) {
+        imSparkJobInfo.setJobName(jobName);
+        return ApiResponse.success("success", oracleService.updateSparkJobInfo(imSparkJobInfo));
+    }
+
+    @GetMapping("/sparkJobSql/{jobName}")
+    public ApiResponse<String> getSparkJobSql(@PathVariable String jobName) {
+        String sql = oracleService.getSparkJobSql(jobName);
+        return ApiResponse.success("success", sql);
     }
 }

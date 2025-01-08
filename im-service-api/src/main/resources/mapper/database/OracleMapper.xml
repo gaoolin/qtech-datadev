@@ -28,4 +28,10 @@
         FROM IMBIZ.IM_SPARK_JOB_INFO
         WHERE job_name = #{jobName}
     </select>
+
+    <select id="getSparkJobSql" resultType="java.lang.String">
+        SELECT QUERY_TEXT
+        FROM IMBIZ.IM_SQL_QUERIES
+        WHERE QUERY_NAME = #{jobName}
+    </select>
 </mapper>

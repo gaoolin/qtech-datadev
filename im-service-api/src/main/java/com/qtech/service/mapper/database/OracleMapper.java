@@ -16,4 +16,6 @@ public interface OracleMapper {
     public ImSparkJobInfo getSparkJobInfo(@Param("jobName") String jobName);
 
     public int updateSparkJobInfo(ImSparkJobInfo imSparkJobInfo);
+
+    public String getSparkJobSql(@Param("jobName") String jobName);
 }
