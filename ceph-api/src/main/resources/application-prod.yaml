@@ -4,5 +4,5 @@ aws:
     accessKey: 9OQ1CKI8DCJIYTB2Y7H0
     secretKey: MArlxB1h71FsGY8KHhxximDdkBaOulIzAzBTUvy7
     region: us-east-1
-    endpoint: http://rook-ceph-rgw-my-store-external.rook-ceph:8080
+    endpoint: http://10.170.6.40:31033
     bucket:  default
