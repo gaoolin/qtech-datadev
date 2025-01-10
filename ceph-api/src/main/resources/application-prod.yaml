@@ -1,8 +1,8 @@
 #AWS S3配置
 aws:
   s3:
-    accessKey: 3N9CP0C0D0VNY5UFLACJ
-    secretKey: jAkyxAwskyg0rQ5U27BZ3PcphtmVbiLiAjkXylUn
+    accessKey: 9OQ1CKI8DCJIYTB2Y7H0
+    secretKey: MArlxB1h71FsGY8KHhxximDdkBaOulIzAzBTUvy7
     region: us-east-1
-    endpoint: http://10.170.6.40:31033
+    endpoint: http://rook-ceph-rgw-my-store-external.rook-ceph
     bucket:  default
