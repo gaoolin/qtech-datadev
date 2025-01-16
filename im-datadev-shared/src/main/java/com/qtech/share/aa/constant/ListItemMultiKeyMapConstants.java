@@ -23,6 +23,8 @@ public class ListItemMultiKeyMapConstants {
      * 把要【解析】的机台List命令，映射为处理器的前缀，以便使用Handler处理器解析
      *
      * 需要解析的List要不断地加入其中
+     *
+     * 需要调整 ComparisonConstants 类 CONTROL_LIST_SET
      */
     public static final Map<String, Set<String>> KEY_MAP;
 
@@ -32,9 +34,10 @@ public class ListItemMultiKeyMapConstants {
         keyMap.put("MtfCheck", new HashSet<>(Arrays.asList("MTF_Check", "MTF_Check1", "MTF_Check2", "MTF_Check3")));
         keyMap.put("ChartAlignment", new HashSet<>(Arrays.asList("ChartAlignment", "ChartAlignment1", "ChartAlignment2")));
         keyMap.put("EpoxyInspectionAuto", new HashSet<>(Collections.singletonList("EpoxyInspection_Auto")));
+        keyMap.put("UtXyzMove", new HashSet<>(Collections.singletonList("UtXyzMove")));
         keyMap.put("RecordPosition", new HashSet<>(Collections.singletonList("RecordPosition")));
+        keyMap.put("SaveOc", new HashSet<>(Collections.singletonList("Save_OC")));
         keyMap.put("SaveMtf", new HashSet<>(Collections.singletonList("Save_MTF")));
-
 
         KEY_MAP = Collections.unmodifiableMap(keyMap); // Make it immutable
     }

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
  * desc   :
  * 处理形如以下格式的字符
  * ITEM	14	UTXYZMove #X #Y  -10
- * ITEM	14	GetPositionWithFinalOffset
  * <p>
  * 用到此解析器的List 命令包括：
  * RecordPosition
@@ -22,6 +21,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * 实例中的属性：
  * recordPositionUtXyzMove
+ * 上述属性名作废，变更为：
+ * utXyzMoveVal
  */
 
 
@@ -35,7 +36,7 @@ public class ItemUtXyzMoveParser {
             String val = parts[5];
             logger.info(">>>>> {}-ItemUtXyzMoveParser: UTXYZMove: {}", prefixCommand, val);
             // 采集数据中的参数名称为 UTXYZMove，不具备驼峰规则，需手动转换
-            return new ImAaListCommand(null, num, prefixCommand, "UtXyzMove", null, val, null);
+            return new ImAaListCommand(null, num, null, null, "UtXyzMoveVal", val, null);
         }
         return null;
     }

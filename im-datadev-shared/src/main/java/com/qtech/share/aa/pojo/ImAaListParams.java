@@ -34,6 +34,9 @@ public class ImAaListParams implements Serializable {
     private String aa3;
     private String backToPosition;
     private String blemish;
+    // 2025-01-15
+    private String blemish1;
+    private String blemish2;
     private String clampOnOff;
     private String chartAlignment;
     private String chartAlignment1;
@@ -42,24 +45,46 @@ public class ImAaListParams implements Serializable {
     private String destroy;
     private String destroyStart;
     private String dispense;
+    // 2025-01-15
+    private String dispense1;
+    private String dispense2;
     private String epoxyInspection;
     private String epoxyInspectionAuto;
     private String grab;
+    // 2025-01-15
+    private String grab1;
+    private String grab2;
     private String gripperOpen;
     private String init;
+    // 2025-01-15
+    private String init1;
+    private String init2;
+    private String init3;
     private String lpBlemish;
     private String lpOc;
     private String lpOcCheck;
     private String lpOn;
     private String lpOnBlemish;
     private String lpOff;
+    // 2025-01-15
+    // private String lpOff0;
+    // 2025-01-16 lpOff0对于mybatis驼峰转换不友好，更改以下指令
+    private String lpIntensity;
     private String moveToBlemishPos;
     private String mtfCheck;
     private String mtfCheck1;
     private String mtfCheck2;
     private String mtfCheck3;
     private String openCheck;
-    private String ocCheck;
+    // 2025-01-15
+    private String openCheck1;
+    private String openCheck2;
+    private String openCheck3;
+    // 2025-01-15
+    private String prToBond;
+    // private String ocCheck;
+    // 台虹厂区的utXyzMove和recordPosition分开管控，因此新增 2025-01-15
+    private String utXyzMove;
     private String recordPosition;
     private String reInit;
     private String saveOc;
@@ -166,14 +191,12 @@ public class ImAaListParams implements Serializable {
     private String vcmCheckResultCheckMax;
 
     // RecordPosition 指标
-    private String recordPositionUtXyzMove;
+    // 由于新增utXyzMove List命令，因此新增utXyzMoveVal作为参数管控值 2025-01-15
+    private String utXyzMoveVal;
+    // 由于新增utXyzMove List命令，因此新增recordPositionName作为参数管控值，原recordPositionXyzMove 被替换掉 2025-01-15
+    private String recordPositionName;
 
     // OcCheck 指标 Save Oc
-    private String ocCheckXOffsetMin;
-    private String ocCheckXOffsetMax;
-    private String ocCheckYOffsetMin;
-    private String ocCheckYOffsetMax;
-
     private String saveOcXOffsetMin;
     private String saveOcXOffsetMax;
     private String saveOcYOffsetMin;

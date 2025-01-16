@@ -1,27 +1,36 @@
 package com.qtech.check.processor.handler.type.item;
 
-import com.qtech.check.algorithm.model.ItemXyOffsetParser;
+import com.qtech.check.algorithm.model.ItemUtXyzMoveParser;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
- * date   :  2024/09/26 14:12:35
- * desc   :  处理List名为OC_Check Save_OC 的命令
+ * date   :  2025/01/15 15:02:52
+ * desc   :
  */
 
-public class OcCheckHandler extends AaListCommandHandler<ImAaListCommand> {
-    private static final Logger logger = LoggerFactory.getLogger(OcCheckHandler.class);
+@Component
+public class UtXyzMoveHandler extends AaListCommandHandler<ImAaListCommand> {
+    private static final Logger logger = LoggerFactory.getLogger(UtXyzMoveHandler.class);
 
+    /**
+     * 处理命令。
+     *
+     * @param parts     命令的部分
+     * @param prefixCmd 前缀命令（可选）
+     * @return 处理结果
+     */
     @Override
     public ImAaListCommand handle(String[] parts, String prefixCmd) {
         try {
-            return ItemXyOffsetParser.apply(parts, prefixCmd);
+            return ItemUtXyzMoveParser.apply(parts, prefixCmd);
         } catch (Exception e) {
             logger.error(">>>>> {} handle error for parts: {}, prefixCommand: {}. Error: {}",
                     this.getClass().getName(), Arrays.toString(parts), prefixCmd, e.getMessage(), e);

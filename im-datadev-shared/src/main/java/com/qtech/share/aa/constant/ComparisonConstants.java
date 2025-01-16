@@ -21,6 +21,8 @@ public class ComparisonConstants {
             "aa3",
             "backToPosition",
             "blemish",
+            "blemish1",
+            "blemish2",
             "clampOnOff",
             "chartAlignment",
             "chartAlignment1",
@@ -29,24 +31,36 @@ public class ComparisonConstants {
             "destroy",
             "destroyStart",
             "dispense",
+            "dispense1",
+            "dispense2",
             "epoxyInspection",
             "epoxyInspectionAuto",
             "grab",
+            "grab1",
+            "grab2",
             "gripperOpen",
             "init",
+            "init1",
+            "init2",
+            "init3",
             "lpBlemish",
             "lpOc",
             "lpOnBlemish",
             "lpOcCheck",
             "lpOn",
             "lpOff",
+            "lpIntensity",
             "moveToBlemishPos",
             "mtfCheck",
             "mtfCheck1",
             "mtfCheck2",
             "mtfCheck3",
             "openCheck",
-            "ocCheck",
+            "openCheck1",
+            "openCheck2",
+            "openCheck3",
+            "prToBond",
+            "utXyzMove",  // 2025-01-15
             "recordPosition",
             "reInit",
             "saveOc",
@@ -69,14 +83,21 @@ public class ComparisonConstants {
             "vcmTopHall",
             "vcmZ",
             "vcmZHall",
-            "yLevel"
+            "yLevel",
             // ... 其他需要比较是否相等的属性名称
+
+            // ... Item 参数中用于比较的属性名称
+            "recordPositionName",
+            "aa1Target", "aa2Target", "aa3Target",
+            "aa1ZRef", "aa2ZRef", "aa3ZRef"
     );
 
     /*
      * 需要解析对应List项的Item参数值并比对的List项目（不是所有List的Item参数都需要解析，也不是都需要比对和反控）
      * 即List对应的Item项中有哪些参数需要解析，哪些参数需要比对，哪些参数需要反控
      * 需要增减List参数的管控，则可直接在下列列表中添加或删除
+     *
+     * 需要调整 ListItemMultiKeyMapConstants 类 KEY_MAP
      */
     public static final Set<String> CONTROL_LIST_SET = Collections.unmodifiableSet(
             new HashSet<>(
@@ -92,7 +113,9 @@ public class ComparisonConstants {
                             "MTF_Check1",
                             "MTF_Check2",
                             "MTF_Check3",
+                            "UtXyzMove",
                             "RecordPosition",
+                            "Save_OC",
                             "Save_MTF"
                     )
             )
@@ -104,17 +127,15 @@ public class ComparisonConstants {
      * 上面的 CONTROL_LIST_SET 数组发生了增减，下面的数组也要对应的增减相关command或者subCommand
      */
     public static final List<String> PROPERTIES_TO_COMPUTE = Arrays.asList(
-            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr",
-            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr",
-            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr",
+            "aa1RoiCc", "aa1RoiUl", "aa1RoiUr", "aa1RoiLl", "aa1RoiLr", "aa1CcToCornerLimit", "aa1CcToCornerLimitMin", "aa1CornerScoreDifferenceRejectValue", "aa1SrchStep", "aa1GoldenGlueThicknessMin", "aa1GoldenGlueThicknessMax",
+            "aa2RoiCc", "aa2RoiUl", "aa2RoiUr", "aa2RoiLl", "aa2RoiLr", "aa2CcToCornerLimit", "aa2CcToCornerLimitMin", "aa2CornerScoreDifferenceRejectValue", "aa2SrchStep", "aa2GoldenGlueThicknessMin", "aa2GoldenGlueThicknessMax",
+            "aa3RoiCc", "aa3RoiUl", "aa3RoiUr", "aa3RoiLl", "aa3RoiLr", "aa3CcToCornerLimit", "aa3CcToCornerLimitMin", "aa3CornerScoreDifferenceRejectValue", "aa3SrchStep", "aa3GoldenGlueThicknessMin", "aa3GoldenGlueThicknessMax",
             "mtfCheckF", "mtfCheck1F", "mtfCheck2F", "mtfCheck3F",
             "chartAlignmentXResMin", "chartAlignmentXResMax", "chartAlignmentYResMin", "chartAlignmentYResMax",
             "chartAlignment1XResMin", "chartAlignment1XResMax", "chartAlignment1YResMin", "chartAlignment1YResMax",
             "chartAlignment2XResMin", "chartAlignment2XResMax", "chartAlignment2YResMin", "chartAlignment2YResMax",
             "epoxyInspectionInterval",
-            "vcmCheckResultCheckMin", "vcmCheckResultCheckMax",
-            "recordPositionUtXyzMove",
-            "ocCheckXOffsetMin", "ocCheckXOffsetMax", "ocCheckYOffsetMin", "ocCheckYOffsetMax",
+            "utXyzMoveVal",
             "saveOcXOffsetMin", "saveOcXOffsetMax", "saveOcYOffsetMin", "saveOcYOffsetMax",
             "saveMtfCcMin", "saveMtfCcMax"
     );

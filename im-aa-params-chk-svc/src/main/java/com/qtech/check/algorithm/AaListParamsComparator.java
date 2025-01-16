@@ -57,6 +57,7 @@ public class AaListParamsComparator {
             allProperties.addAll(propertiesToCompute);
         }
 
+        // TODO 这里需要优化，胶检频率 0-30 都Ok。模版值和实际值，需要重新设计。
         for (String propertyName : allProperties) {
             try {
                 Field modelField = getFieldFromClassHierarchy(standardObj.getClass(), propertyName);
