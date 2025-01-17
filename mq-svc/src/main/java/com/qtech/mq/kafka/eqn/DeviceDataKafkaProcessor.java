@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class DeviceDataKafkaProcessor {
     private static final String REDIS_KEY_PREFIX = "qtech:im:device_status:";
-    private static final int REDIS_EXPIRE_SECONDS = 180;
+    private static final int REDIS_EXPIRE_SECONDS = 60;
 
     private static final Logger logger = LoggerFactory.getLogger(DeviceDataKafkaProcessor.class);
 
