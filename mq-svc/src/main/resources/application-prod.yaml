@@ -5,8 +5,8 @@ spring:
     druid:
       # 主库数据源
       first:
-        driver-class-name: database.jdbc.driver.OracleDriver
-        url: jdbc:database:thin:@//10.170.6.144:1521/qtechIm
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+        url: jdbc:oracle:thin:@//10.170.6.144:1521/qtechIm
         username: imBiz
         password: M5F5JkfnQ
       # 从库数据源
