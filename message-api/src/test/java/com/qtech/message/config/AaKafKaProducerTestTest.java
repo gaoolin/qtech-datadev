@@ -22,7 +22,7 @@ import static com.qtech.message.utils.Constant.HEX_STR;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+// @SpringBootTest
 class AaKafKaProducerTestTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AaKafKaProducerTestTest.class);

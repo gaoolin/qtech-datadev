@@ -56,4 +56,4 @@ api:
 exempt:
   paths:
     - /message/api/list/send
-
+    - /message/api/glue/**

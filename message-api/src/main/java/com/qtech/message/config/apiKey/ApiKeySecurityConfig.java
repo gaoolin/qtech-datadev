@@ -36,7 +36,7 @@ public class ApiKeySecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()
                 // 具体的豁免路径
-                .antMatchers("/message/api/list/**", "/exempted/path2").permitAll()
+                .antMatchers("/message/api/list/**", "/message/api/glue/**", "/exempted/path2").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class)
