@@ -1,11 +1,10 @@
 package com.qtech.service.service.ocr.impl;
 
 
-import com.qtech.service.utils.response.ApiResponse;
 import com.qtech.service.service.ocr.OcrLabelService;
+import com.qtech.service.utils.response.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;

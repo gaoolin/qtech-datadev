@@ -7,6 +7,16 @@
         <result property="statusCode" column="status_code" />
         <result property="remark" column="remark" />
     </resultMap>
+    <insert id="addGlueLog" parameterType="ImAaGlueLog">
+        INSERT INTO IMBIZ.IM_AA_GLUE_IMAGE_LOGS (LOG_DATE, MESSAGE, LOG_LEVEL)
+        VALUES (#{logDate}, #{message}, #{logLevel})
+    </insert>
+
+    <insert id="addGlueHeartBeat">
+        INSERT INTO IMBIZ.IM_AA_GLUE_HEART_BEAT (eq_id, dt, status_code, description)
+        VALUES (#{heartBeat.eqId}, CURRENT_TIMESTAMP, #{heartBeat.statusCode}, #{heartBeat.description})
+    </insert>
+
     <update id="updateSparkJobInfo">
         UPDATE IMBIZ.IM_SPARK_JOB_INFO
         <trim prefix="SET" suffixOverrides=",">

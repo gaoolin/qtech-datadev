@@ -1,5 +1,7 @@
 package com.qtech.service.controller.database;
 
+import com.qtech.service.entity.database.ImAaGlueHeartBeat;
+import com.qtech.service.entity.database.ImAaGlueLog;
 import com.qtech.service.entity.database.ImSparkJobInfo;
 import com.qtech.service.service.database.IOracleService;
 import com.qtech.service.utils.response.ApiResponse;
@@ -38,4 +40,15 @@ public class OracleController {
         String sql = oracleService.getSparkJobSql(jobName);
         return ApiResponse.success("success", sql);
     }
+
+    @PutMapping("/aa/glue/log")
+    public ApiResponse<Boolean> addGlueLog(@RequestBody ImAaGlueLog log) {
+        return ApiResponse.success("success", oracleService.addGlueLog(log));
+    }
+
+    @PutMapping("/aa/glue/heartBeat")
+    public ApiResponse<Boolean> addGlueHeartBeat(@RequestBody ImAaGlueHeartBeat heartBeat) {
+        return ApiResponse.success("success", oracleService.addGlueHeartBeat(heartBeat));
+    }
+
 }

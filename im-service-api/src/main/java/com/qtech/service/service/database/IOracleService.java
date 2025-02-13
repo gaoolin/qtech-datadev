@@ -1,5 +1,7 @@
 package com.qtech.service.service.database;
 
+import com.qtech.service.entity.database.ImAaGlueHeartBeat;
+import com.qtech.service.entity.database.ImAaGlueLog;
 import com.qtech.service.entity.database.ImSparkJobInfo;
 
 /**
@@ -16,4 +18,8 @@ public interface IOracleService {
     public boolean updateSparkJobInfo(ImSparkJobInfo imSparkJobInfo);
 
     public String getSparkJobSql(String jobName);
+
+    public boolean addGlueLog(ImAaGlueLog log);
+
+    public boolean addGlueHeartBeat(ImAaGlueHeartBeat heartBeat);
 }

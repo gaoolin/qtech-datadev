@@ -1,5 +1,7 @@
 package com.qtech.service.service.database.impl;
 
+import com.qtech.service.entity.database.ImAaGlueHeartBeat;
+import com.qtech.service.entity.database.ImAaGlueLog;
 import com.qtech.service.entity.database.ImSparkJobInfo;
 import com.qtech.service.mapper.database.OracleMapper;
 import com.qtech.service.service.database.IOracleService;
@@ -44,5 +46,23 @@ public class OracleServiceImpl implements IOracleService {
     @Override
     public String getSparkJobSql(String jobName) {
         return oracleMapper.getSparkJobSql(jobName);
+    }
+
+    /**
+     * @param log
+     * @return
+     */
+    @Override
+    public boolean addGlueLog(ImAaGlueLog log) {
+        return oracleMapper.addGlueLog(log);
+    }
+
+    /**
+     * @param heartBeat
+     * @return
+     */
+    @Override
+    public boolean addGlueHeartBeat(ImAaGlueHeartBeat heartBeat) {
+        return oracleMapper.addGlueHeartBeat(heartBeat);
     }
 }

@@ -22,7 +22,6 @@ import java.io.IOException;
  * desc   :  远程调用工具类
  */
 public class HttpUtils {
-
     private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
     /**
