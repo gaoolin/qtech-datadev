@@ -27,6 +27,6 @@ public class ItemRecordPosition {
         int num = Integer.parseInt(parts[1]);
         String val = parts[2];
         logger.info(">>>>> {}-ItemRecordPosition: {}", prefixCommand, val);
-        return new ImAaListCommand(null, num, null, null, "recordPositionName", val, null);
+        return new ImAaListCommand(null, num, null, "recordPositionName", null, val, null);
     }
 }

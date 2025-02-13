@@ -31,20 +31,20 @@ public class ItemXyOffsetParser {
 
     public static ImAaListCommand apply(String[] parts, String prefixCmd) {
         String command = parts[3];
-        if ("X_Offset".equals(StringUtils.upperCase(command))) {
+        if (StringUtils.upperCase("X_Offset").equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
             String max = parts[5];
             String min = parts[6];
-            Range<String> ocCheckRange = new Range<>(min, max);
-            logger.info(">>>>> {}-ItemXyOffsetParser: {}, ocCheckXOffsetMax: {}, ocCheckXOffsetMin: {}", prefixCmd, command, max, min);
-            return new ImAaListCommand(null, num, prefixCmd, command, null, null, ocCheckRange);
-        } else if ("Y_OffSET".equals(StringUtils.upperCase(command))) {
+            Range<String> range = new Range<>(min, max);
+            logger.info(">>>>> {}-ItemXyOffsetParser: {}, Max: {}, Min: {}", prefixCmd, command, max, min);
+            return new ImAaListCommand(null, num, prefixCmd, command, null, null, range);
+        } else if (StringUtils.upperCase("Y_OffSET").equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
             String max = parts[5];
             String min = parts[6];
-            Range<String> ocCheckRange = new Range<>(min, max);
-            logger.info(">>>>> {}-ItemXyOffsetParser: {}, ocCheckYOffsetMax: {}, ocCheckYOffsetMin: {}", prefixCmd, command, max, min);
-            return new ImAaListCommand(null, num, prefixCmd, command, null, null, ocCheckRange);
+            Range<String> range = new Range<>(min, max);
+            logger.info(">>>>> {}-ItemXyOffsetParser: {}, Max: {}, Min: {}", prefixCmd, command, max, min);
+            return new ImAaListCommand(null, num, prefixCmd, command, null, null, range);
         }
         return null;
     }

@@ -33,7 +33,7 @@ public class ItemXyResParser {
 
     public static ImAaListCommand apply(String[] parts, String prefixCommand) {
         String command = StringUtils.upperCase(parts[2]);
-        if ("X_RES".equals(command) || "Y_RES".equals(command)) {
+        if ("X_RES".equals(StringUtils.upperCase(command)) || "Y_RES".equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
             String max = parts[3];
             String min = parts[4];

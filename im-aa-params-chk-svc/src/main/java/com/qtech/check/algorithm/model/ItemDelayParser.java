@@ -1,5 +1,6 @@
 package com.qtech.check.algorithm.model;
 
+import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ public class ItemDelayParser {
 
     public static ImAaListCommand apply(String[] parts, String prefixCommand) {
         String command = parts[2];
-        if ("Delay".equals(command)) {
+        if (StringUtils.upperCase("Delay").equals(StringUtils.upperCase(command))) {
             int num = Integer.parseInt(parts[1]);
 
             String val = parts[3];

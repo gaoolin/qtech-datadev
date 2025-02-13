@@ -34,9 +34,9 @@ public class ItemUtXyzMoveParser {
         String command = parts[2];
         if (StringUtils.upperCase("UTXYZMove").equals(StringUtils.upperCase(command))) {
             String val = parts[5];
-            logger.info(">>>>> {}-ItemUtXyzMoveParser: UTXYZMove: {}", prefixCommand, val);
+            logger.info(">>>>> {}-ItemUtXyzMoveParser: UtXyzMove: {}", prefixCommand, val);
             // 采集数据中的参数名称为 UTXYZMove，不具备驼峰规则，需手动转换
-            return new ImAaListCommand(null, num, null, null, "UtXyzMoveVal", val, null);
+            return new ImAaListCommand(null, num, null, "UtXyzMoveVal", null, val, null);
         }
         return null;
     }

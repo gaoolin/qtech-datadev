@@ -1,5 +1,6 @@
 package com.qtech.check.algorithm.model;
 
+import com.qtech.common.utils.StringUtils;
 import com.qtech.share.aa.pojo.ImAaListCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class ItemEpoxyInspectionParser {
 
     public static ImAaListCommand apply(String[] parts, String prefixCommand) {
         String command = parts[2];
-        if ("EpoxyInspection".equals(command)) {
+        if (StringUtils.upperCase("EpoxyInspection").equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
             String val = parts[3];
             logger.info(">>>>> {}-ItemEpoxyInspectionParser: command: {}, val: {}", prefixCommand, command, val);

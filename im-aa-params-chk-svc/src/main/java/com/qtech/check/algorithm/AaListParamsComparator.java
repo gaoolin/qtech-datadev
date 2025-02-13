@@ -103,6 +103,32 @@ public class AaListParamsComparator {
                         } else {
                             logger.error(">>>>> Unsupported data type for mtfCheck: {}", modelTypeName);
                         }
+                        // FIXME: 这里需要优化，胶检频率 0-30 都Ok。模版值和实际值，需要重新设计。
+                    } else if ("epoxyInspectionAuto".equals(propertyName)) {  // 需要特殊处理 胶检频率
+                        if (modelVal != null) {
+                            if (modelVal instanceof String) {
+                                if (StringUtils.isNotEmpty(modelVal.toString())) {
+                                    int modelValInt = Integer.parseInt(modelVal.toString());
+                                    if (actualVal == null) {
+                                        addToResult(modelVal, null, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                                    } else {
+                                        int actualValInt = Integer.parseInt(actualVal.toString());
+                                        if (actualValInt <= 30 && modelValInt >= 0) {
+                                            addToResult(actualValInt, actualValInt, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                                        } else {
+                                            logger.error(">>>>> epoxyInspectionAuto value is out of range: {}", modelVal);
+                                        }
+                                    }
+                                } else {
+                                    addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                                }
+
+                            } else {
+                                logger.error(">>>>> Unsupported data type for epoxyInspectionAuto: {}", modelTypeName);
+                            }
+                        } else {
+                            addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                        }
                     } else {
                         // 对于 propertiesToCompute 需要特别处理字符串数值
                         if (!compareStringNumbers(modelVal, actualVal)) {

@@ -46,7 +46,7 @@ public class OpRedisTest {
 
                     // 获取对应的值
                     String value = stringRedisTemplate.opsForValue().get(key);
-                    // stringRedisTemplate.delete(key);
+                    stringRedisTemplate.delete(key);
                     System.out.println("Key: " + key + ", Value: " + value);
                 }
             }

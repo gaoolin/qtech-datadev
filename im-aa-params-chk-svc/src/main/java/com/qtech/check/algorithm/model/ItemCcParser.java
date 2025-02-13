@@ -34,8 +34,7 @@ public class ItemCcParser {
         }
 
         String command = parts[2];
-        String upperCaseCommand = StringUtils.upperCase(command);
-        if ("RESULT".equals(upperCaseCommand)) {
+        if ("RESULT".equals(StringUtils.upperCase(command))) {
             try {
                 Integer num = Integer.parseInt(parts[1]);
 
