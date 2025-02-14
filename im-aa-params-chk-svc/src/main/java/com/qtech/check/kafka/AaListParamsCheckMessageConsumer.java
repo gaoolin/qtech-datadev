@@ -52,6 +52,8 @@ public class AaListParamsCheckMessageConsumer {
     private RedisUtil redisUtil;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private AaListParamsComparator aaListParamsComparator;
 
     @KafkaListener(topics = "qtech_im_aa_list_parsed_topic", groupId = "aaList-do-check-group", containerFactory = "kafkaListenerContainerFactory")
     public void listenBatchMessages(List<ConsumerRecord<String, String>> records) throws JsonProcessingException {
@@ -132,7 +134,7 @@ public class AaListParamsCheckMessageConsumer {
             //     logger.info(">>>>> 机型: {}", prodType);
             // }
 
-            Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result = AaListParamsComparator.compareObjectsWithStandardAndActual(modelObj, actualObj, PROPERTIES_TO_COMPARE, PROPERTIES_TO_COMPUTE);
+            Triple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> result = aaListParamsComparator.compareObjectsWithStandardAndActual(modelObj, actualObj, PROPERTIES_TO_COMPARE, PROPERTIES_TO_COMPUTE);
 
             Map<String, Map.Entry<Object, Object>> inconsistentProperties = result.getLeft();
             Map<String, Object> emptyInActual = result.getMiddle();

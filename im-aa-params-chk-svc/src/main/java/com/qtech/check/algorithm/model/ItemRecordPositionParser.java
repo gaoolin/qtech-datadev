@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
  */
 
 
-public class ItemRecordPosition {
-    private static final Logger logger = LoggerFactory.getLogger(ItemRecordPosition.class);
+public class ItemRecordPositionParser {
+    private static final Logger logger = LoggerFactory.getLogger(ItemRecordPositionParser.class);
 
     public static ImAaListCommand apply(String[] parts, String prefixCommand) {
         int num = Integer.parseInt(parts[1]);
         String val = parts[2];
-        logger.info(">>>>> {}-ItemRecordPosition: {}", prefixCommand, val);
+        logger.info(">>>>> {}-ItemRecordPositionParser: {}", prefixCommand, val);
         return new ImAaListCommand(null, num, null, "recordPositionName", null, val, null);
     }
 }

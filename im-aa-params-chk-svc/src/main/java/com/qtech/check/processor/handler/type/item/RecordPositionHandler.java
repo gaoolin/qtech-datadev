@@ -1,6 +1,6 @@
 package com.qtech.check.processor.handler.type.item;
 
-import com.qtech.check.algorithm.model.ItemRecordPosition;
+import com.qtech.check.algorithm.model.ItemRecordPositionParser;
 import com.qtech.check.algorithm.model.ItemUtXyzMoveParser;
 import com.qtech.check.processor.handler.type.AaListCommandHandler;
 import com.qtech.share.aa.pojo.ImAaListCommand;
@@ -30,7 +30,7 @@ public class RecordPositionHandler extends AaListCommandHandler<ImAaListCommand>
     public ImAaListCommand handle(String[] parts, String prefixCmd) {
         try {
             if (parts.length == 3) {
-                return ItemRecordPosition.apply(parts, prefixCmd);
+                return ItemRecordPositionParser.apply(parts, prefixCmd);
             } else {
                 return ItemUtXyzMoveParser.apply(parts, prefixCmd);
             }

@@ -9,7 +9,10 @@ import com.qtech.share.aa.model.Range;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -24,9 +27,11 @@ Objects.equals()方法用于比较两个对象是否相等，包括null值。这
 Objects.equals()会返回true，否则如果它们不相等（包括一个为null，另一个不为null），它会返回false。因此，if (!Objects.equals(value1, value2))会捕获不相等的值，
 包括null和非null的组合。接下来的两个if语句分别检查value1和value2的空值情况，确保不会错过任何情况。
 */
+@Component
 public class AaListParamsComparator {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsComparator.class);
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /**
      * 比较两个对象的指定属性并返回不一致的属性及其值。
@@ -37,7 +42,7 @@ public class AaListParamsComparator {
      * @param propertiesToCompute 需要额外处理的属性列表
      * @return 包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
      */
-    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
+    public ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
 
         if ((propertiesToCompare == null || propertiesToCompare.isEmpty()) && (propertiesToCompute == null || propertiesToCompute.isEmpty())) {
             // 如果没有属性需要比较，则直接返回表示没有不一致的结果
@@ -103,31 +108,36 @@ public class AaListParamsComparator {
                         } else {
                             logger.error(">>>>> Unsupported data type for mtfCheck: {}", modelTypeName);
                         }
-                        // FIXME: 这里需要优化，胶检频率 0-30 都Ok。模版值和实际值，需要重新设计。
+                        // FIXME: 这里需要优化，胶检频率 5-30 都Ok。模版值和实际值，需要重新设计。
                     } else if ("epoxyInspectionAuto".equals(propertyName)) {  // 需要特殊处理 胶检频率
                         if (modelVal != null) {
                             if (modelVal instanceof String) {
-                                if (StringUtils.isNotEmpty(modelVal.toString())) {
+                                if (StringUtils.isNotBlank(modelVal.toString())) {
                                     int modelValInt = Integer.parseInt(modelVal.toString());
-                                    if (actualVal == null) {
+                                    if (StringUtils.isBlank(actualVal.toString())) {
                                         addToResult(modelVal, null, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
                                     } else {
                                         int actualValInt = Integer.parseInt(actualVal.toString());
-                                        if (actualValInt <= 30 && modelValInt >= 0) {
-                                            addToResult(actualValInt, actualValInt, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                                        } else {
-                                            logger.error(">>>>> epoxyInspectionAuto value is out of range: {}", modelVal);
+                                        if (actualValInt > 30 || actualValInt < 5) {
+                                            addToResult(modelValInt, actualValInt, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
                                         }
                                     }
                                 } else {
-                                    addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                                    if (StringUtils.isBlank(actualVal.toString())) {
+                                        logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
+                                    } else {
+                                        addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                                    }
                                 }
-
                             } else {
                                 logger.error(">>>>> Unsupported data type for epoxyInspectionAuto: {}", modelTypeName);
                             }
                         } else {
-                            addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                            if (StringUtils.isBlank(actualVal.toString())) {
+                                logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
+                            } else {
+                                addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                            }
                         }
                     } else {
                         // 对于 propertiesToCompute 需要特别处理字符串数值
@@ -223,7 +233,7 @@ public class AaListParamsComparator {
      * @param emptyInActual          实际对象为空的属性集合
      * @param emptyInStandard        标准对象为空的属性集合
      */
-    private static void compareJsonMaps(String modelJson, String actualJson, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+    private void compareJsonMaps(String modelJson, String actualJson, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
         try {
             // 读取 JSON 字符串并转换为 Map<String, Double>
             Map<String, Double> tempModelMap = objectMapper.readValue(modelJson, new TypeReference<Map<String, Double>>() {
