@@ -83,14 +83,7 @@ public class ComparisonConstants {
             "vcmTopHall",
             "vcmZ",
             "vcmZHall",
-            "yLevel",
-            // ... 其他需要比较是否相等的属性名称
-
-            // ... Item 参数中用于比较的属性名称
-            "utXyzMoveVal", // 2025-02-13 上抬下拉不一定为数值，可能数值后代字母
-            "recordPositionName",
-            "aa1Target", "aa2Target", "aa3Target",
-            "aa1ZRef", "aa2ZRef", "aa3ZRef"
+            "yLevel"
     );
 
     /*
@@ -137,7 +130,13 @@ public class ComparisonConstants {
             "chartAlignment2XResMin", "chartAlignment2XResMax", "chartAlignment2YResMin", "chartAlignment2YResMax",
             "epoxyInspectionInterval",
             "saveOcXOffsetMin", "saveOcXOffsetMax", "saveOcYOffsetMin", "saveOcYOffsetMax",
-            "saveMtfCcMin", "saveMtfCcMax"
+            "saveMtfCcMin", "saveMtfCcMax",
+
+            // ... Item 参数中用于比较的属性名称(其值为字符串类型)
+            "utXyzMoveVal", // 2025-02-13 上抬下拉不一定为数值，可能数值后代字母
+            "recordPositionName",
+            "aa1Target", "aa2Target", "aa3Target",
+            "aa1ZRef", "aa2ZRef", "aa3ZRef"
     );
 
     // redis key prefix
