@@ -5,33 +5,26 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import com.qtech.common.utils.StringUtils;
-import com.qtech.share.aa.model.Range;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * author :  gaozhilin
  * email  :  gaoolin@gmail.com
  * date   :  2024/05/20 10:59:31
- * desc   :
+ * desc   : 比较对象的属性，记录不一致的属性。
  */
-/*
-Objects.equals()方法用于比较两个对象是否相等，包括null值。这意味着Objects.equals(value1, value2)会正确处理null值的情况。如果value1和value2都为null，
-Objects.equals()会返回true，否则如果它们不相等（包括一个为null，另一个不为null），它会返回false。因此，if (!Objects.equals(value1, value2))会捕获不相等的值，
-包括null和非null的组合。接下来的两个if语句分别检查value1和value2的空值情况，确保不会错过任何情况。
-*/
-@Component
 public class AaListParamsComparator {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsComparator.class);
-    @Autowired
-    private ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Map<String, Field> fieldCache = new ConcurrentHashMap<>();
+
+    // 比较两个对象的指定属性并返回不一致的属性及其值
 
     /**
      * 比较两个对象的指定属性并返回不一致的属性及其值。
@@ -42,10 +35,11 @@ public class AaListParamsComparator {
      * @param propertiesToCompute 需要额外处理的属性列表
      * @return 包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
      */
-    public ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
+    public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(
+            Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {
 
-        if ((propertiesToCompare == null || propertiesToCompare.isEmpty()) && (propertiesToCompute == null || propertiesToCompute.isEmpty())) {
-            // 如果没有属性需要比较，则直接返回表示没有不一致的结果
+        if ((propertiesToCompare == null || propertiesToCompare.isEmpty()) &&
+                (propertiesToCompute == null || propertiesToCompute.isEmpty())) {
             return new ImmutableTriple<>(new HashMap<>(), new HashMap<>(), new HashMap<>());
         }
 
@@ -55,114 +49,90 @@ public class AaListParamsComparator {
 
         // 合并两个列表进行处理
         Set<String> allProperties = new HashSet<>();
-        if (propertiesToCompare != null) {
-            allProperties.addAll(propertiesToCompare);
-        }
-        if (propertiesToCompute != null) {
-            allProperties.addAll(propertiesToCompute);
-        }
+        if (propertiesToCompare != null) allProperties.addAll(propertiesToCompare);
+        if (propertiesToCompute != null) allProperties.addAll(propertiesToCompute);
 
-        // TODO 这里需要优化，胶检频率 0-30 都Ok。模版值和实际值，需要重新设计。
+        // 遍历所有属性并进行比较
         for (String propertyName : allProperties) {
             try {
-                Field modelField = getFieldFromClassHierarchy(standardObj.getClass(), propertyName);
-                Field actualField = getFieldFromClassHierarchy(actualObj.getClass(), propertyName);
-
-                // 获取字段的类型
-                Class<?> fieldType = modelField.getType();
-                String modelTypeName = fieldType.getName();
+                Field modelField = getFieldFromCache(standardObj.getClass(), propertyName);
+                Field actualField = getFieldFromCache(actualObj.getClass(), propertyName);
 
                 modelField.setAccessible(true);
                 actualField.setAccessible(true);
 
-                // 获取字段的值并进行类型转换
-                Object modelVal = fieldType.cast(modelField.get(standardObj));
-                Object actualVal = fieldType.cast(actualField.get(actualObj));
+                Object modelVal = modelField.get(standardObj);
+                Object actualVal = actualField.get(actualObj);
 
-                // 用于调试
-                // if ("mtfCheckF".equals(propertyName) && modelVal != null) {
-                //     logger.info(">>>>> 检测到属性: {}", propertyName);
-                // }
-
+                // 统一处理所有 propertiesToCompute 中的属性（List需要管控Item参数值的属性）
                 if (propertiesToCompute != null && propertiesToCompute.contains(propertyName)) {
-                    // 特殊处理 mtfCheck 属性
-                    if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F")) {
-                        if (modelTypeName.equals("java.lang.String")) {
-                            int isModelNull = modelVal == null ? 1 : 0;
-                            int isActualNull = actualVal == null ? 1 : 0;
-
-                            if (isModelNull + isActualNull == 0) {
-                                // modelVal 和 actualVal 都不为空
-                                String modelValJsonString = null;
-                                String actualValJsonString = null;
-                                modelValJsonString = modelVal.toString();
-                                actualValJsonString = actualVal.toString();
-                                compareJsonMaps(modelValJsonString, actualValJsonString, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                            } else if (isModelNull + isActualNull == 1) {
-                                // modelVal 或 actualVal 不为空
-                                addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                            } else {
-                                // modelVal 为空，actualVal 为空
-                                logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
-                            }
-                        } else {
-                            logger.error(">>>>> Unsupported data type for mtfCheck: {}", modelTypeName);
-                        }
-                        // FIXME: 这里需要优化，胶检频率 5-30 都Ok。模版值和实际值，需要重新设计。
-                    } else if ("epoxyInspectionAuto".equals(propertyName)) {  // 需要特殊处理 胶检频率
-                        if (modelVal != null) {
-                            if (modelVal instanceof String) {
-                                if (StringUtils.isNotBlank(modelVal.toString())) {
-                                    int modelValInt = Integer.parseInt(modelVal.toString());
-                                    if (StringUtils.isBlank(actualVal.toString())) {
-                                        addToResult(modelVal, null, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                                    } else {
-                                        int actualValInt = Integer.parseInt(actualVal.toString());
-                                        if (actualValInt > 30 || actualValInt < 5) {
-                                            addToResult(modelValInt, actualValInt, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                                        }
-                                    }
-                                } else {
-                                    if (StringUtils.isBlank(actualVal.toString())) {
-                                        logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
-                                    } else {
-                                        addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                                    }
-                                }
-                            } else {
-                                logger.error(">>>>> Unsupported data type for epoxyInspectionAuto: {}", modelTypeName);
-                            }
-                        } else {
-                            if (StringUtils.isBlank(actualVal.toString())) {
-                                logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
-                            } else {
-                                addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                            }
-                        }
-                    } else {
-                        // 对于 propertiesToCompute 需要特别处理字符串数值
-                        if (!compareStringNumbers(modelVal, actualVal)) {
-                            addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                        }
-                    }
+                    handleComputedProperties(propertyName, modelVal, actualVal, inconsistentProperties, emptyInActual, emptyInStandard);
                 } else {
-                    if (!Objects.equals(modelVal, actualVal)) {
-                        addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
-                    }
+                    // 处理PROPERTIES_TO_COMPARE的List是否开启的逻辑
+                    compareRegularValues(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
                 }
-                // 其他类型的处理可以在这里添加
+
             } catch (NoSuchFieldException e) {
-                logger.error(">>>>> Field not found in actualVal: {}", propertyName);
+                logger.error(">>>>> Field not found: {}", propertyName);
             } catch (IllegalAccessException e) {
                 logger.error(">>>>> Access denied for field: {}", propertyName);
             }
         }
 
+
         return new ImmutableTriple<>(inconsistentProperties, emptyInActual, emptyInStandard);
     }
 
     /**
-     * 获取类及其所有父类中的字段
+     * 统一处理 propertiesToCompute 中的所有属性，包括特殊处理的字段、数值类型和字符串类型
+     */
+    private static void handleComputedProperties(String propertyName, Object modelVal, Object actualVal,
+                                                 Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                                 Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F")) {
+            // 处理 mtfCheck 逻辑
+            handleMtfCheck(propertyName, modelVal, actualVal, inconsistentProperties, emptyInActual, emptyInStandard);
+        } else if ("epoxyInspectionInterval".equals(propertyName)) {
+            // 处理 epoxyInspectionAuto 逻辑
+            handleEpoxyInspectionAuto(propertyName, modelVal, actualVal, inconsistentProperties, emptyInActual, emptyInStandard);
+        } else {
+            // 判断是否为数值类型的字符串
+            if (isNumeric(modelVal) && isNumeric(actualVal)) {
+                // 比较数值
+                if (!compareStringNumbers(modelVal, actualVal)) {
+                    addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                }
+            } else {
+                // 直接比较字符串
+                compareRegularValues(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+            }
+        }
+    }
+
+    /**
+     * 判断一个对象的值是否是数值类型的字符串
+     */
+    private static boolean isNumeric(Object value) {
+        if (value == null) {
+            return false;
+        }
+        String str = value.toString().trim();
+        return str.matches("-?\\d+(\\.\\d+)?");
+    }
+
+    private static Field getFieldFromCache(Class<?> clazz, String fieldName) throws NoSuchFieldException {
+        String cacheKey = clazz.getName() + "." + fieldName;
+        return fieldCache.computeIfAbsent(cacheKey, key -> {
+            try {
+                return getFieldFromClassHierarchy(clazz, fieldName);
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /**
+     * 获取类及其父类中的字段
      *
      * @param clazz     类对象
      * @param fieldName 字段名称
@@ -174,14 +144,102 @@ public class AaListParamsComparator {
             try {
                 return clazz.getDeclaredField(fieldName);
             } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();  // 继续查找父类
+                clazz = clazz.getSuperclass();  // Continue searching in parent classes
             }
         }
         throw new NoSuchFieldException("Field " + fieldName + " not found in class hierarchy.");
     }
 
+    // 处理常规属性值比较
+    private static void compareRegularValues(Object modelVal, Object actualVal, String propertyName,
+                                             Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                             Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        if (!Objects.equals(modelVal, actualVal)) {
+            addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+        }
+    }
+
+    // 处理特殊属性（如 mtfCheck 和 epoxyInspectionAuto）
+    private static void handleSpecialProperties(String propertyName, Object modelVal, Object actualVal,
+                                                Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                                Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        if (StringUtils.startsWith(propertyName, "mtfCheck") && StringUtils.endsWith(propertyName, "F")) {
+            handleMtfCheck(propertyName, modelVal, actualVal, inconsistentProperties, emptyInActual, emptyInStandard);
+        } else if ("epoxyInspectionInterval".equals(propertyName)) {
+            handleEpoxyInspectionAuto(propertyName, modelVal, actualVal, inconsistentProperties, emptyInActual, emptyInStandard);
+        } else {
+            // 数字类型处理
+            if (!compareStringNumbers(modelVal, actualVal)) {
+                addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+            }
+        }
+    }
+
+    // 处理 mtfCheck 特殊逻辑
+    private static void handleMtfCheck(String propertyName, Object modelVal, Object actualVal,
+                                       Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                       Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        if (modelVal == null && actualVal == null) {
+            logger.info(">>>>> both modelVal and actualVal are empty for {}", propertyName);
+            return;
+        }
+
+        if (modelVal != null && actualVal != null) {
+            try {
+                Map<String, Double> modelMap = objectMapper.readValue(modelVal.toString(), new TypeReference<Map<String, Double>>() {
+                });
+                Map<String, Double> actualMap = objectMapper.readValue(actualVal.toString(), new TypeReference<Map<String, Double>>() {
+                });
+
+                if (modelMap.equals(actualMap)) {
+                    return; // 直接返回，不做额外存储
+                }
+                compareMaps(modelMap, actualMap, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+            } catch (JsonProcessingException e) {
+                logger.error("JSON parsing error in {}: {}, treating as raw string comparison", propertyName, e.getMessage());
+                addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+            }
+        } else {
+            addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+        }
+    }
+
+
+    // 处理 epoxyInspectionAuto 特殊逻辑
+    private static void handleEpoxyInspectionAuto(String propertyName, Object modelVal, Object actualVal,
+                                                  Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                                  Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        if (modelVal == null && actualVal == null) {
+            // modelVal 和 actualVal 都为空，不记录
+            logger.info(">>>>> both modelVal and actualVal are empty propertyName: {}", propertyName);
+            return;
+        }
+
+        if (modelVal != null) {
+            // 确保 modelVal 是数字类型，转换成整数后进行比较
+            int modelValInt = Integer.parseInt(modelVal.toString());
+
+            if (actualVal == null || StringUtils.isBlank(actualVal.toString())) {
+                // actualVal 为空，记录 modelVal 和 null 之间的差异
+                addToResult(modelValInt, null, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+            } else {
+                int actualValInt = Integer.parseInt(actualVal.toString());
+                // 检查 actualVal 是否在有效范围内 (5 到 30)
+                if (actualValInt < 5 || actualValInt > 30) {
+                    addToResult("[ 5 <= epoxyInspectionAuto <= 30 ]", actualValInt, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+                }
+            }
+        } else {
+            // modelVal 为空，但 actualVal 不为空，仍需记录
+            addToResult(null, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+        }
+    }
+
+
+    // 比较两个字符串类型的数字
+
     /**
-     * 比较两个字符串数值是否相等
+     * 比较两个数值类型的属性是否相等
      *
      * @param modelVal  标准值
      * @param actualVal 实际值
@@ -197,11 +255,46 @@ public class AaListParamsComparator {
         try {
             Double modelNum = Double.parseDouble(modelVal.toString());
             Double actualNum = Double.parseDouble(actualVal.toString());
-            return Objects.equals(modelNum, actualNum);
+            return Math.abs(modelNum - actualNum) < 0.0001;
         } catch (NumberFormatException e) {
             return false;
         }
     }
+
+    // 比较两个 JSON 字符串表示的 Map<Integer, Double>
+    private static void compareJsonMaps(Object modelVal, Object actualVal, String propertyName,
+                                        Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                        Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        try {
+            Map<String, Double> modelMap = objectMapper.readValue(modelVal.toString(), new TypeReference<Map<String, Double>>() {
+            });
+            Map<String, Double> actualMap = objectMapper.readValue(actualVal.toString(), new TypeReference<Map<String, Double>>() {
+            });
+
+            compareMaps(modelMap, actualMap, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+        } catch (JsonProcessingException e) {
+            logger.error("JSON processing error in {}: {}, using raw values for comparison", propertyName, e.getMessage());
+            addToResult(modelVal, actualVal, propertyName, inconsistentProperties, emptyInActual, emptyInStandard);
+        }
+    }
+
+
+    private static void compareMaps(Map<String, Double> modelMap, Map<String, Double> actualMap, String propertyName,
+                                    Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                    Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+        Set<String> allKeys = new HashSet<>(modelMap.keySet());
+        allKeys.addAll(actualMap.keySet());
+
+        for (String key : allKeys) {
+            Double modelValue = modelMap.get(key);
+            Double actualValue = actualMap.get(key);
+            if (!Objects.equals(modelValue, actualValue)) {
+                addToResult(modelValue, actualValue, key, inconsistentProperties, emptyInActual, emptyInStandard);
+            }
+        }
+    }
+
+    // 将不一致的属性添加到结果中
 
     /**
      * 将比较结果添加到结果集合中
@@ -213,7 +306,9 @@ public class AaListParamsComparator {
      * @param emptyInActual          实际对象为空的属性集合
      * @param emptyInStandard        标准对象为空的属性集合
      */
-    private static void addToResult(Object modelVal, Object actualVal, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
+    private static void addToResult(Object modelVal, Object actualVal, String propertyName,
+                                    Map<String, Map.Entry<Object, Object>> inconsistentProperties,
+                                    Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
         if (modelVal == null) {
             emptyInStandard.put(propertyName, null);
         } else if (actualVal == null) {
@@ -223,81 +318,5 @@ public class AaListParamsComparator {
         }
     }
 
-    /**
-     * 比较两个 JSON 字符串表示的 Map<Integer, Double>
-     *
-     * @param modelJson              标准 JSON 字符串
-     * @param actualJson             实际 JSON 字符串
-     * @param propertyName           属性名称
-     * @param inconsistentProperties 不一致的属性集合
-     * @param emptyInActual          实际对象为空的属性集合
-     * @param emptyInStandard        标准对象为空的属性集合
-     */
-    private void compareJsonMaps(String modelJson, String actualJson, String propertyName, Map<String, Map.Entry<Object, Object>> inconsistentProperties, Map<String, Object> emptyInActual, Map<String, Object> emptyInStandard) {
-        try {
-            // 读取 JSON 字符串并转换为 Map<String, Double>
-            Map<String, Double> tempModelMap = objectMapper.readValue(modelJson, new TypeReference<Map<String, Double>>() {
-            });
-            Map<String, Double> tempActualMap = objectMapper.readValue(actualJson, new TypeReference<Map<String, Double>>() {
-            });
-
-            // 创建一个新的 Map<Integer, Double>
-            Map<Integer, Double> modelMap = new HashMap<>();
-            Map<Integer, Double> actualMap = new HashMap<>();
-
-            // 将 tempMap 的键和值转换为数值类型并放入 intKeyMap
-            for (Map.Entry<String, Double> entry : tempModelMap.entrySet()) {
-                modelMap.put(Integer.parseInt(entry.getKey()), entry.getValue());
-            }
-            for (Map.Entry<String, Double> entry : tempActualMap.entrySet()) {
-                actualMap.put(Integer.parseInt(entry.getKey()), entry.getValue());
-            }
-
-            // 比较两个 Map<Integer, Double> 中的每个键值对
-            Set<Integer> allKeys = new HashSet<>(modelMap.keySet());
-            allKeys.addAll(actualMap.keySet());
-
-            for (Integer key : allKeys) {
-                Double modelValue = modelMap.get(key);
-                Double actualValue = actualMap.get(key);
-
-                if (!Objects.equals(modelValue, actualValue)) {
-                    addToResult(modelValue, actualValue, StringUtils.joinWith("_", propertyName, key), inconsistentProperties, emptyInActual, emptyInStandard);
-                }
-            }
-        } catch (JsonProcessingException e) {
-            logger.error("JSON解析失败, msg: {}, {}", modelJson, e.getMessage());
-        } catch (NumberFormatException e) {
-            logger.error("键转换为整数失败, msg: {}, {}", modelJson, e.getMessage());
-        }
-    }
-
-
-    // 原有的 compareObjectsWithRanges 方法保持不变
-    private static boolean compareObjectsWithRanges(Object obj1, Object obj2, List<String> propertiesToCompare, Map<String, Range<Integer>> propertiesWithRanges) {
-        if (obj1 == obj2) return true;
-        if (obj1 == null || obj2 == null) return false;
-
-        // 检查范围
-        for (Map.Entry<String, Range<Integer>> entry : propertiesWithRanges.entrySet()) {
-            try {
-                Field field1 = getFieldFromClassHierarchy(obj1.getClass(), entry.getKey());
-                Field field2 = getFieldFromClassHierarchy(obj2.getClass(), entry.getKey());
-
-                field1.setAccessible(true);
-                field2.setAccessible(true);
-
-                Integer value1 = (Integer) field1.get(obj1);
-                Integer value2 = (Integer) field2.get(obj2);
-
-                if (value1 == null || value1 < entry.getValue().getMin() || value1 > entry.getValue().getMax() || value2 == null || value2 < entry.getValue().getMin() || value2 > entry.getValue().getMax()) {
-                    return false;
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new IllegalArgumentException("Error accessing field: " + entry.getKey(), e);
-            }
-        }
-
-        return true;
-    }
 }
+

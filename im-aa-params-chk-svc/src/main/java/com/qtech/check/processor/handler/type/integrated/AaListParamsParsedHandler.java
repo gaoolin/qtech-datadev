@@ -98,8 +98,9 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
         List<ImAaListCommand> aaListCommandList = Arrays.stream(msg.split("\n"))
                 .map(String::trim)  // 去除每行的空白字符
                 .filter(line -> !line.isEmpty())  // 跳过空行
+                .filter(line -> StringUtils.startsWith(line, "LIST") || StringUtils.startsWith(line, "ITEM"))
                 .map(line -> line.split("\\s+"))  // 按空格分割每一行
-                .filter(parts -> parts.length > 3)  // 过滤掉空的行
+                // .filter(parts -> parts.length > 3)  // 过滤掉小于3个分隔的行， 可能到导致某些Item参数过滤掉，而解析不到
                 .map(parts -> {
                     String startWithStr = parts[0];
                     try {
@@ -146,7 +147,7 @@ public class AaListParamsParsedHandler extends MessageHandler<ImAaListCommand> {
 
                 // 用于调试
                 // String s = ((String) jsonObject.get("WoCode")).split("#")[0];
-                // if (s.equals("C3PA81-A")) {
+                // if (s.equals("C4DF05")) {
                 //     logger.info(">>>>> 检测到WoCode机型: {}", jsonObject.get("WoCode"));
                 // }
 

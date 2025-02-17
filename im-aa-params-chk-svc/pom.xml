@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.qtech.share</groupId>
             <artifactId>im-datadev-shared</artifactId>
-            <version>1.0.16</version>
+            <version>1.0.17</version>
         </dependency>
 
         <!--数据库连接依赖-->

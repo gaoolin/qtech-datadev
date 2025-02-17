@@ -30,6 +30,8 @@ public class ItemXyOffsetParser {
     private static final Logger logger = LoggerFactory.getLogger(ItemXyOffsetParser.class);
 
     public static ImAaListCommand apply(String[] parts, String prefixCmd) {
+        if (parts.length < 3)
+            return null;
         String command = parts[3];
         if (StringUtils.upperCase("X_Offset").equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
