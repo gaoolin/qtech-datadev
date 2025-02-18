@@ -33,7 +33,7 @@ public class AaListParamsComparator {
      * @param actualObj           实际对象
      * @param propertiesToCompare 需要比较的属性列表
      * @param propertiesToCompute 需要额外处理的属性列表
-     * @return 包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
+     * @return ImmutableTriple<>(inconsistentProperties, emptyInActual, emptyInStandard);包含不一致属性、实际对象中为空的属性、标准对象中为空的属性的Triple
      */
     public static ImmutableTriple<Map<String, Map.Entry<Object, Object>>, Map<String, Object>, Map<String, Object>> compareObjectsWithStandardAndActual(
             Object standardObj, Object actualObj, List<String> propertiesToCompare, List<String> propertiesToCompute) {

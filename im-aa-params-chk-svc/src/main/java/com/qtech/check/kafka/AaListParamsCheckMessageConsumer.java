@@ -37,7 +37,7 @@ import static com.qtech.share.aa.constant.ComparisonConstants.*;
  * desc   :
  */
 
-@Component
+// @Component
 public class AaListParamsCheckMessageConsumer {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckMessageConsumer.class);
     private final ObjectMapper objectMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));

@@ -30,7 +30,7 @@ public class ItemXyOffsetParser {
     private static final Logger logger = LoggerFactory.getLogger(ItemXyOffsetParser.class);
 
     public static ImAaListCommand apply(String[] parts, String prefixCmd) {
-        if (parts.length < 3)
+        if (parts.length < 4)
             return null;
         String command = parts[3];
         if (StringUtils.upperCase("X_Offset").equals(StringUtils.upperCase(command))) {
@@ -40,7 +40,7 @@ public class ItemXyOffsetParser {
             Range<String> range = new Range<>(min, max);
             logger.info(">>>>> {}-ItemXyOffsetParser: {}, Max: {}, Min: {}", prefixCmd, command, max, min);
             return new ImAaListCommand(null, num, prefixCmd, command, null, null, range);
-        } else if (StringUtils.upperCase("Y_OffSET").equals(StringUtils.upperCase(command))) {
+        } else if (StringUtils.upperCase("Y_Offset").equals(StringUtils.upperCase(command))) {
             Integer num = Integer.parseInt(parts[1]);
             String max = parts[5];
             String min = parts[6];
