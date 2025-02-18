@@ -37,10 +37,10 @@ public class ImAaListParams implements Serializable {
     // 2025-01-15
     private String blemish1;
     private String blemish2;
-    private String clampOnOff;
     private String chartAlignment;
     private String chartAlignment1;
     private String chartAlignment2;
+    private String clampOnOff;
     private String delay;
     private String destroy;
     private String destroyStart;
