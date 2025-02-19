@@ -289,7 +289,8 @@ public class AaListParamsComparator {
             Double modelValue = modelMap.get(key);
             Double actualValue = actualMap.get(key);
             if (!Objects.equals(modelValue, actualValue)) {
-                addToResult(modelValue, actualValue, key, inconsistentProperties, emptyInActual, emptyInStandard);
+                // #连接 用于区分点检描述中的_，避免与点检描述中的-混淆
+                addToResult(modelValue, actualValue, StringUtils.joinWith("#", propertyName, key), inconsistentProperties, emptyInActual, emptyInStandard);
             }
         }
     }
