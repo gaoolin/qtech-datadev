@@ -3,7 +3,6 @@ package com.qtech.check.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.qtech.check.algorithm.AaListParamsComparator;
 import com.qtech.check.pojo.AaListParamsParsed;
 import com.qtech.check.pojo.AaListParamsStdTemplate;
@@ -17,11 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +36,9 @@ import static com.qtech.share.aa.constant.ComparisonConstants.*;
 @Component
 public class AaListParamsCheckListener {
     private static final Logger logger = LoggerFactory.getLogger(AaListParamsCheckListener.class);
-    private final ObjectMapper objectMapper = new ObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false).setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-
+    @Autowired
+    @Qualifier("dateFormat1ObjectMapper")
+    private ObjectMapper objectMapper;
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
@@ -111,6 +111,7 @@ public class AaListParamsCheckListener {
         return checkResult;
     }
 
+    // FIXME : 当redis没有模版信息时，更严谨的逻辑是到数据库中查询 模版信息或模版详情，并更新到Redis中
     private AaListParamsStdTemplateInfo getModelInfo(String prodType) {
         return redisUtil.getAaListParamsStdModelInfo(REDIS_COMPARISON_MODEL_INFO_KEY_SUFFIX + prodType);
     }

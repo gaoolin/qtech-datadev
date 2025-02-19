@@ -60,7 +60,7 @@ public class ToPascalCaseConverter {
         // 示例测试
         String input1 = "example_input_string";
         String input2 = "another_EXAMPLE_STRING";
-        String input3 = "URL_parser";
+        String input3 = "LP_Intensity";
         String input4 = "AA_example";
 
         System.out.println(doConvert(input1)); // 输出: ExampleInputString

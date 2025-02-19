@@ -1,3 +1,4 @@
+import com.qtech.check.AaParamsChkSvc;
 import com.qtech.check.config.redis.RedisConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * desc   :
  */
 
-@SpringBootTest(classes = {OpRedisTest.class, RedisConfig.class})
+@SpringBootTest(classes = {AaParamsChkSvc.class, RedisConfig.class})
 @RunWith(SpringRunner.class)
 public class OpRedisTest {
 
@@ -46,7 +47,7 @@ public class OpRedisTest {
 
                     // 获取对应的值
                     String value = stringRedisTemplate.opsForValue().get(key);
-                    stringRedisTemplate.delete(key);
+                    // stringRedisTemplate.delete(key);
                     System.out.println("Key: " + key + ", Value: " + value);
                 }
             }

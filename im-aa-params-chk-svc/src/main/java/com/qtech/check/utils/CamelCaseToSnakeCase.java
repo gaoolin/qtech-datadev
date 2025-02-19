@@ -29,7 +29,7 @@ public class CamelCaseToSnakeCase {
     }
 
     public static void main(String[] args) {
-        String camelCase = "recordPositionUtXyzMove";
+        String camelCase = "LP_Intensity";
         String snakeCase = doConvert(camelCase);
         System.out.println(snakeCase);
     }
